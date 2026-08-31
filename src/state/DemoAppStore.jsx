@@ -166,6 +166,24 @@ function reducer(state, action) {
       };
     case 'ADD_ROUTE':
       return { ...state, routes: [action.route, ...state.routes] };
+    case 'ADD_SEGMENT':
+      return { ...state, segments: [action.segment, ...(state.segments || [])] };
+    case 'UPDATE_SEGMENT':
+      return {
+        ...state,
+        segments: (state.segments || []).map((seg) => {
+          if (seg.id !== action.id) return seg;
+          const next = { ...seg, ...action.changes };
+          if (action.changes.name && !action.changes.segmentName) next.segmentName = action.changes.name;
+          if (action.changes.segmentName && !action.changes.name) next.name = action.changes.segmentName;
+          return next;
+        }),
+      };
+    case 'DELETE_SEGMENT':
+      return {
+        ...state,
+        segments: (state.segments || []).filter((seg) => seg.id !== action.id),
+      };
     case 'TOGGLE_NOTIF_RULE':
       return {
         ...state,
@@ -545,6 +563,32 @@ export function DemoAppStoreProvider({ children }) {
     };
     dispatch({ type: 'ADD_ROUTE', route: next });
     return next;
+  }, []);
+  const addSegment = useCallback((segment) => {
+    const name = (segment.name || segment.segmentName || '').trim();
+    const next = {
+      ...segment,
+      id: segment.id || `seg-${Date.now().toString(36)}`,
+      name,
+      segmentName: name,
+      shortName: (segment.shortName || '').trim() || name.slice(0, 4).toUpperCase(),
+      type: segment.type || 'District',
+      parentId: segment.parentId || segment.parent || null,
+      delaySharing: !!segment.delaySharing,
+      delayDuration: Number(segment.delayDuration) || 0,
+      publicGroupId:
+        segment.publicGroupId ||
+        `00G4M00000${Math.random().toString(36).substring(2, 9).toUpperCase()}`,
+      createdAt: segment.createdAt || new Date().toISOString(),
+    };
+    dispatch({ type: 'ADD_SEGMENT', segment: next });
+    return next;
+  }, []);
+  const updateSegment = useCallback((id, changes) => {
+    dispatch({ type: 'UPDATE_SEGMENT', id, changes });
+  }, []);
+  const deleteSegment = useCallback((id) => {
+    dispatch({ type: 'DELETE_SEGMENT', id });
   }, []);
 
   const user = state.currentUser;
@@ -1047,6 +1091,9 @@ export function DemoAppStoreProvider({ children }) {
     addContact,
     updateContact,
     addRoute,
+    addSegment,
+    updateSegment,
+    deleteSegment,
     selectAccounts,
     selectContacts,
     selectSegments,

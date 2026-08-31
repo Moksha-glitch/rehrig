@@ -10,6 +10,7 @@ export const NAV = {
       icon: 'building',
       children: [
         { key: 'accounts', module: 'accounts', label: 'All Providers', icon: 'building' },
+        { key: 'segments', module: 'segments', label: 'Segments', icon: 'layers' },
         { key: 'contacts', module: 'contacts', label: 'Contacts', icon: 'user' },
         {
           key: 'contractOnboarding',

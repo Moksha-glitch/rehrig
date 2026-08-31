@@ -21,6 +21,7 @@ import ProfileManagement from './screens/ProfileManagement.jsx';
 import { GenericList } from './screens/RecordScreens.jsx';
 import ContactsDirectory from './screens/ContactsDirectory.jsx';
 import CustomersDirectory from './screens/CustomersDirectory.jsx';
+import SegmentsDirectory from './screens/SegmentsDirectory.jsx';
 import MapCenter from './screens/MapCenter.jsx';
 import BulkImport from './screens/BulkImport.jsx';
 import ContractOnboarding from './screens/ContractOnboarding.jsx';
@@ -57,6 +58,7 @@ function Router({ onOnboard }) {
     account: 'account',
     contacts: 'contacts',
     customers: 'customers',
+    segments: 'segments',
     serviceTypes: 'serviceTypes',
     locationTypes: 'locationTypes',
     assetTypes: 'assetTypes',
@@ -123,6 +125,8 @@ function Router({ onOnboard }) {
       return <ContactsDirectory />;
     case 'customers':
       return <CustomersDirectory />;
+    case 'segments':
+      return <SegmentsDirectory />;
     case 'serviceTypes':
       return <MasterConfig configKey="serviceTypes" />;
     case 'locationTypes':
@@ -276,7 +280,7 @@ export default function App() {
     return (
       <div className="flex h-full items-center justify-center bg-canvas text-sm text-ink-muted" role="status">
         <span className="loading-spinner mr-2" aria-hidden="true" />
-        Restoring sessionÃ¢â‚¬Â¦
+        Restoring session…
       </div>
     );
   }

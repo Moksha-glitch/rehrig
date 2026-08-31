@@ -20,18 +20,7 @@ import {
   screenAccessState,
   summarizeProfileAccess,
 } from '../data/profileAccess.js';
-
-// Fixed neutral-professional palette — each role gets a consistent slot
-const AVATAR_PALETTE = [
-  { bg: '#3B5998', shadow: 'rgba(59,89,152,0.30)' },   // navy
-  { bg: '#2E7D5E', shadow: 'rgba(46,125,94,0.30)' },   // forest
-  { bg: '#5A4A8A', shadow: 'rgba(90,74,138,0.30)' },   // plum
-  { bg: '#7A5230', shadow: 'rgba(122,82,48,0.30)' },   // chestnut
-  { bg: '#2C6E8A', shadow: 'rgba(44,110,138,0.30)' },  // steel blue
-  { bg: '#6B3A3A', shadow: 'rgba(107,58,58,0.30)' },   // burgundy
-  { bg: '#3A6B4A', shadow: 'rgba(58,107,74,0.30)' },   // sage
-  { bg: '#4A5568', shadow: 'rgba(74,85,104,0.30)' },   // slate
-];
+import { getAvatarProps } from '../utils/theme.js';
 
 function hydrateScreens(groups) {
   return groups.map((group) => ({
@@ -716,12 +705,7 @@ export default function ProfileForm({
             </p>
             <div className="space-y-1">
               {profiles.map((item) => {
-                const words = (item.role || '').trim().split(/\s+/);
-                const initials = words.length >= 2
-                  ? `${words[0][0]}${words[words.length - 1][0]}`
-                  : (words[0] || 'P').slice(0, 2);
-                const idx = [...(item.role || '')].reduce((a, c) => a + c.charCodeAt(0), 0) % AVATAR_PALETTE.length;
-                const palette = AVATAR_PALETTE[idx];
+                const { initials, palette } = getAvatarProps(null, item.role);
                 const isSelected = cloneId === item.id;
                 return (
                   <button
@@ -740,7 +724,7 @@ export default function ProfileForm({
                         background: palette.bg,
                       }}
                     >
-                      {initials.toUpperCase()}
+                      {initials}
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-[13px] font-medium text-ink">{item.role}</span>
@@ -797,15 +781,20 @@ export default function ProfileForm({
         {/* Identity header — shows for both new (as live preview) and edit */}
         <div className="-mt-1 mb-4 flex items-center gap-3 rounded-xl border border-line bg-elevated/50 px-4 py-3">
           {name.trim() ? (
-            <span
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sm font-bold text-white select-none transition-all"
-              style={{
-                background: AVATAR_PALETTE[[...(name)].reduce((a,c)=>a+c.charCodeAt(0),0) % AVATAR_PALETTE.length].bg,
-                boxShadow: `0 2px 8px ${AVATAR_PALETTE[[...(name)].reduce((a,c)=>a+c.charCodeAt(0),0) % AVATAR_PALETTE.length].shadow}`,
-              }}
-            >
-              {(() => { const w = name.trim().split(/\s+/); return w.length >= 2 ? `${w[0][0]}${w[w.length-1][0]}` : (w[0]||'P').slice(0,2); })().toUpperCase()}
-            </span>
+            (() => {
+              const { initials, palette } = getAvatarProps(null, name);
+              return (
+                <span
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sm font-bold text-white select-none transition-all"
+                  style={{
+                    background: palette.bg,
+                    boxShadow: `0 2px 8px ${palette.shadow}`,
+                  }}
+                >
+                  {initials}
+                </span>
+              );
+            })()
           ) : (
             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border-2 border-dashed border-line bg-elevated/60 text-ink-faint">
               <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8">

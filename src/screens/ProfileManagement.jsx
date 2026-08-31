@@ -9,6 +9,8 @@ import {
 } from "../components/UI.jsx";
 import { useStore } from "../state/AppStore.jsx";
 import { useAccounts, useSegments } from "../hooks/useAccounts.js";
+import { TOTAL_PROFILE_SCREENS } from '../data/profileAccess.js';
+import { getAvatarProps } from '../utils/theme.js';
 import { SEED_PROFILES } from "../data/profileAccess.js";
 import ProfileForm from "./ProfileForm.jsx";
 
@@ -33,32 +35,10 @@ function writeProfiles(profiles) {
 
 function todayLabel() {
   const now = new Date();
-  const day = String(now.getDate()).padStart(2, "0");
-  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, '0');
+  const month = String(now.getMonth() + 1).padStart(2, '0');
   const year = String(now.getFullYear()).slice(-2);
   return `${day}/${month}/${year}`;
-}
-
-// Fixed neutral-professional palette — each role gets a consistent slot
-const AVATAR_PALETTE = [
-  { bg: '#3B5998', shadow: 'rgba(59,89,152,0.30)' },   // navy
-  { bg: '#2E7D5E', shadow: 'rgba(46,125,94,0.30)' },   // forest
-  { bg: '#5A4A8A', shadow: 'rgba(90,74,138,0.30)' },   // plum
-  { bg: '#7A5230', shadow: 'rgba(122,82,48,0.30)' },   // chestnut
-  { bg: '#2C6E8A', shadow: 'rgba(44,110,138,0.30)' },  // steel blue
-  { bg: '#6B3A3A', shadow: 'rgba(107,58,58,0.30)' },   // burgundy
-  { bg: '#3A6B4A', shadow: 'rgba(58,107,74,0.30)' },   // sage
-  { bg: '#4A5568', shadow: 'rgba(74,85,104,0.30)' },   // slate
-];
-
-function roleAvatar(role) {
-  const words = (role || '').trim().split(/\s+/);
-  const initials =
-    words.length >= 2
-      ? `${words[0][0]}${words[words.length - 1][0]}`
-      : (words[0] || 'P').slice(0, 2);
-  const idx = [...(role || '')].reduce((acc, ch) => acc + ch.charCodeAt(0), 0) % AVATAR_PALETTE.length;
-  return { initials: initials.toUpperCase(), palette: AVATAR_PALETTE[idx] };
 }
 
 function accessChips(access) {
@@ -95,7 +75,7 @@ function AccessChip({ label, color }) {
 }
 
 function AvatarInitials({ role }) {
-  const { initials, palette } = roleAvatar(role);
+  const { initials, palette } = getAvatarProps(null, role);
   return (
     <span
       className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-[13px] font-bold text-white select-none"

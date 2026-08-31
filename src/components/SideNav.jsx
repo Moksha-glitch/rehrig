@@ -5,11 +5,11 @@ import UserAccountMenu from './UserAccountMenu.jsx';
 import { useStore } from '../state/AppStore.jsx';
 import { useAccounts } from '../hooks/useAccounts.js';
 import { NAV, filterNavTree, isNavItemActive } from './navConfig.js';
-
-function initials(name) {
-  const parts = (name || '').split(' ');
-  return ((parts[0]?.[0] || '') + (parts[1]?.[0] || '')).toUpperCase();
-}
+import {
+  applyResolvedTheme,
+  subscribeSystemTheme,
+  getAvatarProps,
+} from '../utils/theme.js';
 
 function VaiRow({ active = false, collapsed = false }) {
   const id = React.useId().replace(/:/g, '');
@@ -475,13 +475,23 @@ export default function SideNav({ open, onToggle }) {
               aria-expanded={accountOpen}
               aria-haspopup="menu"
             >
-              <span
-                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[10px] font-semibold text-white ${
-                  isPreviewingPersona ? 'bg-warn' : 'bg-ink'
-                }`}
-              >
-                {initials(user?.name)}
-              </span>
+              {(() => {
+                const { initials, palette } = getAvatarProps(user?.name, user?.role);
+                return (
+                  <span
+                    className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[10px] font-semibold text-white ${
+                      isPreviewingPersona ? 'bg-warn shadow-[0_2px_8px_rgba(234,179,8,0.4)]' : ''
+                    }`}
+                    style={
+                      !isPreviewingPersona
+                        ? { background: palette.bg, boxShadow: `0 2px 8px ${palette.shadow}` }
+                        : {}
+                    }
+                  >
+                    {initials}
+                  </span>
+                );
+              })()}
               {open && (
                 <>
                   <div className="min-w-0 flex-1">

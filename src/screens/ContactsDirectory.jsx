@@ -18,7 +18,7 @@ import {
   AsyncState,
 } from '../components/UI.jsx';
 import { useStore } from '../state/AppStore.jsx';
-import { useAccounts } from '../hooks/useAccounts.js';
+import { useAccounts, useSegments } from '../hooks/useAccounts.js';
 import { useContacts, useCreateContact, useUpdateContact } from '../hooks/useRecords.js';
 import { getErrorMessage } from '../lib/errors.js';
 import { PICKLISTS } from '../data/picklists.js';
@@ -62,6 +62,10 @@ function ContactEditorDrawer({ accounts, contact, defaultAccountId, onClose, onS
   const accountOptions = accounts.map((a) => a.name);
   const accountIdByName = Object.fromEntries(accounts.map((a) => [a.name, a.id]));
   const accountNameById = Object.fromEntries(accounts.map((a) => [a.id, a.name]));
+
+  const segmentsQuery = useSegments(form.accountId);
+  const availableSegments = segmentsQuery.data || [];
+  const segmentOptions = ['(None / Top Level)', ...availableSegments.map((s) => s.name)];
 
   const save = async (e) => {
     e.preventDefault();
@@ -149,7 +153,14 @@ function ContactEditorDrawer({ accounts, contact, defaultAccountId, onClose, onS
           />
         </Field>
         <Field label="Segment" span2>
-          <TextInput value={form.segment} onChange={(e) => set({ segment: e.target.value })} />
+          <Select
+            options={segmentOptions}
+            value={form.segment || '(None / Top Level)'}
+            onChange={(e) => {
+              const val = e.target.value;
+              set({ segment: val === '(None / Top Level)' ? '' : val });
+            }}
+          />
         </Field>
       </FieldSection>
       <Checkbox

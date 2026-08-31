@@ -48,6 +48,29 @@ export function useSegments(accountId) {
   return demoQuery(store.selectSegments(accountId));
 }
 
+export function useCreateSegment() {
+  const store = useStore();
+  return demoMutation(async (segment) => {
+    return store.addSegment(segment);
+  });
+}
+
+export function useUpdateSegment() {
+  const store = useStore();
+  return demoMutation(async ({ id, changes }) => {
+    store.updateSegment(id, changes);
+    return { id, ...changes };
+  });
+}
+
+export function useDeleteSegment() {
+  const store = useStore();
+  return demoMutation(async (id) => {
+    store.deleteSegment(id);
+    return id;
+  });
+}
+
 export function useProducts(accountId) {
   const store = useStore();
   return demoQuery(store.selectProducts(accountId));

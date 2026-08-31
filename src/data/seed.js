@@ -351,11 +351,35 @@ export const CONTACTS = [
 ];
 
 export const SEGMENTS = [
-  { id: 'seg-1', accountId: 'acc-212880', name: 'Edmonton AB Top', shortName: 'EDM-TOP', type: 'Top', parentId: null, delaySharing: false, delayDuration: 0, publicGroupId: 'PG-000001' },
-  { id: 'seg-2', accountId: 'acc-212880', name: 'Hauler 1', shortName: 'H1', type: 'Market Area', parentId: 'seg-1', delaySharing: false, delayDuration: 0, publicGroupId: 'PG-000002' },
-  { id: 'seg-3', accountId: 'acc-212880', name: 'Downtown District', shortName: 'DT', type: 'District', parentId: 'seg-2', delaySharing: false, delayDuration: 0, publicGroupId: 'PG-000003' },
-  { id: 'seg-4', accountId: 'acc-212880', name: 'Division A', shortName: 'DIV-A', type: 'Division', parentId: 'seg-3', delaySharing: true, delayDuration: 300, publicGroupId: 'PG-000004' },
-  { id: 'seg-10', accountId: 'acc-212883', name: 'Toronto Top', shortName: 'TOR-TOP', type: 'Top', parentId: null, delaySharing: false, delayDuration: 0, publicGroupId: 'PG-000010' },
+  // Edmonton AB (acc-212880)
+  { id: 'seg-1', accountId: 'acc-212880', name: 'Edmonton AB City', segmentName: 'Edmonton AB City', shortName: 'EDM-CITY', type: 'Top', parentId: null, delaySharing: false, delayDuration: 0, publicGroupId: '00G4M000002I9lQUAQ' },
+  { id: 'seg-2', accountId: 'acc-212880', name: 'Edmonton AB', segmentName: 'Edmonton AB', shortName: 'EDM-MKT', type: 'Market Area', parentId: 'seg-1', delaySharing: false, delayDuration: 0, publicGroupId: '00G4M000002J0nUAJ' },
+  { id: 'seg-3', accountId: 'acc-212880', name: 'Hauler 1', segmentName: 'Hauler 1', shortName: 'H1', type: 'District', parentId: 'seg-1', delaySharing: false, delayDuration: 0, publicGroupId: '00G4M000002K1oVBK' },
+  { id: 'seg-4', accountId: 'acc-212880', name: 'Hauler 2', segmentName: 'Hauler 2', shortName: 'H2', type: 'District', parentId: 'seg-1', delaySharing: false, delayDuration: 0, publicGroupId: '00G4M000002L2pWCL' },
+  { id: 'seg-5', accountId: 'acc-212880', name: 'Hauler 5', segmentName: 'Hauler 5', shortName: 'H5', type: 'District', parentId: 'seg-1', delaySharing: false, delayDuration: 0, publicGroupId: '00G4M000002M3qXDM' },
+  { id: 'seg-6', accountId: 'acc-212880', name: 'Edmonton AB Communal', segmentName: 'Edmonton AB Communal', shortName: 'EDM-COM', type: 'Division', parentId: 'seg-1', delaySharing: false, delayDuration: 0, publicGroupId: '00G4M000002N4rYEN' },
+  { id: 'seg-7', accountId: 'acc-212880', name: 'Downtown District', segmentName: 'Downtown District', shortName: 'DT', type: 'District', parentId: 'seg-2', delaySharing: false, delayDuration: 0, publicGroupId: '00G4M000002O5sZFO' },
+  { id: 'seg-8', accountId: 'acc-212880', name: 'Division A', segmentName: 'Division A', shortName: 'DIV-A', type: 'Division', parentId: 'seg-7', delaySharing: true, delayDuration: 300, publicGroupId: '00G4M000002P6tAGP' },
+  
+  // Calgary Metro Waste (acc-212881)
+  { id: 'seg-20', accountId: 'acc-212881', name: 'Calgary Metro', segmentName: 'Calgary Metro', shortName: 'CAL-TOP', type: 'Top', parentId: null, delaySharing: false, delayDuration: 0, publicGroupId: '00G4M000002Q7uBHQ' },
+  { id: 'seg-21', accountId: 'acc-212881', name: 'Calgary North', segmentName: 'Calgary North', shortName: 'CAL-N', type: 'Market Area', parentId: 'seg-20', delaySharing: false, delayDuration: 0, publicGroupId: '00G4M000002R8vCIR' },
+  { id: 'seg-22', accountId: 'acc-212881', name: 'Calgary South District', segmentName: 'Calgary South District', shortName: 'CAL-S', type: 'District', parentId: 'seg-21', delaySharing: false, delayDuration: 0, publicGroupId: '00G4M000002S9wDJS' },
+
+  // Toronto Waste Services (acc-212883)
+  { id: 'seg-30', accountId: 'acc-212883', name: 'Toronto Top', segmentName: 'Toronto Top', shortName: 'TOR-TOP', type: 'Top', parentId: null, delaySharing: false, delayDuration: 0, publicGroupId: '00G4M000002T0xEKT' },
+  { id: 'seg-31', accountId: 'acc-212883', name: 'Toronto Central', segmentName: 'Toronto Central', shortName: 'TOR-CTR', type: 'Market Area', parentId: 'seg-30', delaySharing: false, delayDuration: 0, publicGroupId: '00G4M000002U1yFLU' },
+  { id: 'seg-32', accountId: 'acc-212883', name: 'Toronto East Division', segmentName: 'Toronto East Division', shortName: 'TOR-E', type: 'Division', parentId: 'seg-31', delaySharing: false, delayDuration: 0, publicGroupId: '00G4M000002V2zGMV' },
+
+  // Vancouver Sanitation Co (acc-212882)
+  { id: 'seg-40', accountId: 'acc-212882', name: 'Vancouver Metro', segmentName: 'Vancouver Metro', shortName: 'VAN-TOP', type: 'Top', parentId: null, delaySharing: false, delayDuration: 0, publicGroupId: '00G4M000002W3aHNW' },
+  { id: 'seg-41', accountId: 'acc-212882', name: 'Vancouver West', segmentName: 'Vancouver West', shortName: 'VAN-W', type: 'Market Area', parentId: 'seg-40', delaySharing: false, delayDuration: 0, publicGroupId: '00G4M000002X4bIOX' },
+
+  // Winnipeg Green Bins Ltd (acc-212884)
+  { id: 'seg-50', accountId: 'acc-212884', name: 'Winnipeg Central', segmentName: 'Winnipeg Central', shortName: 'WPG-TOP', type: 'Top', parentId: null, delaySharing: false, delayDuration: 0, publicGroupId: '00G4M000002Y5cJPY' },
+
+  // Fairfax County VA (acc-212885)
+  { id: 'seg-60', accountId: 'acc-212885', name: 'Fairfax County North', segmentName: 'Fairfax County North', shortName: 'FFX-TOP', type: 'Top', parentId: null, delaySharing: false, delayDuration: 0, publicGroupId: '00G4M000002Z6dKQZ' },
 ];
 
 export const ROUTES = [

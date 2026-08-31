@@ -50,6 +50,7 @@ export const ROLE_NAV_KEYS = {
     'r-trucks',
     'r-indTips',
     'r-routes',
+    'r-segments',
     'r-notif',
     'mapCenter',
     'devices',
@@ -64,8 +65,8 @@ export const ROLE_NAV_KEYS = {
     'holidays',
   ],
 
-  // Field Tech — assigned Work Orders + Assets only (+ Map, Details)
-  'sp:Field Tech': ['assistant', 'home', 'details', 'r-assets', 'r-workOrders', 'mapCenter', 'chatter'],
+  // Field Tech — assigned Work Orders + Assets only (+ Map, Details, Segments)
+  'sp:Field Tech': ['assistant', 'home', 'details', 'r-assets', 'r-workOrders', 'r-segments', 'mapCenter', 'chatter'],
 
   // Dispatcher — Dispatches / WOs / Routes / Assets / Trucks; no Contacts or Segments
   'sp:Dispatcher': [
@@ -83,6 +84,7 @@ export const ROLE_NAV_KEYS = {
     'r-trucks',
     'r-indTips',
     'r-routes',
+    'r-segments',
     'mapCenter',
     'devices',
     'reports',
@@ -100,6 +102,7 @@ export const ROLE_NAV_KEYS = {
     'reportSubs',
     'r-aggTips',
     'r-indTips',
+    'r-segments',
     'customerInsights',
   ],
 
@@ -112,6 +115,7 @@ export const ROLE_NAV_KEYS = {
     'r-workOrders',
     'r-trucks',
     'r-mrp',
+    'r-segments',
     'mapCenter',
     'chatter',
     'approvals',
@@ -133,6 +137,7 @@ export const ROLE_MODULES = {
     'accountDetail',
     'contacts',
     'customers',
+    'segments',
     'serviceTypes',
     'locationTypes',
     'assetTypes',
@@ -160,6 +165,7 @@ export const ROLE_MODULES = {
     'home',
     'notifications',
     'account',
+    'segments',
     'assets',
     'locations',
     'dispatches',
@@ -191,6 +197,7 @@ export const ROLE_MODULES = {
     'home',
     'notifications',
     'account',
+    'segments',
     'assets',
     'locations',
     'dispatches',
@@ -213,11 +220,12 @@ export const ROLE_MODULES = {
     'holidays',
   ],
 
-  'sp:Field Tech': ['home', 'account', 'assets', 'workOrders', 'mapCenter', 'userAccount', 'chatter'],
+  'sp:Field Tech': ['home', 'account', 'segments', 'assets', 'workOrders', 'mapCenter', 'userAccount', 'chatter'],
 
   'sp:Maintenance Admin': [
     'home',
     'account',
+    'segments',
     'assets',
     'workOrders',
     'trucks',
@@ -232,6 +240,7 @@ export const ROLE_MODULES = {
     'home',
     'notifications',
     'account',
+    'segments',
     'assets',
     'locations',
     'dispatches',
@@ -251,6 +260,7 @@ export const ROLE_MODULES = {
   'sp:Analyst': [
     'home',
     'account',
+    'segments',
     'aggregatedTips',
     'individualTips',
     'analytics',
@@ -286,14 +296,15 @@ export const ROLE_ACCOUNT_TABS = {
     'contacts',
     'customers',
     'products',
+    'segments',
     'routes',
     'notifications',
     'mindmap',
   ],
-  'sp:Field Tech': ['details'],
-  'sp:Dispatcher': ['details', 'routes', 'mindmap'],
-  'sp:Analyst': ['details'],
-  'sp:Maintenance Admin': ['details'],
+  'sp:Field Tech': ['details', 'segments'],
+  'sp:Dispatcher': ['details', 'segments', 'routes', 'mindmap'],
+  'sp:Analyst': ['details', 'segments'],
+  'sp:Maintenance Admin': ['details', 'segments'],
   'rehrig:Admin': [
     'details',
     'contacts',

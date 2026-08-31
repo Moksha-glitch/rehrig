@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Icon from '../components/Icon.jsx';
 import {
   Badge,
@@ -23,7 +23,13 @@ import {
   EmptyState,
 } from '../components/UI.jsx';
 import { useStore } from '../state/AppStore.jsx';
-import { useAccount, useUpdateAccount } from '../hooks/useAccounts.js';
+import {
+  useAccount,
+  useUpdateAccount,
+  useCreateSegment,
+  useUpdateSegment,
+  useDeleteSegment,
+} from '../hooks/useAccounts.js';
 import { useCreateContact, useRecords, useUpdateContact } from '../hooks/useRecords.js';
 import { useNotificationConfig } from '../hooks/useConfig.js';
 import { getErrorMessage } from '../lib/errors.js';
@@ -325,7 +331,14 @@ export default function AccountDetail({ accountId, tab }) {
         />
       )}
       {activeTab === 'products' && <ProductsTab products={products} />}
-      {activeTab === 'segments' && <SegmentsTab segments={segments} />}
+      {activeTab === 'segments' && (
+        <SegmentsTab
+          account={account}
+          segments={segments}
+          canManage={canCreateAccounts || canCreateRecords}
+          onChanged={() => detailQuery.refetch?.()}
+        />
+      )}
       {activeTab === 'routes' && <RoutesTab routes={routes} />}
       {activeTab === 'notifications' && <NotificationsTab account={account} />}
       {activeTab === 'mindmap' && (
@@ -1282,38 +1295,361 @@ function ProductsTab({ products }) {
   );
 }
 
-function SegmentsTab({ segments }) {
-  const byParent = {};
-  segments.forEach((s) => {
-    const p = s.parentId || 'root';
-    (byParent[p] = byParent[p] || []).push(s);
+function SegmentsTab({ account, segments, canManage = true, onChanged }) {
+  const { toast } = useStore();
+  const createSegment = useCreateSegment();
+  const updateSegment = useUpdateSegment();
+  const deleteSegment = useDeleteSegment();
+
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [editingSegment, setEditingSegment] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [form, setForm] = useState({
+    name: '',
+    shortName: '',
+    type: 'District',
+    parentId: '',
+    delaySharing: false,
+    delayDuration: 0,
+    publicGroupId: '',
   });
-  const nameById = Object.fromEntries(segments.map((s) => [s.id, s.name]));
-  const render = (parentKey, depth) =>
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
+
+  const byParent = useMemo(() => {
+    const map = {};
+    segments.forEach((s) => {
+      const p = s.parentId || 'root';
+      (map[p] = map[p] || []).push(s);
+    });
+    return map;
+  }, [segments]);
+
+  const nameById = useMemo(
+    () => Object.fromEntries(segments.map((s) => [s.id, s.name])),
+    [segments]
+  );
+
+  const eligibleParents = useMemo(() => {
+    if (form.type === 'Top') return [];
+    const hierarchyOrder = ['Top', 'Market Area', 'District', 'Division'];
+    const currentRank = hierarchyOrder.indexOf(form.type);
+
+    return segments.filter((s) => {
+      if (editingSegment && s.id === editingSegment.id) return false;
+      const parentRank = hierarchyOrder.indexOf(s.type);
+      return parentRank !== -1 && currentRank !== -1 && parentRank < currentRank;
+    });
+  }, [segments, form.type, editingSegment]);
+
+  const parentOptions = ['(No Parent / Top Level)', ...eligibleParents.map((p) => p.name)];
+  const parentIdByName = Object.fromEntries(eligibleParents.map((p) => [p.name, p.id]));
+  const parentNameById = Object.fromEntries(segments.map((p) => [p.id, p.name]));
+
+  const openNew = () => {
+    setEditingSegment(null);
+    setForm({
+      name: '',
+      shortName: '',
+      type: 'District',
+      parentId: '',
+      delaySharing: false,
+      delayDuration: 0,
+      publicGroupId: '',
+    });
+    setError('');
+    setIsDrawerOpen(true);
+  };
+
+  const openEdit = (seg) => {
+    setEditingSegment(seg);
+    setForm({
+      name: seg.name || seg.segmentName || '',
+      shortName: seg.shortName || '',
+      type: seg.type || 'District',
+      parentId: seg.parentId || '',
+      delaySharing: !!seg.delaySharing,
+      delayDuration: seg.delayDuration || 0,
+      publicGroupId: seg.publicGroupId || '',
+    });
+    setError('');
+    setIsDrawerOpen(true);
+  };
+
+  const saveSegment = async (e) => {
+    e.preventDefault();
+    if (!form.name.trim()) {
+      setError('Segment name is required.');
+      return;
+    }
+
+    setBusy(true);
+    setError('');
+
+    const payload = {
+      accountId: account.id,
+      name: form.name.trim(),
+      segmentName: form.name.trim(),
+      shortName: form.shortName.trim() || form.name.slice(0, 4).toUpperCase(),
+      type: form.type,
+      parentId: form.type === 'Top' ? null : form.parentId || null,
+      delaySharing: !!form.delaySharing,
+      delayDuration: Number(form.delayDuration) || 0,
+      publicGroupId:
+        form.publicGroupId.trim() ||
+        editingSegment?.publicGroupId ||
+        `00G4M00000${Math.random().toString(36).substring(2, 9).toUpperCase()}`,
+    };
+
+    try {
+      if (!editingSegment) {
+        await createSegment.mutateAsync(payload);
+        toast(`Segment "${payload.name}" created`);
+      } else {
+        await updateSegment.mutateAsync({ id: editingSegment.id, changes: payload });
+        toast(`Segment "${payload.name}" updated`);
+      }
+      onChanged?.();
+      setIsDrawerOpen(false);
+    } catch (err) {
+      setError(getErrorMessage(err, 'Failed to save segment.'));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+    try {
+      await deleteSegment.mutateAsync(deleteTarget.id);
+      toast(`Segment "${deleteTarget.name}" deleted`);
+      onChanged?.();
+    } catch (err) {
+      toast(getErrorMessage(err, 'Failed to delete segment.'), 'danger');
+    } finally {
+      setDeleteTarget(null);
+    }
+  };
+
+  const TYPE_PILL = {
+    Top: 'bg-violet-500/10 text-violet-700 dark:text-violet-300 border border-violet-500/25',
+    'Market Area': 'bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 border border-cyan-500/25',
+    District: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/25',
+    Division: 'bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/25',
+  };
+
+  const renderTree = (parentKey, depth) =>
     (byParent[parentKey] || []).map((s) => (
-      <div key={s.id}>
+      <div key={s.id} className="space-y-1">
         <div
-          className="flex flex-wrap items-center gap-2 py-2 interactive hover:bg-elevated/60"
-          style={{ paddingLeft: depth * 24 + 16 }}
+          className="group flex flex-wrap items-center justify-between gap-3 rounded-xl border border-line bg-surface p-2.5 transition-all hover:border-line-strong hover:bg-elevated/70"
+          style={{ marginLeft: `${depth * 24}px` }}
         >
-          <Icon name="chevronRight" size={13} className="text-ink-faint" />
-          <span className="text-sm font-medium text-ink">{s.name}</span>
-          <Badge color={SEG_BADGE[s.type]}>{s.type}</Badge>
-          <span className="text-xs text-ink-faint">
-            Parent Ã‚Â· {nameById[s.parentId] || 'Top level'}
-          </span>
+          <div className="flex min-w-0 flex-1 items-center gap-2.5">
+            {depth > 0 && <Icon name="chevronRight" size={13} className="shrink-0 text-ink-faint" />}
+            <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-elevated text-ink-muted">
+              <Icon name="layers" size={13} />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2">
+                <span className="truncate text-sm font-semibold text-ink">{s.name}</span>
+                {s.shortName && (
+                  <span className="rounded bg-elevated px-1.5 py-0.5 text-[10px] font-bold text-ink-muted">
+                    {s.shortName}
+                  </span>
+                )}
+                <span
+                  className={`rounded-full px-2 py-0.5 text-[10px] font-semibold tracking-wide ${
+                    TYPE_PILL[s.type] || TYPE_PILL.District
+                  }`}
+                >
+                  {s.type}
+                </span>
+              </div>
+              <div className="mt-0.5 flex flex-wrap items-center gap-2 text-xs text-ink-faint">
+                <span>Parent · {nameById[s.parentId] || 'Top level'}</span>
+                {s.publicGroupId && (
+                  <span className="font-mono text-[11px] text-ink-faint">ID: {s.publicGroupId}</span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {canManage && (
+            <div className="flex items-center gap-1 opacity-80 transition-opacity group-hover:opacity-100">
+              <Button variant="ghost" size="sm" onClick={() => openEdit(s)} className="h-7 px-2 text-xs">
+                <Icon name="edit" size={12} className="mr-1" />
+                Edit
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setDeleteTarget(s)}
+                className="h-7 px-2 text-xs text-danger hover:bg-danger/10 hover:text-danger"
+              >
+                <Icon name="trash" size={12} />
+              </Button>
+            </div>
+          )}
         </div>
-        {render(s.id, depth + 1)}
+        {renderTree(s.id, depth + 1)}
       </div>
     ));
+
   return (
-    <Panel className="py-2">
-      {segments.length ? (
-        render('root', 0)
-      ) : (
-        <div className="px-5 py-8 text-center text-sm text-ink-faint">No segments yet.</div>
+    <div className="space-y-4">
+      {/* Top Action Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 className="font-display text-base font-semibold text-ink">Service Provider Segments</h2>
+          <p className="text-xs text-ink-muted">
+            {segments.length} {segments.length === 1 ? 'segment' : 'segments'} configured for {account.name}
+          </p>
+        </div>
+        {canManage && (
+          <Button variant="primary" size="sm" onClick={openNew}>
+            <Icon name="plus" size={13} className="mr-1.5" />
+            New Segment
+          </Button>
+        )}
+      </div>
+
+      {/* Hierarchy Info Banner */}
+      <div className="flex items-start gap-2.5 rounded-xl border border-cyan-500/30 bg-cyan-500/10 p-3 text-xs text-ink-muted dark:border-cyan-500/20 dark:bg-cyan-500/5">
+        <Icon name="info" size={14} className="mt-0.5 shrink-0 text-cyan-600 dark:text-cyan-400" />
+        <div>
+          <span className="font-semibold text-ink">Hierarchy Rules: </span>
+          Segments follow the structure{' '}
+          <strong className="text-ink">Top → Market Area → District → Division</strong>. A parent has read access
+          to all child data.
+        </div>
+      </div>
+
+      <Panel className="space-y-2 p-3 sm:p-4">
+        {segments.length ? (
+          renderTree('root', 0)
+        ) : (
+          <div className="px-5 py-8 text-center text-sm text-ink-faint">No segments configured yet.</div>
+        )}
+      </Panel>
+
+      {/* Segment Editor Drawer */}
+      {isDrawerOpen && (
+        <FormDrawer
+          title={editingSegment ? `Edit: ${editingSegment.name}` : 'New Service Provider Segment'}
+          subtitle={`Scoped to ${account.name}`}
+          onClose={() => setIsDrawerOpen(false)}
+          isOpen
+        >
+          <form onSubmit={saveSegment} className="space-y-6">
+            {error && (
+              <div className="rounded-lg border border-danger/30 bg-danger/10 px-3.5 py-2.5 text-xs text-danger">
+                {error}
+              </div>
+            )}
+
+            <FieldSection title="Information">
+              <Field label="Segment Type" required>
+                <Select
+                  value={form.type}
+                  onChange={(type) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      type,
+                      parentId: type === 'Top' ? '' : prev.parentId,
+                    }))
+                  }
+                  options={['Top', 'Market Area', 'District', 'Division']}
+                />
+                <p className="mt-1 text-[11px] text-ink-muted">
+                  Hierarchy: Top → Market Area → District → Division
+                </p>
+              </Field>
+
+              <Field label="Segment Name" required>
+                <TextInput
+                  value={form.name}
+                  onChange={(name) => setForm((prev) => ({ ...prev, name }))}
+                  placeholder="e.g. Hauler 1, Downtown District"
+                  required
+                />
+              </Field>
+
+              <Field label="Short Code / Name">
+                <TextInput
+                  value={form.shortName}
+                  onChange={(shortName) => setForm((prev) => ({ ...prev, shortName }))}
+                  placeholder="e.g. H1, DT"
+                />
+              </Field>
+
+              {form.type !== 'Top' && (
+                <Field label="Parent Segment">
+                  <Select
+                    value={parentNameById[form.parentId] || '(No Parent / Top Level)'}
+                    onChange={(val) =>
+                      setForm((prev) => ({ ...prev, parentId: parentIdByName[val] || '' }))
+                    }
+                    options={parentOptions}
+                  />
+                </Field>
+              )}
+
+              <div className="pt-2">
+                <Checkbox
+                  checked={form.delaySharing}
+                  onChange={(delaySharing) => setForm((prev) => ({ ...prev, delaySharing }))}
+                  label="Delay Sharing"
+                />
+              </div>
+
+              {form.delaySharing && (
+                <Field label="Delay Duration (seconds)">
+                  <TextInput
+                    type="number"
+                    value={form.delayDuration}
+                    onChange={(delayDuration) => setForm((prev) => ({ ...prev, delayDuration }))}
+                    placeholder="300"
+                  />
+                </Field>
+              )}
+            </FieldSection>
+
+            <FieldSection title="Record Sharing">
+              <Field label="Public Group ID">
+                <TextInput
+                  value={form.publicGroupId}
+                  onChange={(publicGroupId) => setForm((prev) => ({ ...prev, publicGroupId }))}
+                  placeholder="Auto-generated (e.g. 00G4M000002I9lQUAQ)"
+                  className="font-mono text-xs"
+                />
+              </Field>
+            </FieldSection>
+
+            <div className="flex items-center justify-end gap-2.5 border-t border-line pt-4">
+              <Button variant="ghost" onClick={() => setIsDrawerOpen(false)} disabled={busy} type="button">
+                Cancel
+              </Button>
+              <Button variant="primary" disabled={busy} type="submit">
+                {busy ? 'Saving...' : editingSegment ? 'Save Changes' : 'Create Segment'}
+              </Button>
+            </div>
+          </form>
+        </FormDrawer>
       )}
-    </Panel>
+
+      {/* Delete Safeguard Dialog */}
+      {deleteTarget && (
+        <ConfirmDialog
+          title="Delete Segment"
+          message={`Are you sure you want to delete "${deleteTarget.name}"?`}
+          confirmLabel="Delete Segment"
+          variant="danger"
+          onConfirm={confirmDelete}
+          onCancel={() => setDeleteTarget(null)}
+        />
+      )}
+    </div>
   );
 }
 

@@ -5,5 +5,8 @@ export {
   useUpdateAccount,
   useUsers,
   useSegments,
+  useCreateSegment,
+  useUpdateSegment,
+  useDeleteSegment,
   useProducts,
 } from '@backend/hooks/useAccounts.js';
