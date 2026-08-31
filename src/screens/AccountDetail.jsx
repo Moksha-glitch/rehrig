@@ -31,9 +31,9 @@ import {
   useDeleteSegment,
 } from '../hooks/useAccounts.js';
 import { useCreateContact, useRecords, useUpdateContact } from '../hooks/useRecords.js';
-import { useNotificationConfig } from '../hooks/useConfig.js';
 import { getErrorMessage } from '../lib/errors.js';
 import { PICKLISTS } from '../data/picklists.js';
+import { SegmentEditorDrawer } from './SegmentsDirectory.jsx';
 
 const TABS = [
   { key: 'details', label: 'Details' },
@@ -1297,24 +1297,12 @@ function ProductsTab({ products }) {
 
 function SegmentsTab({ account, segments, canManage = true, onChanged }) {
   const { toast } = useStore();
-  const createSegment = useCreateSegment();
-  const updateSegment = useUpdateSegment();
   const deleteSegment = useDeleteSegment();
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [editingSegment, setEditingSegment] = useState(null);
+  const [drawerParentId, setDrawerParentId] = useState('');
   const [deleteTarget, setDeleteTarget] = useState(null);
-  const [form, setForm] = useState({
-    name: '',
-    shortName: '',
-    type: 'District',
-    parentId: '',
-    delaySharing: false,
-    delayDuration: 0,
-    publicGroupId: '',
-  });
-  const [error, setError] = useState('');
-  const [busy, setBusy] = useState(false);
 
   const byParent = useMemo(() => {
     const map = {};
@@ -1330,99 +1318,29 @@ function SegmentsTab({ account, segments, canManage = true, onChanged }) {
     [segments]
   );
 
-  const eligibleParents = useMemo(() => {
-    if (form.type === 'Top') return [];
-    const hierarchyOrder = ['Top', 'Market Area', 'District', 'Division'];
-    const currentRank = hierarchyOrder.indexOf(form.type);
-
-    return segments.filter((s) => {
-      if (editingSegment && s.id === editingSegment.id) return false;
-      const parentRank = hierarchyOrder.indexOf(s.type);
-      return parentRank !== -1 && currentRank !== -1 && parentRank < currentRank;
-    });
-  }, [segments, form.type, editingSegment]);
-
-  const parentOptions = ['(No Parent / Top Level)', ...eligibleParents.map((p) => p.name)];
-  const parentIdByName = Object.fromEntries(eligibleParents.map((p) => [p.name, p.id]));
-  const parentNameById = Object.fromEntries(segments.map((p) => [p.id, p.name]));
-
-  const openNew = () => {
+  const openNewRoot = () => {
     setEditingSegment(null);
-    setForm({
-      name: '',
-      shortName: '',
-      type: 'District',
-      parentId: '',
-      delaySharing: false,
-      delayDuration: 0,
-      publicGroupId: '',
-    });
-    setError('');
+    setDrawerParentId('');
+    setIsDrawerOpen(true);
+  };
+
+  const openNewChild = (parentSeg) => {
+    setEditingSegment(null);
+    setDrawerParentId(parentSeg.id);
     setIsDrawerOpen(true);
   };
 
   const openEdit = (seg) => {
     setEditingSegment(seg);
-    setForm({
-      name: seg.name || seg.segmentName || '',
-      shortName: seg.shortName || '',
-      type: seg.type || 'District',
-      parentId: seg.parentId || '',
-      delaySharing: !!seg.delaySharing,
-      delayDuration: seg.delayDuration || 0,
-      publicGroupId: seg.publicGroupId || '',
-    });
-    setError('');
+    setDrawerParentId(seg.parentId || '');
     setIsDrawerOpen(true);
-  };
-
-  const saveSegment = async (e) => {
-    e.preventDefault();
-    if (!form.name.trim()) {
-      setError('Segment name is required.');
-      return;
-    }
-
-    setBusy(true);
-    setError('');
-
-    const payload = {
-      accountId: account.id,
-      name: form.name.trim(),
-      segmentName: form.name.trim(),
-      shortName: form.shortName.trim() || form.name.slice(0, 4).toUpperCase(),
-      type: form.type,
-      parentId: form.type === 'Top' ? null : form.parentId || null,
-      delaySharing: !!form.delaySharing,
-      delayDuration: Number(form.delayDuration) || 0,
-      publicGroupId:
-        form.publicGroupId.trim() ||
-        editingSegment?.publicGroupId ||
-        `00G4M00000${Math.random().toString(36).substring(2, 9).toUpperCase()}`,
-    };
-
-    try {
-      if (!editingSegment) {
-        await createSegment.mutateAsync(payload);
-        toast(`Segment "${payload.name}" created`);
-      } else {
-        await updateSegment.mutateAsync({ id: editingSegment.id, changes: payload });
-        toast(`Segment "${payload.name}" updated`);
-      }
-      onChanged?.();
-      setIsDrawerOpen(false);
-    } catch (err) {
-      setError(getErrorMessage(err, 'Failed to save segment.'));
-    } finally {
-      setBusy(false);
-    }
   };
 
   const confirmDelete = async () => {
     if (!deleteTarget) return;
     try {
       await deleteSegment.mutateAsync(deleteTarget.id);
-      toast(`Segment "${deleteTarget.name}" deleted`);
+      toast(`Segment "${deleteTarget.name}" deleted successfully`);
       onChanged?.();
     } catch (err) {
       toast(getErrorMessage(err, 'Failed to delete segment.'), 'danger');
@@ -1447,12 +1365,18 @@ function SegmentsTab({ account, segments, canManage = true, onChanged }) {
         >
           <div className="flex min-w-0 flex-1 items-center gap-2.5">
             {depth > 0 && <Icon name="chevronRight" size={13} className="shrink-0 text-ink-faint" />}
-            <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-elevated text-ink-muted">
-              <Icon name="layers" size={13} />
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-elevated text-ink-muted">
+              <Icon name="layers" size={14} />
             </div>
             <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2">
-                <span className="truncate text-sm font-semibold text-ink">{s.name}</span>
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => canManage && openEdit(s)}
+                  className="truncate text-left text-sm font-semibold text-ink hover:text-brand"
+                >
+                  {s.name}
+                </button>
                 {s.shortName && (
                   <span className="rounded bg-elevated px-1.5 py-0.5 text-[10px] font-bold text-ink-muted">
                     {s.shortName}
@@ -1467,9 +1391,14 @@ function SegmentsTab({ account, segments, canManage = true, onChanged }) {
                 </span>
               </div>
               <div className="mt-0.5 flex flex-wrap items-center gap-2 text-xs text-ink-faint">
-                <span>Parent · {nameById[s.parentId] || 'Top level'}</span>
+                {s.parentId && <span>Parent · {nameById[s.parentId] || 'Top level'}</span>}
                 {s.publicGroupId && (
                   <span className="font-mono text-[11px] text-ink-faint">ID: {s.publicGroupId}</span>
+                )}
+                {s.delaySharing && (
+                  <span className="text-[11px] font-medium text-amber-600 dark:text-amber-400">
+                    Delay: {s.delayDuration}s
+                  </span>
                 )}
               </div>
             </div>
@@ -1477,6 +1406,18 @@ function SegmentsTab({ account, segments, canManage = true, onChanged }) {
 
           {canManage && (
             <div className="flex items-center gap-1 opacity-80 transition-opacity group-hover:opacity-100">
+              {s.type !== 'Division' && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => openNewChild(s)}
+                  className="h-7 px-2 text-xs text-brand hover:bg-brand/10 hover:text-brand"
+                  title={`Add child segment under ${s.name}`}
+                >
+                  <Icon name="plus" size={12} className="mr-1" />
+                  Sub-Segment
+                </Button>
+              )}
               <Button variant="ghost" size="sm" onClick={() => openEdit(s)} className="h-7 px-2 text-xs">
                 <Icon name="edit" size={12} className="mr-1" />
                 Edit
@@ -1507,7 +1448,7 @@ function SegmentsTab({ account, segments, canManage = true, onChanged }) {
           </p>
         </div>
         {canManage && (
-          <Button variant="primary" size="sm" onClick={openNew}>
+          <Button variant="primary" size="sm" onClick={openNewRoot}>
             <Icon name="plus" size={13} className="mr-1.5" />
             New Segment
           </Button>
@@ -1535,116 +1476,30 @@ function SegmentsTab({ account, segments, canManage = true, onChanged }) {
 
       {/* Segment Editor Drawer */}
       {isDrawerOpen && (
-        <FormDrawer
-          title={editingSegment ? `Edit: ${editingSegment.name}` : 'New Service Provider Segment'}
-          subtitle={`Scoped to ${account.name}`}
-          onClose={() => setIsDrawerOpen(false)}
-          isOpen
-        >
-          <form onSubmit={saveSegment} className="space-y-6">
-            {error && (
-              <div className="rounded-lg border border-danger/30 bg-danger/10 px-3.5 py-2.5 text-xs text-danger">
-                {error}
-              </div>
-            )}
-
-            <FieldSection title="Information">
-              <Field label="Segment Type" required>
-                <Select
-                  value={form.type}
-                  onChange={(type) =>
-                    setForm((prev) => ({
-                      ...prev,
-                      type,
-                      parentId: type === 'Top' ? '' : prev.parentId,
-                    }))
-                  }
-                  options={['Top', 'Market Area', 'District', 'Division']}
-                />
-                <p className="mt-1 text-[11px] text-ink-muted">
-                  Hierarchy: Top → Market Area → District → Division
-                </p>
-              </Field>
-
-              <Field label="Segment Name" required>
-                <TextInput
-                  value={form.name}
-                  onChange={(name) => setForm((prev) => ({ ...prev, name }))}
-                  placeholder="e.g. Hauler 1, Downtown District"
-                  required
-                />
-              </Field>
-
-              <Field label="Short Code / Name">
-                <TextInput
-                  value={form.shortName}
-                  onChange={(shortName) => setForm((prev) => ({ ...prev, shortName }))}
-                  placeholder="e.g. H1, DT"
-                />
-              </Field>
-
-              {form.type !== 'Top' && (
-                <Field label="Parent Segment">
-                  <Select
-                    value={parentNameById[form.parentId] || '(No Parent / Top Level)'}
-                    onChange={(val) =>
-                      setForm((prev) => ({ ...prev, parentId: parentIdByName[val] || '' }))
-                    }
-                    options={parentOptions}
-                  />
-                </Field>
-              )}
-
-              <div className="pt-2">
-                <Checkbox
-                  checked={form.delaySharing}
-                  onChange={(delaySharing) => setForm((prev) => ({ ...prev, delaySharing }))}
-                  label="Delay Sharing"
-                />
-              </div>
-
-              {form.delaySharing && (
-                <Field label="Delay Duration (seconds)">
-                  <TextInput
-                    type="number"
-                    value={form.delayDuration}
-                    onChange={(delayDuration) => setForm((prev) => ({ ...prev, delayDuration }))}
-                    placeholder="300"
-                  />
-                </Field>
-              )}
-            </FieldSection>
-
-            <FieldSection title="Record Sharing">
-              <Field label="Public Group ID">
-                <TextInput
-                  value={form.publicGroupId}
-                  onChange={(publicGroupId) => setForm((prev) => ({ ...prev, publicGroupId }))}
-                  placeholder="Auto-generated (e.g. 00G4M000002I9lQUAQ)"
-                  className="font-mono text-xs"
-                />
-              </Field>
-            </FieldSection>
-
-            <div className="flex items-center justify-end gap-2.5 border-t border-line pt-4">
-              <Button variant="ghost" onClick={() => setIsDrawerOpen(false)} disabled={busy} type="button">
-                Cancel
-              </Button>
-              <Button variant="primary" disabled={busy} type="submit">
-                {busy ? 'Saving...' : editingSegment ? 'Save Changes' : 'Create Segment'}
-              </Button>
-            </div>
-          </form>
-        </FormDrawer>
+        <SegmentEditorDrawer
+          accounts={[account]}
+          segments={segments}
+          segment={editingSegment}
+          defaultAccountId={account.id}
+          defaultParentId={drawerParentId}
+          onClose={() => {
+            setIsDrawerOpen(false);
+            setEditingSegment(null);
+            setDrawerParentId('');
+          }}
+          onSaved={() => onChanged?.()}
+        />
       )}
 
       {/* Delete Safeguard Dialog */}
       {deleteTarget && (
         <ConfirmDialog
+          open={true}
           title="Delete Segment"
-          message={`Are you sure you want to delete "${deleteTarget.name}"?`}
+          description={`Are you sure you want to delete "${deleteTarget.name}"?`}
           confirmLabel="Delete Segment"
-          variant="danger"
+          cancelLabel="Cancel"
+          severity="danger"
           onConfirm={confirmDelete}
           onCancel={() => setDeleteTarget(null)}
         />
