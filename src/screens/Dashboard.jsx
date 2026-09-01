@@ -446,7 +446,7 @@ export default function Dashboard() {
         workOrdersQuery.refetch(); dispatchesQuery.refetch(); trucksQuery.refetch(); assetsQuery.refetch(); tipsQuery.refetch(); accountsQuery.refetch(); settingsQuery.refetch();
       }}>
         {layout.length ? (
-          <div className="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-12">
+          <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-12">
             {layout.map((id, index) => {
               const widget = DASHBOARD_WIDGET_BY_ID[id];
               if (!widget) return null;

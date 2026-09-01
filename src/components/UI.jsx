@@ -6,7 +6,7 @@ import Icon from './Icon.jsx';
 export function Page({ children, wide = false, className = '' }) {
   return (
     <div
-      className={`mx-auto min-w-0 w-full animate-fade-up px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10 ${className}`}
+      className={`mx-auto min-w-0 w-full max-w-screen-2xl animate-fade-up px-5 py-6 sm:px-7 sm:py-8 lg:px-10 lg:py-10 ${className}`}
     >
       {children}
     </div>
@@ -15,18 +15,18 @@ export function Page({ children, wide = false, className = '' }) {
 
 export function PageHeader({ overline, title, description, actions, meta, titleExtra }) {
   return (
-    <header className="mb-8 sm:mb-10">
-      <div className="flex flex-wrap items-end justify-between gap-5">
+    <header className="mb-6 sm:mb-8">
+      <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="min-w-0 max-w-2xl">
-          {overline && <p className="type-overline mb-2.5">{overline}</p>}
+          {overline && <p className="type-overline mb-2">{overline}</p>}
           <div className="flex min-w-0 flex-wrap items-center gap-2.5">
-            <h1 className="min-w-0 break-words font-display text-display-md text-ink sm:text-[2.15rem]">{title}</h1>
+            <h1 className="min-w-0 break-words font-display text-display-md text-ink sm:text-[2rem]">{title}</h1>
             {titleExtra}
           </div>
           {description && (
-            <div className="mt-2.5 max-w-xl text-sm leading-relaxed text-ink-muted">{description}</div>
+            <div className="mt-2 max-w-xl text-sm leading-relaxed text-ink-muted">{description}</div>
           )}
-          {meta && <div className="mt-2 text-sm text-ink-muted">{meta}</div>}
+          {meta && <div className="mt-1.5 text-sm text-ink-muted">{meta}</div>}
         </div>
         {actions && (
           <div className="ml-auto flex max-w-full flex-wrap items-center justify-end gap-2 sm:shrink-0">
@@ -34,7 +34,7 @@ export function PageHeader({ overline, title, description, actions, meta, titleE
           </div>
         )}
       </div>
-      <div className="hairline-rule mt-7 animate-rule-draw" />
+      <div className="hairline-rule mt-6 animate-rule-draw" />
     </header>
   );
 }
@@ -84,10 +84,12 @@ export function StatStrip({ items, compact = false }) {
   );
 }
 
-export function Toolbar({ children, className = '' }) {
+export function Toolbar({ children, className = '', sticky = true }) {
   return (
     <div
-      className={`toolbar flex flex-wrap items-center gap-3 border-b border-line bg-elevated/40 px-4 py-3.5 sm:flex-nowrap sm:px-5 ${className}`}
+      className={`toolbar flex flex-wrap items-center gap-3 px-4 py-3 sm:flex-nowrap sm:px-5 ${
+        sticky ? 'sticky-toolbar' : 'border-b border-line bg-elevated/40'
+      } ${className}`}
     >
       {children}
     </div>
@@ -188,7 +190,7 @@ export function StatusDot({ color = 'emerald', label }) {
   );
 }
 
-export function Button({ variant = 'secondary', children, className = '', ...rest }) {
+export function Button({ variant = 'secondary', size, children, className = '', ...rest }) {
   const variants = {
     primary: 'btn-primary',
     accent: 'btn-brand',
@@ -197,9 +199,18 @@ export function Button({ variant = 'secondary', children, className = '', ...res
     secondary: 'btn-secondary',
     ghost:
       'inline-flex items-center justify-center gap-1.5 rounded-control px-3.5 py-2 text-sm font-medium text-ink-muted interactive hover:bg-elevated hover:text-ink',
+    danger:
+      'inline-flex items-center justify-center gap-1.5 rounded-control bg-danger px-3.5 py-2 text-sm font-semibold text-white interactive hover:brightness-90 disabled:opacity-50',
   };
+  const sizes = {
+    xs: '!px-2 !py-1 !text-[11px]',
+    sm: '!px-2.5 !py-1.5 !text-xs',
+    md: '',
+    lg: '!px-5 !py-3 !text-base',
+  };
+  const sizeClass = size ? (sizes[size] ?? '') : '';
   return (
-    <button className={`${variants[variant]} ${className}`} {...rest}>
+    <button className={`${variants[variant]} ${sizeClass} ${className}`} {...rest}>
       {children}
     </button>
   );
@@ -384,7 +395,7 @@ export function Tabs({ items, value, onChange, label = 'Sections', className = '
     <div
       role="tablist"
       aria-label={label}
-      className={`flex gap-1 overflow-x-auto border-b border-line ${className}`}
+      className={`flex gap-0.5 overflow-x-auto border-b border-line scroll-thin ${className}`}
     >
       {items.map((item, index) => {
         const selected = item.key === value;
@@ -397,10 +408,10 @@ export function Tabs({ items, value, onChange, label = 'Sections', className = '
             tabIndex={selected ? 0 : -1}
             onClick={() => onChange(item.key)}
             onKeyDown={(event) => onKeyDown(event, index)}
-            className={`whitespace-nowrap border-b-2 px-3 py-2.5 text-sm font-medium ${
+            className={`whitespace-nowrap border-b-2 px-3.5 py-3 text-sm transition-colors duration-snappy ${
               selected
-                ? 'border-brand text-ink'
-                : 'border-transparent text-ink-muted hover:text-ink'
+                ? 'border-brand font-semibold text-ink'
+                : 'border-transparent font-medium text-ink-muted hover:border-line-strong hover:text-ink'
             }`}
           >
             {item.label}
@@ -415,12 +426,12 @@ export function Table({ columns, children, className = '', caption, label }) {
   return (
     <div className={`min-w-0 overflow-x-auto scroll-thin ${className}`}>
       <table
-        className="w-full text-left text-sm [&_td]:overflow-hidden [&_th]:overflow-hidden"
+        className="w-full text-left text-sm [&_td]:overflow-hidden [&_th]:overflow-hidden [&_tbody_tr:last-child_td]:border-b-0"
         aria-label={caption ? undefined : label}
       >
         {caption && <caption className="sr-only">{caption}</caption>}
         <thead>
-          <tr className="border-b border-line bg-elevated/30">
+          <tr className="border-b border-line bg-elevated/50">
             {columns.map((c, i) => {
               const text = typeof c === 'object' ? c.label : c;
               const extra = typeof c === 'object' ? c.className || '' : '';
@@ -428,7 +439,7 @@ export function Table({ columns, children, className = '', caption, label }) {
                 <th
                   key={typeof c === 'object' ? c.key || c.label || i : `${c}-${i}`}
                   scope="col"
-                  className={`type-overline px-3 py-3 font-semibold sm:px-4 ${extra}`}
+                  className={`type-overline px-4 py-3 font-semibold sm:px-5 ${extra}`}
                 >
                   {text}
                 </th>
@@ -721,16 +732,17 @@ export function DrawerActions({ children, className = '' }) {
 }
 
 /** Grouped field block inside drawer/form bodies. */
-export function FieldSection({ title, description, children, className = '' }) {
+export function FieldSection({ title, description, children, className = '', cols = 2 }) {
+  const colClass = { 1: 'grid-cols-1', 2: 'sm:grid-cols-2', 3: 'sm:grid-cols-3' }[cols] ?? 'sm:grid-cols-2';
   return (
-    <section className={`space-y-3 ${className}`}>
+    <section className={`space-y-4 ${className}`}>
       {(title || description) && (
-        <div>
+        <div className="border-b border-line pb-2">
           {title && <h3 className="font-display text-title-sm text-ink">{title}</h3>}
           {description && <p className="mt-1 text-sm text-ink-muted">{description}</p>}
         </div>
       )}
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">{children}</div>
+      <div className={`grid grid-cols-1 gap-4 ${colClass}`}>{children}</div>
     </section>
   );
 }
@@ -800,7 +812,7 @@ export function FormDrawer({
       >
         <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
           <div
-            className={`min-h-0 flex-1 space-y-4 overflow-y-auto px-6 py-5 scroll-thin ${bodyClassName}`}
+            className={`min-h-0 flex-1 space-y-6 overflow-y-auto px-6 py-6 scroll-thin ${bodyClassName}`}
           >
             {children}
             {error && (
@@ -839,13 +851,13 @@ export function EmptyState({
   className = '',
 }) {
   return (
-    <div className={`flex flex-col items-center px-6 py-12 text-center ${className}`}>
-      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-elevated text-ink-muted">
-        <Icon name={icon} size={18} />
+    <div className={`flex flex-col items-center px-6 py-14 text-center ${className}`}>
+      <span className="flex h-12 w-12 items-center justify-center rounded-2xl border border-line bg-elevated text-ink-muted shadow-raise">
+        <Icon name={icon} size={20} />
       </span>
-      <h3 className="mt-3 font-display text-title-sm text-ink">{title}</h3>
-      {description && <p className="mt-1 max-w-md text-sm text-ink-muted">{description}</p>}
-      {action && <div className="mt-4">{action}</div>}
+      <h3 className="mt-4 font-display text-title-sm text-ink">{title}</h3>
+      {description && <p className="mt-1.5 max-w-sm text-sm leading-relaxed text-ink-muted">{description}</p>}
+      {action && <div className="mt-5">{action}</div>}
     </div>
   );
 }

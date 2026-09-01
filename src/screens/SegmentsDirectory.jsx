@@ -419,8 +419,8 @@ export default function SegmentsDirectory() {
       return (
         <div key={seg.id} className="space-y-1.5">
           <div
-            className="group flex flex-wrap items-center justify-between gap-3 rounded-xl border border-line bg-surface p-3 transition-all hover:border-line-strong hover:bg-elevated/70"
-            style={{ marginLeft: `${depth * 24}px` }}
+            className="group flex flex-wrap items-center justify-between gap-3 rounded-xl border border-line bg-surface p-3.5 transition-all hover:border-line-strong hover:bg-elevated/70 hover:shadow-raise"
+            style={{ marginLeft: `${depth * 28}px` }}
           >
             <div className="flex min-w-0 flex-1 items-center gap-3">
               {/* Toggle expand/collapse if has subchildren, otherwise branch connector */}
@@ -466,7 +466,7 @@ export default function SegmentsDirectory() {
                     </span>
                   )}
                   <span
-                    className={`rounded-full px-2.5 py-0.5 text-[10px] font-semibold tracking-wide ${cfg.pillClass}`}
+                    className={`rounded-full px-2.5 py-0.5 text-[10.5px] font-semibold tracking-wide ${cfg.pillClass}`}
                   >
                     {seg.type}
                   </span>

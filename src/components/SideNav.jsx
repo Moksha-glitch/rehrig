@@ -109,7 +109,7 @@ function NavButton({ item, active, onClick, collapsed }) {
                 ? 'nav-item-active text-ink'
                 : 'text-ink-muted hover:bg-surface hover:text-ink'
             }`
-          : `nav-item flex w-full items-center gap-3 rounded-xl px-3 py-2 text-[13.5px] ${
+          : `nav-item flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-[13.5px] ${
               active ? 'nav-item-active' : 'text-ink-muted hover:bg-surface hover:text-ink'
             }`
       }
@@ -219,7 +219,7 @@ function FolderButton({ section, collapsed, open, active, onToggle, isItemActive
                     ? 'bg-surface/70 text-ink'
                     : 'text-ink-muted hover:bg-surface hover:text-ink'
               }`
-            : `nav-item flex w-full items-center gap-3 rounded-xl px-3 py-2 text-[13.5px] ${
+            : `nav-item flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-[13.5px] ${
                 active
                   ? 'nav-item-active text-ink'
                   : 'text-ink-muted hover:bg-surface hover:text-ink'
@@ -413,8 +413,8 @@ export default function SideNav({ open, onToggle }) {
         </div>
 
         <nav
-          className={`flex min-h-0 flex-1 flex-col overflow-y-auto pb-3 scroll-thin ${
-            open ? 'space-y-0.5 px-2.5' : 'items-center gap-1 px-1.5'
+          className={`flex min-h-0 flex-1 flex-col overflow-y-auto pt-1 pb-3 scroll-thin ${
+            open ? 'space-y-0.5 px-3' : 'items-center gap-1 px-2'
           }`}
         >
           {tree.map((node) => {
@@ -450,7 +450,7 @@ export default function SideNav({ open, onToggle }) {
           })}
         </nav>
 
-        <div className={`shrink-0 border-t border-line ${open ? 'px-3 py-3' : 'px-1.5 py-3'}`}>
+        <div className={`shrink-0 border-t border-line ${open ? 'px-3 py-4' : 'px-2 py-3'}`}>
           {open && scopedAccount && (
             <div className="mb-2 truncate px-2 text-[11px] text-ink-faint">{scopedAccount.name}</div>
           )}

@@ -292,7 +292,8 @@ export default function AccountDetail({ accountId, tab }) {
       <div
         role="tablist"
         aria-label="Account sections"
-        className="mb-6 flex gap-0 overflow-x-auto border-b border-line bg-surface/60 scroll-thin"
+        className="sticky top-0 z-10 mb-6 flex gap-0 overflow-x-auto border-b border-line scroll-thin"
+        style={{ background: 'color-mix(in srgb, var(--color-surface) 95%, transparent)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}
       >
         {visibleTabs.map((t) => (
           <button
@@ -301,10 +302,10 @@ export default function AccountDetail({ accountId, tab }) {
             onClick={() => setTab(t.key)}
             role="tab"
             aria-selected={activeTab === t.key}
-            className={`whitespace-nowrap border-b-2 px-3.5 py-2.5 text-sm font-medium transition duration-snappy ${
+            className={`whitespace-nowrap border-b-2 px-3.5 py-3 text-sm transition duration-snappy ${
               activeTab === t.key
-                ? 'border-brand text-ink'
-                : 'border-transparent text-ink-faint hover:text-ink-muted'
+                ? 'border-brand font-semibold text-ink'
+                : 'border-transparent font-medium text-ink-faint hover:border-line-strong hover:text-ink'
             }`}
           >
             {t.label}

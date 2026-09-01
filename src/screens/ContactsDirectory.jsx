@@ -239,23 +239,23 @@ export default function ContactsDirectory() {
           >
             {rows.map((c) => (
               <tr key={c.id} className="interactive hover:bg-elevated/70">
-                <td className="max-w-[10rem] truncate px-4 py-3 font-medium text-ink">{c.name}</td>
-                <td className="max-w-[8rem] truncate px-4 py-3 text-ink-muted">{c.title}</td>
-                <td className="max-w-[12rem] truncate px-4 py-3 text-ink-muted">{c.email}</td>
-                <td className="max-w-[8rem] truncate px-4 py-3 text-ink-muted">{c.roleTitle}</td>
-                <td className="max-w-[10rem] truncate px-4 py-3 text-ink-muted">{accById[c.accountId]}</td>
-                <td className="max-w-[8rem] truncate px-4 py-3 text-ink-muted">{c.segment}</td>
-                <td className="px-4 py-3">
+                <td className="max-w-[10rem] truncate px-4 py-3.5 font-medium text-ink sm:px-5">{c.name}</td>
+                <td className="max-w-[8rem] truncate px-4 py-3.5 text-ink-muted sm:px-5">{c.title}</td>
+                <td className="max-w-[12rem] truncate px-4 py-3.5 text-ink-muted sm:px-5">{c.email}</td>
+                <td className="max-w-[8rem] truncate px-4 py-3.5 text-ink-muted sm:px-5">{c.roleTitle}</td>
+                <td className="max-w-[10rem] truncate px-4 py-3.5 text-ink-muted sm:px-5">{accById[c.accountId]}</td>
+                <td className="max-w-[8rem] truncate px-4 py-3.5 text-ink-muted sm:px-5">{c.segment}</td>
+                <td className="px-4 py-3.5 sm:px-5">
                   <Badge color={contactStatusColor(c)}>{contactStatus(c)}</Badge>
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-4 py-3.5 sm:px-5">
                   {c.isUserCreated && c.isUserActive ? (
                     <Badge color="green">Portal User</Badge>
                   ) : (
                     <Badge color="slate">Not enrolled</Badge>
                   )}
                 </td>
-                <td className="px-4 py-3 text-right">
+                <td className="px-4 py-3.5 text-right sm:px-5">
                   {canCreateAccounts && (
                     <button
                       type="button"
