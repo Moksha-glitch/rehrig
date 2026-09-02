@@ -31,6 +31,7 @@ import {
   useDeleteSegment,
 } from '../hooks/useAccounts.js';
 import { useCreateContact, useRecords, useUpdateContact } from '../hooks/useRecords.js';
+import { useNotificationConfig } from '../hooks/useConfig.js';
 import { getErrorMessage } from '../lib/errors.js';
 import { PICKLISTS } from '../data/picklists.js';
 import { SegmentEditorDrawer } from './SegmentsDirectory.jsx';

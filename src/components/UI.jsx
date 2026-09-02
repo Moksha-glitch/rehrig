@@ -119,7 +119,7 @@ export function SearchField({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="w-full border-0 border-b border-line bg-transparent py-2 pl-7 pr-2 text-sm text-ink placeholder:text-ink-faint focus:border-ink focus:outline-none focus:ring-0"
+        className="min-w-0 w-full border-0 border-b border-line bg-transparent py-2 pl-7 pr-2 text-sm text-ink placeholder:text-ink-faint focus:border-ink focus:outline-none focus:ring-0"
       />
     </div>
   );

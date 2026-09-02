@@ -794,7 +794,7 @@ export default function Wizard({ onClose, draftId = null }) {
               className="hidden w-60 shrink-0 overflow-y-auto border-r border-line bg-elevated/70 px-3 py-4 md:block scroll-thin"
             >
               {fromContract && (
-                <div className="mb-3 rounded-control border border-line bg-brand-soft px-3 py-2.5 text-[10px] text-brand-ink">
+                <div className="mb-3 rounded-control border border-line bg-brand-soft px-4 py-3 text-[10px] text-brand-ink">
                   <span className="font-semibold">From contract</span>
                   <div className="mt-0.5 truncate text-brand">{fileName}</div>
                 </div>
@@ -807,7 +807,7 @@ export default function Wizard({ onClose, draftId = null }) {
                     key={s.title}
                     type="button"
                     onClick={() => goto(s.index)}
-                    className={`mb-1 flex w-full items-start gap-3 rounded-control px-3 py-2.5 text-left transition ${
+                    className={`mb-1 flex w-full items-start gap-3 rounded-control px-4 py-3 text-left transition ${
                       current
                         ? 'bg-surface shadow-raise'
                         : s.highlight
@@ -888,7 +888,7 @@ export default function Wizard({ onClose, draftId = null }) {
               <h2 className="font-display mt-2 text-title-lg text-ink">{STEPS[step].title}</h2>
 
               {missingFields.length > 0 && step < LAST_STEP && (
-                <div className="mt-3 flex items-start gap-2 rounded-panel border border-line bg-warn-soft px-3 py-2.5">
+                <div className="mt-3 flex items-start gap-2 rounded-panel border border-line bg-warn-soft px-4 py-3">
                   <Icon name="alert" size={16} className="mt-0.5 shrink-0 text-warn" />
                   <div>
                     <div className="text-sm font-semibold text-ink-soft">
@@ -901,7 +901,7 @@ export default function Wizard({ onClose, draftId = null }) {
                 </div>
               )}
               {stepFilled && step < LAST_STEP && (
-                <div className="mt-3 flex items-start gap-2 rounded-panel border border-success/25 bg-success-soft px-3 py-2.5">
+                <div className="mt-3 flex items-start gap-2 rounded-panel border border-success/25 bg-success-soft px-4 py-3">
                   <Icon name="checkCircle" size={16} className="mt-0.5 shrink-0 text-success" />
                   <div className="text-sm font-medium text-ink-soft">
                     {sectionNote || 'This section looks good.'}
@@ -1033,7 +1033,7 @@ export default function Wizard({ onClose, draftId = null }) {
           onClose={() => setCancelOpen(false)}
         >
           <div className="px-6 py-4">
-            <div className="mb-4 flex items-start gap-2 rounded-panel border border-warn/30 bg-warn-soft px-3 py-2.5">
+            <div className="mb-4 flex items-start gap-2 rounded-panel border border-warn/30 bg-warn-soft px-4 py-3">
               <Icon name="alert" size={16} className="mt-0.5 shrink-0 text-warn" />
               <p className="text-sm text-ink-soft">
                 {hasFormProgress(f, phase, step)
@@ -1681,7 +1681,7 @@ function StepScreenAccess({ modules, onChange }) {
         Choose which screens this Service Provider account can see. Nothing is enabled until you turn
         it on.
       </p>
-      <div className="mt-4 flex items-start gap-2 rounded-panel border border-brand/25 bg-brand-soft px-3 py-2.5">
+      <div className="mt-4 flex items-start gap-2 rounded-panel border border-brand/25 bg-brand-soft px-4 py-3">
         <Icon name="help" size={16} className="mt-0.5 shrink-0 text-brand" />
         <p className="text-sm leading-relaxed text-ink-soft">
           Nothing is enabled by default. Turn on the screens this Service Provider should see, based
@@ -1696,7 +1696,7 @@ function StepScreenAccess({ modules, onChange }) {
           const access = moduleAccessState(group);
           return (
             <div key={group.module}>
-              <div className="flex items-center gap-3 px-3 py-3 sm:px-4">
+              <div className="flex items-center gap-3 px-4 py-3.5 sm:px-4">
                 <button
                   type="button"
                   onClick={() => toggleExpand(group.module)}
@@ -1807,7 +1807,7 @@ function Step8({ f, errors = {}, issues = [], onJump, onOpenAssistant }) {
         </div>
       )}
       {issues.length === 0 && (
-        <div className="mt-4 flex items-start gap-2 rounded-panel border border-success/25 bg-success-soft px-3 py-2.5">
+        <div className="mt-4 flex items-start gap-2 rounded-panel border border-success/25 bg-success-soft px-4 py-3">
           <Icon name="checkCircle" size={16} className="mt-0.5 shrink-0 text-success" />
           <p className="text-sm font-medium text-ink-soft">Everything looks good â€” you can activate this service provider.</p>
         </div>

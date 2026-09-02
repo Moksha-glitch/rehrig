@@ -87,10 +87,10 @@ export default function CustomersDirectory() {
                 (customer.accountIds || []).map((id) => accById[id]).find(Boolean) || null;
               return (
                 <tr key={customer.id} className="interactive hover:bg-elevated/70">
-                  <td className="mono px-3 py-3 text-ink-muted sm:px-4">
+                  <td className="mono px-4 py-3.5 text-ink-muted sm:px-5">
                     {customer.customerId || 'â€”'}
                   </td>
-                  <td className="min-w-0 px-3 py-3 sm:px-4">
+                  <td className="min-w-0 px-4 py-3.5 sm:px-5">
                     <button
                       type="button"
                       onClick={() =>
@@ -105,23 +105,23 @@ export default function CustomersDirectory() {
                     </button>
                   </td>
                   <td
-                    className={`max-w-[14rem] truncate px-3 py-3 text-ink-muted sm:px-4 ${
+                    className={`max-w-[14rem] truncate px-4 py-3.5 text-ink-muted sm:px-5 ${
                       compact ? 'hidden' : ''
                     }`}
                   >
                     {customer.email || 'â€”'}
                   </td>
-                  <td className="max-w-[12rem] truncate px-3 py-3 text-ink-muted sm:px-4">
+                  <td className="max-w-[12rem] truncate px-4 py-3.5 text-ink-muted sm:px-5">
                     {provider?.name || 'â€”'}
                   </td>
                   <td
-                    className={`max-w-[8rem] truncate px-3 py-3 text-ink-muted sm:px-4 ${
+                    className={`max-w-[8rem] truncate px-4 py-3.5 text-ink-muted sm:px-5 ${
                       compact ? 'hidden' : ''
                     }`}
                   >
                     {customer.scopeLabel || 'â€”'}
                   </td>
-                  <td className="px-3 py-3 sm:px-4">
+                  <td className="px-4 py-3.5 sm:px-5">
                     <Badge color={customer.active === false ? 'slate' : 'green'}>
                       {customer.active === false ? 'Inactive' : 'Active'}
                     </Badge>

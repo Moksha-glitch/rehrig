@@ -618,7 +618,7 @@ export function WizardChatbot({
 
         {busy && (
           <div className="flex justify-start" role="status" aria-label="Assistant is responding">
-            <div className="rounded-panel bg-elevated px-3 py-2.5">
+            <div className="rounded-panel bg-elevated px-4 py-3">
               <span className="inline-flex gap-1">
                 <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink-faint [animation-delay:0ms]" />
                 <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink-faint [animation-delay:150ms]" />
@@ -631,7 +631,7 @@ export function WizardChatbot({
       </div>
 
       {/* Options + composer */}
-      <div className="border-t border-line px-3 py-3">
+      <div className="border-t border-line px-4 py-3.5">
         {remaining > 0 && (
           <div className="mb-2.5 flex flex-wrap gap-1.5">
             {missingFields.map((f) => {

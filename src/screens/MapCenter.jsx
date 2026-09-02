@@ -292,7 +292,7 @@ export default function MapCenter() {
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
         <Panel className="lg:col-span-8" padded>
-          <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
+          <div className="mb-3 flex flex-wrap items-end justify-between gap-4">
             <div>
               <p className="type-overline">Geospatial</p>
               <p className="mt-1 font-display text-title-sm text-ink">Service areas</p>
@@ -332,7 +332,7 @@ export default function MapCenter() {
             </div>
           </div>
 
-          <fieldset className="mb-4 flex flex-wrap gap-4 rounded-panel border border-line px-3 py-2">
+          <fieldset className="mb-4 flex flex-wrap gap-5 rounded-panel border border-line px-4 py-2.5">
             <legend className="sr-only">Map layers</legend>
             {LAYERS.map((layer) => (
               <Checkbox
@@ -392,7 +392,7 @@ export default function MapCenter() {
           </div>
 
           {selectedDetail && (
-            <div className="mt-3 flex flex-col gap-2 rounded-panel border border-line p-3 text-sm sm:flex-row sm:items-center sm:justify-between">
+            <div className="mt-3 flex flex-col gap-2 rounded-panel border border-line p-4 text-sm sm:flex-row sm:items-center sm:justify-between">
               <div className="min-w-0">
                 <strong className="block truncate">{selectedDetail.title}</strong>
                 <span className="mt-0.5 block truncate text-ink-muted sm:mt-0 sm:ml-2 sm:inline">{selectedDetail.subtitle}</span>
@@ -439,7 +439,7 @@ export default function MapCenter() {
               },
               { icon: 'activity', value: activeDispatches.length, label: 'Active dispatches' },
             ].map((stat) => (
-              <div key={stat.label} className="bg-surface p-4">
+              <div key={stat.label} className="bg-surface p-5">
                 <Icon name={stat.icon} size={14} className="text-ink-faint" />
                 <div className="font-display mt-2 text-lg font-semibold text-ink">{stat.value}</div>
                 <div className="type-overline mt-1 !normal-case !tracking-normal">{stat.label}</div>

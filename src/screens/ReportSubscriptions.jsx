@@ -330,7 +330,7 @@ export default function ReportSubscriptions() {
             >
               {rows.map((row) => (
                 <tr key={row.id} className="interactive hover:bg-elevated/70">
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3.5">
                     <button
                       type="button"
                       className="link-brand text-left"
@@ -340,21 +340,21 @@ export default function ReportSubscriptions() {
                     </button>
                     <div className="mono mt-0.5 text-xs text-ink-faint">{row.id}</div>
                   </td>
-                  <td className="px-4 py-3 text-ink-muted">{cadenceLabel(row)}</td>
-                  <td className="max-w-[16rem] truncate px-4 py-3 text-ink-muted">
+                  <td className="px-4 py-3.5 text-ink-muted">{cadenceLabel(row)}</td>
+                  <td className="max-w-[16rem] truncate px-4 py-3.5 text-ink-muted">
                     {row.recipients}
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3.5">
                     <Badge color="cyan">{row.channel}</Badge>
                   </td>
-                  <td className="px-4 py-3 text-ink-muted">{row.format}</td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3.5 text-ink-muted">{row.format}</td>
+                  <td className="px-4 py-3.5">
                     <StatusDot
                       color={row.active ? 'emerald' : 'slate'}
                       label={nextRun(row)}
                     />
                   </td>
-                  <td className="px-4 py-3 text-right">
+                  <td className="px-4 py-3.5 text-right">
                     {canEdit ? (
                       <>
                         <button

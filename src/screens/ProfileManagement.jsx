@@ -102,7 +102,7 @@ function ProfileCard({ profile, onClick, index }) {
       style={{ animationDelay: `${index * 35}ms` }}
     >
       <div className="absolute inset-x-0 top-0 h-[2px] opacity-0 transition-opacity duration-200 group-hover:opacity-100 bg-brand/40" />
-      <div className="flex items-start gap-3.5 p-4">
+      <div className="flex items-start gap-3.5 p-5">
         <AvatarInitials role={profile.role} />
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
@@ -259,7 +259,7 @@ export default function ProfileManagement() {
       />
 
       {/* Stat strip */}
-      <div className="mb-6 grid grid-cols-3 gap-3 sm:gap-4">
+      <div className="mb-6 grid grid-cols-3 gap-3 sm:gap-5">
         {[
           { label: "Total profiles", value: profiles.length, icon: "shieldCheck", color: "brand" },
           { label: "Active", value: activeCount, icon: "check", color: "success" },
@@ -267,7 +267,7 @@ export default function ProfileManagement() {
         ].map((stat, i) => (
           <div
             key={stat.label}
-            className="flex items-center gap-3.5 rounded-xl border border-line bg-surface p-4 shadow-raise animate-fade-up"
+            className="flex items-center gap-3.5 rounded-xl border border-line bg-surface p-5 shadow-raise animate-fade-up"
             style={{ animationDelay: `${i * 40}ms` }}
           >
             <span

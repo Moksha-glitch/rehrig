@@ -474,7 +474,7 @@ export default function BulkImport() {
               {preview.slice(0, 5).map((row) => (
                 <tr key={row._row}>
                   {columns.slice(0, 4).map((h) => (
-                    <td key={h} className="px-4 py-3 text-ink-muted">
+                    <td key={h} className="px-4 py-3.5 text-ink-muted">
                       {row[h] || 'â€”'}
                     </td>
                   ))}
@@ -506,9 +506,9 @@ export default function BulkImport() {
         <Table columns={['Object', 'Rows', 'Status', 'Timestamp']}>
           {historyEntries.map((entry) => (
             <tr key={entry.id}>
-              <td className="px-4 py-3 font-medium text-ink">{entry.object}</td>
-              <td className="mono px-4 py-3 text-ink-muted">{entry.rowCount ?? 'â€”'}</td>
-              <td className="px-4 py-3">
+              <td className="px-4 py-3.5 font-medium text-ink">{entry.object}</td>
+              <td className="mono px-4 py-3.5 text-ink-muted">{entry.rowCount ?? 'â€”'}</td>
+              <td className="px-4 py-3.5">
                 <Badge
                   color={
                     entry.status === 'Complete'
@@ -523,7 +523,7 @@ export default function BulkImport() {
                   {entry.status}
                 </Badge>
               </td>
-              <td className="mono px-4 py-3 text-ink-muted">
+              <td className="mono px-4 py-3.5 text-ink-muted">
                 {entry.timestamp ? new Date(entry.timestamp).toLocaleString() : 'â€”'}
               </td>
             </tr>

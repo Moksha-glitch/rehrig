@@ -410,9 +410,9 @@ export default function Setup() {
                   <Table columns={['Name', 'Alias', 'Persona', 'Role', 'Scope', 'Active']}>
                     {users.map((u) => (
                       <tr key={u.id} className="interactive hover:bg-elevated/70">
-                        <td className="px-4 py-3 font-medium text-ink">{u.name}</td>
-                        <td className="mono px-4 py-3 text-ink-muted">{u.alias}</td>
-                        <td className="px-4 py-3">
+                        <td className="px-4 py-3.5 font-medium text-ink">{u.name}</td>
+                        <td className="mono px-4 py-3.5 text-ink-muted">{u.alias}</td>
+                        <td className="px-4 py-3.5">
                           <Badge
                             color={
                               u.persona === 'rehrig' ? 'blue' : u.persona === 'sp' ? 'cyan' : 'slate'
@@ -421,9 +421,9 @@ export default function Setup() {
                             {u.persona}
                           </Badge>
                         </td>
-                        <td className="px-4 py-3 text-ink-muted">{u.role}</td>
-                        <td className="px-4 py-3 text-ink-muted">{u.scopeLabel}</td>
-                        <td className="px-4 py-3">
+                        <td className="px-4 py-3.5 text-ink-muted">{u.role}</td>
+                        <td className="px-4 py-3.5 text-ink-muted">{u.scopeLabel}</td>
+                        <td className="px-4 py-3.5">
                           {u.active ? (
                             <StatusDot color="emerald" label="Active" />
                           ) : (
@@ -448,16 +448,16 @@ export default function Setup() {
                   >
                     {RBAC_ROLES.map((r) => (
                       <tr key={r.key} className="interactive hover:bg-elevated/70">
-                        <td className="px-4 py-3 font-medium text-ink capitalize">
+                        <td className="px-4 py-3.5 font-medium text-ink capitalize">
                           {r.persona} · {r.role}
                         </td>
-                        <td className="px-4 py-3 text-ink-muted">{ROLE_PSG[r.key]}</td>
+                        <td className="px-4 py-3.5 text-ink-muted">{ROLE_PSG[r.key]}</td>
                         {RBAC_MATRIX_MODULES.map((m) => (
-                          <td key={m.key} className="px-4 py-3">
+                          <td key={m.key} className="px-4 py-3.5">
                             <BoolCell value={canAccessModuleForUser(r.user, m.key)} />
                           </td>
                         ))}
-                        <td className="px-4 py-3">
+                        <td className="px-4 py-3.5">
                           <BoolCell value={canCreateRecordsForUser(r.user)} />
                         </td>
                       </tr>
@@ -475,9 +475,9 @@ export default function Setup() {
                   <Table columns={['Permission Set Group', 'Applies To', 'Key Permissions']}>
                     {PSGS.map((p) => (
                       <tr key={p.name} className="interactive hover:bg-elevated/70">
-                        <td className="px-4 py-3 font-medium text-ink">{p.name}</td>
-                        <td className="px-4 py-3 text-ink-muted">{p.applies}</td>
-                        <td className="px-4 py-3 text-ink-muted">{p.perms}</td>
+                        <td className="px-4 py-3.5 font-medium text-ink">{p.name}</td>
+                        <td className="px-4 py-3.5 text-ink-muted">{p.applies}</td>
+                        <td className="px-4 py-3.5 text-ink-muted">{p.perms}</td>
                       </tr>
                     ))}
                   </Table>

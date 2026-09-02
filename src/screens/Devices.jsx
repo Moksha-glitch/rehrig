@@ -399,15 +399,15 @@ export default function Devices() {
               >
                 {filtered.map((row) => (
                   <tr key={row.id} className="interactive hover:bg-elevated/70">
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3.5">
                       {row.serial ? (
                         <span className="mono text-ink">{row.serial}</span>
                       ) : (
                         <span className="text-ink-faint">Not registered</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-ink-muted">{row.type}</td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3.5 text-ink-muted">{row.type}</td>
+                    <td className="px-4 py-3.5">
                       <button
                         type="button"
                         className="link-brand text-left"
@@ -419,21 +419,21 @@ export default function Devices() {
                         <div className="mt-0.5 text-xs text-ink-faint">{row.hostMeta}</div>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-ink-muted">{row.account || '—'}</td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3.5 text-ink-muted">{row.account || '—'}</td>
+                    <td className="px-4 py-3.5">
                       <Badge color={STATUS_COLORS[row.status]}>{row.status}</Badge>
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3.5">
                       <StatusDot
                         color={row.lastReported ? 'emerald' : 'slate'}
                         label={formatStamp(row.lastReported)}
                       />
                     </td>
-                    <td className="px-4 py-3 text-ink-muted tabular-nums">
+                    <td className="px-4 py-3.5 text-ink-muted tabular-nums">
                       {row.events ? `${row.events} events` : '—'}
                       {row.tips ? ` · ${row.tips} tips` : ''}
                     </td>
-                    <td className="px-4 py-3 text-right">
+                    <td className="px-4 py-3.5 text-right">
                       {row.editable && canCreateRecords ? (
                         <>
                           <button

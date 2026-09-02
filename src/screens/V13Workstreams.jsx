@@ -271,7 +271,7 @@ export default function V13Workstreams({ kind = 'chatter' }) {
               return (
                 <tr key={row.id} className="interactive hover:bg-elevated/70">
                   {values.map((value, index) => (
-                    <td key={index} className="max-w-[16rem] truncate px-4 py-3 text-sm text-ink">
+                    <td key={index} className="max-w-[16rem] truncate px-4 py-3.5 text-sm text-ink">
                       {index === statusIndex ? (
                         <Badge color={badgeFor(kind, row)}>{value}</Badge>
                       ) : (
@@ -280,7 +280,7 @@ export default function V13Workstreams({ kind = 'chatter' }) {
                     </td>
                   ))}
                   {kind === 'approvals' && (
-                    <td className="whitespace-nowrap px-4 py-3 text-right">
+                    <td className="whitespace-nowrap px-4 py-3.5 text-right">
                       {row.status === 'Pending' ? (
                         <div className="flex justify-end gap-1">
                           <Button variant="secondary" onClick={() => decide(row.id, 'Approved')}>

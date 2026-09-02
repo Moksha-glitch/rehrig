@@ -574,7 +574,7 @@ export default function SegmentsDirectory() {
       <AsyncState query={segmentsQuery}>
         <div className="space-y-4">
           <Panel className="p-0">
-            <Toolbar>
+            <Toolbar className="justify-between">
               <SearchField
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -582,8 +582,8 @@ export default function SegmentsDirectory() {
                 className="w-full sm:w-80"
               />
               <div className="flex flex-wrap items-center gap-2.5">
-                {/* Account Filter */}
-                <div className="w-52">
+                {/* Account Filter Dropdown */}
+                <div className="min-w-[16rem]">
                   <Select
                     value={
                       selectedAccountId
