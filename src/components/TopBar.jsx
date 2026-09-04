@@ -10,6 +10,69 @@ import { useAccounts } from '../hooks/useAccounts.js';
 import { NAV, filterNavTree, isNavItemActive } from './navConfig.js';
 import { getAvatarProps } from '../utils/theme.js';
 
+function VaiRow({ active = false, collapsed = false, className = '' }) {
+  const id = React.useId().replace(/:/g, '');
+  const ink = active ? '#5DB7E7' : '#64748B';
+  return (
+    <svg
+      viewBox={collapsed ? '0.5 0 48 48' : '0 0 240 49'}
+      fill="none"
+      aria-hidden="true"
+      className={className}
+    >
+      {active && (
+        <>
+          <rect x="0.5" width="239" height="48" rx="4" fill={`url(#vai-fill-a-${id})`} fillOpacity="0.2" />
+          <rect x="0.5" width="239" height="48" rx="4" fill={`url(#vai-fill-b-${id})`} />
+          <rect x="0.5" width="239" height="48" rx="4" stroke={`url(#vai-stroke-${id})`} strokeOpacity="0.15" />
+          <path
+            d="M19.7256 39.7998C28.6635 39.7998 38.059 32.3516 38.059 23.9382C38.059 15.5247 28.6635 8.71094 19.7256 8.71094C10.7876 8.71094 8.94141 15.5247 8.94141 23.9382C8.94141 32.3516 10.7876 39.7998 19.7256 39.7998Z"
+            fill={`url(#vai-mark-${id})`}
+            fillOpacity="0.2"
+          />
+        </>
+      )}
+      <path
+        d="M27.92 18.2305V20.897M29.2437 19.5637H26.5964M18.6546 30.23C18.6546 30.9663 18.062 31.5633 17.331 31.5633C16.5999 31.5633 16.0073 30.9663 16.0073 30.23C16.0073 29.4936 16.5999 28.8967 17.331 28.8967C18.062 28.8967 18.6546 29.4936 18.6546 30.23Z"
+        stroke={ink}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <path
+        d="M22.1763 32.8889L19.3825 27.259L13.7939 24.4444L19.3825 21.6299L22.1763 16L24.9701 21.6299L30.5587 24.4444L24.9701 27.259L22.1763 32.8889ZM16.8904 24.4444L20.4198 26.2305L22.1763 29.786L23.9492 26.2305L27.4787 24.4444L23.9492 22.6749L22.1763 19.1194L20.4198 22.6749L16.8904 24.4444Z"
+        fill={ink}
+      />
+      {!collapsed && (
+        <path
+          d="M50.1506 18.8182L53.1733 27.3892H53.2926L56.3153 18.8182H57.608L53.8693 29H52.5966L48.858 18.8182H50.1506ZM58.7365 29H57.4439L61.1825 18.8182H62.4553L66.1939 29H64.9013L61.8587 20.429H61.7791L58.7365 29ZM59.2138 25.0227H64.424V26.1165H59.2138V25.0227ZM69.0128 18.8182V29H67.7798V18.8182H69.0128Z"
+          fill="#64748B"
+        />
+      )}
+      {active && (
+        <defs>
+          <linearGradient id={`vai-fill-a-${id}`} x1="120" y1="0" x2="120" y2="48" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#BB00BB" />
+            <stop offset="1" stopColor="#2B81FF" />
+          </linearGradient>
+          <linearGradient id={`vai-fill-b-${id}`} x1="0.5" y1="24" x2="239.5" y2="24" gradientUnits="userSpaceOnUse">
+            <stop stopColor="white" stopOpacity="0.7" />
+            <stop offset="0.504808" stopColor="white" stopOpacity="0.5" />
+            <stop offset="1" stopColor="white" stopOpacity="0.7" />
+          </linearGradient>
+          <linearGradient id={`vai-stroke-${id}`} x1="183.438" y1="6.07321" x2="182.051" y2="51.1314" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#BB00BB" />
+            <stop offset="1" stopColor="#2B81FF" />
+          </linearGradient>
+          <linearGradient id={`vai-mark-${id}`} x1="23.5002" y1="8.71094" x2="23.5002" y2="39.7998" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#BB00BB" />
+            <stop offset="1" stopColor="#2B81FF" />
+          </linearGradient>
+        </defs>
+      )}
+    </svg>
+  );
+}
+
 export default function TopBar() {
   const {
     state,
@@ -133,6 +196,85 @@ export default function TopBar() {
               </button>
             </div>
           )}
+      </header>
+
+      {/* Desktop Header */}
+      <header className="relative z-30 hidden h-[4.5rem] items-center justify-between border-b border-line bg-surface/95 px-6 backdrop-blur-md lg:flex">
+        <div className="flex-1" />
+        
+        {/* Center: Search Bar with AI Button */}
+        <div className="flex flex-1 justify-center">
+          <div className="flex w-full max-w-[32rem] items-center gap-2 rounded-lg bg-[#F8FAFC] p-1.5 border border-transparent focus-within:border-line focus-within:bg-surface hover:bg-surface hover:border-line transition-colors">
+            <button
+              type="button"
+              onClick={openAssistant}
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded overflow-hidden shadow-sm transition-transform hover:scale-105"
+              aria-label="Open Vision AI"
+              title="Vision AI"
+            >
+              <VaiRow active={true} collapsed={true} className="w-full h-full object-cover" />
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }));
+              }}
+              className="flex-1 bg-transparent px-2 py-1 text-sm text-ink-muted text-left outline-none cursor-text"
+            >
+              Search vision pulse...
+            </button>
+          </div>
+        </div>
+
+        {/* Right: User Profile */}
+        <div className="flex flex-1 justify-end">
+          {user && (
+            <div className="relative" ref={accountRef}>
+              <button
+                type="button"
+                onClick={() => setAccountOpen(!accountOpen)}
+                className={`flex items-center gap-3 text-right interactive rounded-xl p-1.5 hover:bg-surface transition-colors ${accountOpen ? 'bg-surface' : ''}`}
+                aria-expanded={accountOpen}
+                aria-haspopup="menu"
+              >
+                <div className="flex flex-col">
+                  <span className="text-[13px] font-semibold text-ink leading-tight">{user.name}</span>
+                  <span className="text-[11px] text-ink-faint leading-tight mt-0.5">Admin - {user.email?.split('@')[0] || 'admin'}</span>
+                </div>
+                {(() => {
+                  const { initials, palette } = getAvatarProps(user.name, user.role);
+                  return (
+                    <span
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-xs font-semibold text-white shadow-sm"
+                      style={{ background: palette.bg }}
+                    >
+                      {initials}
+                    </span>
+                  );
+                })()}
+              </button>
+              
+              {accountOpen && (
+                <UserAccountMenu
+                  user={user}
+                  persona={persona}
+                  scopedAccount={scopedAccount}
+                  isScoped={isScoped}
+                  canPreviewPersonas={canPreviewPersonas}
+                  personaViews={personaViews}
+                  previewPersona={previewPersona}
+                  exitPersonaPreview={exitPersonaPreview}
+                  previewOrigin={previewOrigin}
+                  isPreviewingPersona={isPreviewingPersona}
+                  navigate={navigate}
+                  logout={logout}
+                  onClose={() => setAccountOpen(false)}
+                  className="absolute right-0 top-full mt-2 w-64 rounded-panel border border-line bg-surface p-1.5 shadow-float z-50"
+                />
+              )}
+            </div>
+          )}
+        </div>
       </header>
 
       {mobileOpen && (

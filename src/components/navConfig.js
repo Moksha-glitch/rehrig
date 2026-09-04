@@ -2,7 +2,6 @@
 
 export const NAV = {
   rehrig: [
-    { type: 'item', key: 'assistant', module: 'assistant', label: 'Vision AI', icon: 'star' },
     { type: 'item', key: 'home', module: 'home', label: 'Home', icon: 'home' },
     {
       type: 'section',
@@ -78,7 +77,6 @@ export const NAV = {
     { type: 'item', key: 'notifications', module: 'notifications', label: 'Notifications', icon: 'bell' },
   ],
   sp: [
-    { type: 'item', key: 'assistant', module: 'assistant', label: 'Vision AI', icon: 'star' },
     { type: 'item', key: 'home', module: 'home', label: 'Home', icon: 'home' },
     {
       type: 'section',
@@ -288,7 +286,6 @@ export const NAV = {
     { type: 'item', key: 'notifications', module: 'notifications', label: 'Notifications', icon: 'bell' },
   ],
   customer: [
-    { type: 'item', key: 'assistant', module: 'assistant', label: 'Vision AI', icon: 'star' },
     { type: 'item', key: 'home', module: 'home', label: 'Home', icon: 'home' },
     { type: 'item', key: 'myLocations', module: 'myLocations', label: 'My Locations', icon: 'mapPin' },
     {
