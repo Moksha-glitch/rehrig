@@ -2,11 +2,11 @@
 
 export const NAV = {
   rehrig: [
-    { type: 'item', key: 'home', module: 'home', label: 'Home', icon: 'home' },
+    { type: 'item', key: 'home', module: 'home', label: 'HOME', icon: 'grid' },
     {
       type: 'section',
-      label: 'Service Providers',
-      icon: 'building',
+      label: 'ACTIVITIES',
+      icon: 'none',
       children: [
         { key: 'accounts', module: 'accounts', label: 'All Providers', icon: 'building' },
         { key: 'segments', module: 'segments', label: 'Segments', icon: 'layers' },
@@ -17,12 +17,40 @@ export const NAV = {
           label: 'Contract Onboarding',
           icon: 'clipboard',
         },
+        { key: 'notifications', module: 'notifications', label: 'Notifications', icon: 'bell' },
       ],
     },
     {
       type: 'section',
-      label: 'Configure',
-      icon: 'settings',
+      label: 'ANALYTICS',
+      icon: 'none',
+      children: [
+        {
+          key: 'reports',
+          module: 'analytics',
+          params: { view: 'reports' },
+          label: 'Reports',
+          icon: 'clipboard',
+        },
+        {
+          key: 'dashboards',
+          module: 'analytics',
+          params: { view: 'dashboards' },
+          label: 'Dashboards',
+          icon: 'barChart',
+        },
+        {
+          key: 'reportSubs',
+          module: 'reportSubscriptions',
+          label: 'Report Subscriptions',
+          icon: 'mail',
+        },
+      ],
+    },
+    {
+      type: 'section',
+      label: 'CONFIGURATION',
+      icon: 'none',
       children: [
         {
           key: 'profileMgmtNav',
@@ -47,41 +75,13 @@ export const NAV = {
         { key: 'loginHistory', module: 'loginHistory', label: 'Login History', icon: 'lock' },
       ],
     },
-    {
-      type: 'section',
-      label: 'Analytics',
-      icon: 'barChart',
-      children: [
-        {
-          key: 'reports',
-          module: 'analytics',
-          params: { view: 'reports' },
-          label: 'Reports',
-          icon: 'clipboard',
-        },
-        {
-          key: 'dashboards',
-          module: 'analytics',
-          params: { view: 'dashboards' },
-          label: 'Dashboards',
-          icon: 'barChart',
-        },
-        {
-          key: 'reportSubs',
-          module: 'reportSubscriptions',
-          label: 'Report Subscriptions',
-          icon: 'mail',
-        },
-      ],
-    },
-    { type: 'item', key: 'notifications', module: 'notifications', label: 'Notifications', icon: 'bell' },
   ],
   sp: [
-    { type: 'item', key: 'home', module: 'home', label: 'Home', icon: 'home' },
+    { type: 'item', key: 'home', module: 'home', label: 'HOME', icon: 'grid' },
     {
       type: 'section',
-      label: 'Service Provider',
-      icon: 'building',
+      label: 'ACTIVITIES',
+      icon: 'none',
       children: [
         {
           key: 'details',
@@ -140,34 +140,6 @@ export const NAV = {
           label: 'Service Notifications',
           icon: 'bell',
         },
-      ],
-    },
-    {
-      type: 'section',
-      label: 'Assets & Products',
-      icon: 'box',
-      children: [
-        { key: 'r-assets', module: 'assets', label: 'Assets', icon: 'box' },
-        {
-          key: 'r-masterProducts',
-          module: 'productTypes',
-          label: 'Master Product Catalog',
-          icon: 'package',
-        },
-        {
-          key: 'r-products',
-          module: 'account',
-          params: { tab: 'products' },
-          label: 'Service Provider Products',
-          icon: 'package',
-        },
-      ],
-    },
-    {
-      type: 'section',
-      label: 'Operations',
-      icon: 'clipboard',
-      children: [
         { key: 'r-workOrders', module: 'workOrders', label: 'Work Orders', icon: 'clipboard' },
         { key: 'r-dispatches', module: 'dispatches', label: 'Dispatches', icon: 'send' },
         { key: 'r-trucks', module: 'trucks', label: 'Trucks', icon: 'truck' },
@@ -192,13 +164,6 @@ export const NAV = {
         },
         { key: 'approvals', module: 'approvals', label: 'Approvals', icon: 'checkCircle' },
         { key: 'automationCenter', module: 'automationCenter', label: 'Automation', icon: 'zap' },
-      ],
-    },
-    {
-      type: 'section',
-      label: 'Collaboration',
-      icon: 'users',
-      children: [
         { key: 'chatter', module: 'chatter', label: 'Chatter', icon: 'message' },
         { key: 'recordSharing', module: 'recordSharing', label: 'Record Sharing', icon: 'users' },
         {
@@ -207,32 +172,13 @@ export const NAV = {
           label: 'Customer Insights',
           icon: 'barChart',
         },
+        { key: 'notifications', module: 'notifications', label: 'Notifications', icon: 'bell' },
       ],
     },
     {
       type: 'section',
-      label: 'Telematics',
-      icon: 'truck',
-      children: [
-        {
-          key: 'r-indTips',
-          module: 'individualTips',
-          label: 'Tips & Non-Tips',
-          icon: 'layers',
-        },
-        {
-          key: 'r-aggTips',
-          module: 'aggregatedTips',
-          label: 'Trip Data',
-          icon: 'barChart',
-        },
-        { key: 'devices', module: 'devices', label: 'Devices', icon: 'package' },
-      ],
-    },
-    {
-      type: 'section',
-      label: 'Analytics',
-      icon: 'barChart',
+      label: 'ANALYTICS',
+      icon: 'none',
       children: [
         {
           key: 'reports',
@@ -258,9 +204,36 @@ export const NAV = {
     },
     {
       type: 'section',
-      label: 'Configure',
-      icon: 'settings',
+      label: 'CONFIGURATION',
+      icon: 'none',
       children: [
+        { key: 'r-assets', module: 'assets', label: 'Assets', icon: 'box' },
+        {
+          key: 'r-masterProducts',
+          module: 'productTypes',
+          label: 'Master Product Catalog',
+          icon: 'package',
+        },
+        {
+          key: 'r-products',
+          module: 'account',
+          params: { tab: 'products' },
+          label: 'Service Provider Products',
+          icon: 'package',
+        },
+        {
+          key: 'r-indTips',
+          module: 'individualTips',
+          label: 'Tips & Non-Tips',
+          icon: 'layers',
+        },
+        {
+          key: 'r-aggTips',
+          module: 'aggregatedTips',
+          label: 'Trip Data',
+          icon: 'barChart',
+        },
+        { key: 'devices', module: 'devices', label: 'Devices', icon: 'package' },
         {
           key: 'r-requestTypes',
           module: 'requestTypeResolutions',
@@ -283,25 +256,33 @@ export const NAV = {
         { key: 'holidays', module: 'holidays', label: 'Holiday schedule', icon: 'calendar' },
       ],
     },
-    { type: 'item', key: 'notifications', module: 'notifications', label: 'Notifications', icon: 'bell' },
   ],
   customer: [
-    { type: 'item', key: 'home', module: 'home', label: 'Home', icon: 'home' },
-    { type: 'item', key: 'myLocations', module: 'myLocations', label: 'My Locations', icon: 'mapPin' },
+    { type: 'item', key: 'home', module: 'home', label: 'HOME', icon: 'grid' },
     {
-      type: 'item',
-      key: 'myWorkOrders',
-      module: 'myWorkOrders',
-      label: 'My Work Orders',
-      icon: 'clipboard',
+      type: 'section',
+      label: 'ACTIVITIES',
+      icon: 'none',
+      children: [
+        { type: 'item', key: 'myLocations', module: 'myLocations', label: 'My Locations', icon: 'mapPin' },
+        {
+          type: 'item',
+          key: 'myWorkOrders',
+          module: 'myWorkOrders',
+          label: 'My Work Orders',
+          icon: 'clipboard',
+        },
+        {
+          type: 'item',
+          key: 'myNotifications',
+          module: 'myNotifications',
+          label: 'Notifications',
+          icon: 'bell',
+        },
+      ]
     },
-    {
-      type: 'item',
-      key: 'myNotifications',
-      module: 'myNotifications',
-      label: 'Notifications',
-      icon: 'bell',
-    },
+    { type: 'section', label: 'ANALYTICS', icon: 'none', children: [] },
+    { type: 'section', label: 'CONFIGURATION', icon: 'none', children: [] },
   ],
 };
 

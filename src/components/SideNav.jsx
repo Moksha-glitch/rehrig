@@ -145,18 +145,20 @@ function FolderButton({ section, collapsed, open, active, onToggle, isItemActive
               }`
         }
       >
-        <Icon
-          name={section.icon || section.children?.[0]?.icon || 'grid'}
-          size={collapsed ? 18 : 16}
-          className={`shrink-0 ${active || open ? 'text-ink' : 'text-ink-faint'}`}
-        />
+        {(!section.icon || section.icon !== 'none') && (
+          <Icon
+            name={section.icon || section.children?.[0]?.icon || 'grid'}
+            size={collapsed ? 18 : 16}
+            className={`shrink-0 ${active || open ? 'text-ink' : 'text-ink-faint'}`}
+          />
+        )}
         {!collapsed && (
           <>
-            <span className="min-w-0 flex-1 truncate text-left">{section.label}</span>
+            <span className={`min-w-0 flex-1 truncate text-left ${section.icon === 'none' ? 'tracking-wider text-xs font-semibold' : ''}`}>{section.label}</span>
             <Icon
-              name="chevronDown"
+              name="chevronRight"
               size={14}
-              className={`shrink-0 ${active ? 'text-ink-muted' : 'text-ink-faint'}`}
+              className={`shrink-0 ${active ? 'text-ink-muted' : 'text-ink-faint'} transition-transform ${open ? 'rotate-90' : ''}`}
             />
           </>
         )}
