@@ -234,7 +234,7 @@ function Router({ onOnboard }) {
 }
 
 export default function App() {
-  const { state, navigate, assistantOpen, openAssistant, closeAssistant } = useStore();
+  const { state, navigate, assistantOpen, closeAssistant } = useStore();
   const { bootstrapping } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(readSidebarOpen);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -273,12 +273,9 @@ export default function App() {
     const previous = prevModuleRef.current;
     prevModuleRef.current = state.nav.module;
 
-    if (loggedInNow) {
-      openAssistant();
-      return;
-    }
+    if (loggedInNow) return;
     if (previous !== state.nav.module) closeAssistant();
-  }, [state.currentUser, state.nav.module, openAssistant, closeAssistant]);
+  }, [state.currentUser, state.nav.module, closeAssistant]);
 
   const toggleSidebar = () => setSidebarOpen((open) => !open);
 

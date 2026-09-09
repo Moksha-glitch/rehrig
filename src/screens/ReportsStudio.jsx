@@ -397,8 +397,10 @@ function ReportConfigDrawer({ draft, baseline, onChange, onClose, onSave, busy, 
 }
 
 export default function ReportsStudio() {
-  const { state, toast, canCreateRecords, canAccessModule } = useStore();
-  const canEdit = canCreateRecords && canAccessModule('analytics');
+  const { state, toast, canCreateRecords, canCreateAccounts, canAccessModule } = useStore();
+  const canEdit =
+    (canCreateAccounts || canCreateRecords) &&
+    (canAccessModule('reports') || canAccessModule('analytics'));
   const specsQuery = useReportSpecs();
   const { upsert, remove } = useReportMutations();
   const [draft, setDraft] = useState(null);
@@ -614,10 +616,20 @@ export default function ReportsStudio() {
                           type="button"
                           onClick={() => toggleFavorite(spec)}
                           aria-label={`${spec.favorite ? 'Remove' : 'Add'} ${spec.name} ${spec.favorite ? 'from' : 'to'} favorites`}
-                          className={spec.favorite ? 'text-warn' : 'text-ink-faint'}
+                          className={`rounded-lg p-1 ${spec.favorite ? 'text-warn' : 'text-ink-faint hover:text-ink'}`}
                         >
                           <Icon name="star" size={14} className={spec.favorite ? 'fill-current' : ''} />
                         </button>
+                        {canEdit && (
+                          <button
+                            type="button"
+                            onClick={() => setDeletePending(spec)}
+                            aria-label={`Delete ${spec.name}`}
+                            className="rounded-lg p-1 text-ink-faint hover:bg-danger-soft hover:text-danger"
+                          >
+                            <Icon name="trash" size={14} />
+                          </button>
+                        )}
                       </div>
                     </li>
                   );
@@ -705,7 +717,22 @@ export default function ReportsStudio() {
                 <span className="mono text-xs text-ink-faint">
                   {String(index + 1).padStart(2, '0')}
                 </span>
-                <Icon name="barChart" size={16} className="text-ink-faint" />
+                <span className="flex items-center gap-1">
+                  {canEdit && (
+                    <button
+                      type="button"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        setDeletePending(spec);
+                      }}
+                      aria-label={`Delete ${spec.name}`}
+                      className="rounded-lg p-1 text-ink-faint hover:bg-danger-soft hover:text-danger"
+                    >
+                      <Icon name="trash" size={14} />
+                    </button>
+                  )}
+                  <Icon name="barChart" size={16} className="text-ink-faint" />
+                </span>
               </div>
               <div className="mt-4 font-display text-title-sm text-ink">{spec.name}</div>
               <div className="mt-1 text-xs text-ink-muted">
