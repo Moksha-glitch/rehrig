@@ -41,7 +41,7 @@ function reducer(state, action) {
         currentUser: action.user,
         previewOriginUserId: null,
         nav: action.nav,
-        assistantOpen: action.user?.persona === 'sp',
+        assistantOpen: true,
       };
     case 'LOGOUT':
       return {

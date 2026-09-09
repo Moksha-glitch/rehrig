@@ -274,7 +274,7 @@ export default function App() {
     prevModuleRef.current = state.nav.module;
 
     if (loggedInNow) {
-      if (state.currentUser?.persona === 'sp') openAssistant();
+      openAssistant();
       return;
     }
     if (previous !== state.nav.module) closeAssistant();

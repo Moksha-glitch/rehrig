@@ -139,7 +139,7 @@ export default function VisionChat({ onOnboard, onClose, children }) {
   const isSp = persona === 'sp';
   const [draft, setDraft] = useState('');
   const [turns, setTurns] = useState([]);
-  const [viewing, setViewing] = useState({ type: 'idle' });
+  const [viewing, setViewing] = useState({ type: 'landing' });
   const [busy, setBusy] = useState(false);
   const [history, setHistory] = useState(() => readHistory(userKey));
   const [favorites, setFavorites] = useState(() => readFavorites(userKey));
@@ -187,7 +187,7 @@ export default function VisionChat({ onOnboard, onClose, children }) {
     setTurns([]);
     setDraft('');
     setBusy(false);
-    setViewing({ type: 'idle' });
+    setViewing({ type: 'landing' });
     setHistory(readHistory(userKey));
     setFavorites(readFavorites(userKey));
     setHistoryOpen(false);
@@ -216,7 +216,7 @@ export default function VisionChat({ onOnboard, onClose, children }) {
   }, [historyOpen, favsOpen]);
 
   const greetName = user?.firstName || user?.name || (isSp ? 'Edmonton AB Admin' : 'there');
-  const starters = isSp ? PLAYBOOK_STARTERS : content.chips.map((label) => ({ key: label, label }));
+  const starters = PLAYBOOK_STARTERS;
   const searchQuery = useSearch(draft);
   const searchResults = useMemo(
     () =>
@@ -320,7 +320,11 @@ export default function VisionChat({ onOnboard, onClose, children }) {
     setTurns(nextTurns);
     setDraft('');
     setBusy(true);
-    setViewing({ type: 'idle', turnId: turn.id });
+    setViewing((prev) => ({
+      type: prev.type === 'idle' ? 'landing' : prev.type,
+      key: prev.key,
+      turnId: turn.id,
+    }));
     window.clearTimeout(timerRef.current);
     timerRef.current = window.setTimeout(() => {
       const result = resolveIntent(content, prompt);
@@ -374,7 +378,7 @@ export default function VisionChat({ onOnboard, onClose, children }) {
     setTurns([]);
     setBusy(false);
     setDraft('');
-    setViewing({ type: 'idle' });
+    setViewing({ type: 'landing' });
     setHistoryOpen(false);
     setFavsOpen(false);
     window.setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 0);
@@ -390,7 +394,7 @@ export default function VisionChat({ onOnboard, onClose, children }) {
     } else if (last?.playbookKey && PLAYBOOK[last.playbookKey]) {
       setViewing({ type: 'playbook', key: last.playbookKey, instant: true, turnId: last.id });
     } else {
-      setViewing({ type: 'idle', turnId: last?.id });
+      setViewing({ type: 'landing', turnId: last?.id });
     }
     setHistoryOpen(false);
     setFavsOpen(false);
@@ -511,7 +515,9 @@ export default function VisionChat({ onOnboard, onClose, children }) {
     <section className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-canvas" aria-label="Answer">
       <div className="flex h-[60px] shrink-0 items-center justify-between gap-2 border-b border-line bg-surface px-3">
         <div className="min-w-0">
-          <p className="text-xs font-semibold text-brand">Answer</p>
+          <p className="text-xs font-semibold text-brand">
+            {viewing.type === 'playbook' ? 'Answer' : "Today's collections"}
+          </p>
           <p className="truncate text-[10px] text-ink-faint">{answerSub}</p>
         </div>
         <button
@@ -523,21 +529,19 @@ export default function VisionChat({ onOnboard, onClose, children }) {
         </button>
       </div>
       <div ref={agentScrollRef} className="min-h-0 flex-1 overflow-y-auto px-4 py-4 scroll-thin">
-        {isSp && (
-          <LandingReport
-            onAsk={askPlaybook}
-            onExport={handleExport}
-            onCreateWidget={openCreateWidget}
-            onCreateReport={openCreateReport}
-          />
-        )}
+        <LandingReport
+          onAsk={askPlaybook}
+          onExport={handleExport}
+          onCreateWidget={openCreateWidget}
+          onCreateReport={openCreateReport}
+        />
         {turns
           .filter((turn) => turn.playbookKey && PLAYBOOK[turn.playbookKey])
           .map((turn) => (
             <div
               key={turn.id}
               ref={turn.id === viewing.turnId ? currentAnswerRef : undefined}
-              className={isSp ? 'mt-6 scroll-mt-4 border-t border-line pt-6' : 'scroll-mt-4'}
+              className="mt-6 scroll-mt-4 border-t border-line pt-6"
             >
               <StructuredAnswer
                 answer={PLAYBOOK[turn.playbookKey]}

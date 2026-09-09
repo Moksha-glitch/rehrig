@@ -1,7 +1,6 @@
 /** Service Provider Vision Assistant playbook (daily collections + operational drills). */
 
 export const PLAYBOOK_STARTERS = [
-  { key: 'landing', label: "How are today's collections going?" },
   { key: 'behind', label: 'Which routes are running behind on tips today?' },
   { key: 'unmatched', label: "Which tips today didn't match a registered cart?" },
   { key: 'dispute', label: 'Was 12802 58 Street NW picked up today?' },
