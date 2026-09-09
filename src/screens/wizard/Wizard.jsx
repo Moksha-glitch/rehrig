@@ -48,7 +48,7 @@ const emptyRoute = () => ({
 });
 const emptyContact = (role = '') => ({ firstName: '', lastName: '', email: '', role, portal: false });
 
-const BLANK_SELECT = new Set(['', '--None--', 'None', 'Selectâ€¦']);
+const BLANK_SELECT = new Set(['', '--None--', 'None', 'Select…']);
 function picklistOptions(options = []) {
   return options.filter((option) => {
     const value = option && typeof option === 'object' ? option.value ?? option.k ?? '' : option;
@@ -159,7 +159,7 @@ function validateWizard(f) {
   required('accountName', f.accountName, 'Account name');
   if (f.accountName?.trim() && f.accountName.trim().length < 3) errors.accountName = 'Use at least 3 characters.';
   required('uid', f.uid, 'Service Provider UID');
-  if (f.uid && !UID_RE.test(f.uid.trim())) errors.uid = 'Use 3â€“10 uppercase letters, numbers, or hyphens.';
+  if (f.uid && !UID_RE.test(f.uid.trim())) errors.uid = 'Use 3–10 uppercase letters, numbers, or hyphens.';
   required('phone', f.phone, 'Phone');
   if (f.phone && (!PHONE_RE.test(f.phone.trim()) || (f.phone.match(/\d/g) || []).length < 7)) {
     errors.phone = 'Enter a valid phone number with at least 7 digits.';
@@ -1078,7 +1078,7 @@ function Step1({ f, set, missingKeys = new Set(), errors = {} }) {
   return (
     <>
       <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink-muted">
-        Basic details â€” name, type, industry, and other account fields.
+        Basic details — name, type, industry, and other account fields.
       </p>
       <div className="type-overline mt-7 text-brand">
         Account Information
@@ -1099,14 +1099,14 @@ function Step1({ f, set, missingKeys = new Set(), errors = {} }) {
         <Field label="Account Owner">
           <div className="field-input flex items-center gap-2 bg-elevated text-ink-muted">
             <Icon name="users" size={14} className="shrink-0 text-ink-faint" />
-            <span className="truncate">{f.accountOwner || 'â€”'}</span>
+            <span className="truncate">{f.accountOwner || '—'}</span>
           </div>
         </Field>
         <Field label="Type">
-          <Select options={picklistOptions(PICKLISTS.accountType)} placeholder="Selectâ€¦" value={selectValue(f.type)} onChange={(e) => set({ type: e.target.value })} />
+          <Select options={picklistOptions(PICKLISTS.accountType)} placeholder="Select…" value={selectValue(f.type)} onChange={(e) => set({ type: e.target.value })} />
         </Field>
         <Field label="Parent Account">
-          <TextInput placeholder="Search accountsâ€¦" value={f.parentAccount} onChange={(e) => set({ parentAccount: e.target.value })} />
+          <TextInput placeholder="Search accounts…" value={f.parentAccount} onChange={(e) => set({ parentAccount: e.target.value })} />
         </Field>
         <Field label="Website">
           <TextInput value={f.website} onChange={(e) => set({ website: e.target.value })} aria-invalid={!!errors.website} className={warnInput(errors.website)} />
@@ -1139,7 +1139,7 @@ function Step1({ f, set, missingKeys = new Set(), errors = {} }) {
           </div>
         </Field>
         <Field label="Industry">
-          <Select options={picklistOptions(PICKLISTS.industry)} placeholder="Selectâ€¦" value={selectValue(f.industry)} onChange={(e) => set({ industry: e.target.value })} />
+          <Select options={picklistOptions(PICKLISTS.industry)} placeholder="Select…" value={selectValue(f.industry)} onChange={(e) => set({ industry: e.target.value })} />
         </Field>
         <Field label="Employees">
           <TextInput type="number" min="0" step="1" value={f.employees} onChange={(e) => set({ employees: e.target.value })} aria-invalid={!!errors.employees} className={warnInput(errors.employees)} />
@@ -1167,7 +1167,7 @@ function Step1({ f, set, missingKeys = new Set(), errors = {} }) {
 
 function Step2({ f, set, setNotif, toggleServiceType, errors = {} }) {
   const preview = `This Service Provider will deliver ${
-    f.serviceTypes.length ? f.serviceTypes.join(' + ') : 'â€”'
+    f.serviceTypes.length ? f.serviceTypes.join(' + ') : '—'
   }${f.modules ? `, using modules ${f.modules}` : ''}${
     f.enableAutoWO ? ', with auto work orders' : ''
   }${f.enableAutoHotTicket ? ` and hot ticket conversion after ${f.autoHotTicketDays}d` : ''}. Resident notifications: ${
@@ -1272,7 +1272,7 @@ function Step2({ f, set, setNotif, toggleServiceType, errors = {} }) {
               <InlineError message={errors.messageLimit} />
             </Field>
             <Field label="Time Zone">
-              <Select options={picklistOptions(PICKLISTS.timeZone)} placeholder="Selectâ€¦" value={selectValue(f.notif.timeZone)} onChange={(e) => setNotif({ timeZone: e.target.value })} />
+              <Select options={picklistOptions(PICKLISTS.timeZone)} placeholder="Select…" value={selectValue(f.notif.timeZone)} onChange={(e) => setNotif({ timeZone: e.target.value })} />
             </Field>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <Field label="Start Time">
@@ -1379,11 +1379,11 @@ function AddressPanel({ title, addr, onChange, disabled, header, errorPrefix, er
         {header}
       </div>
       <Field label="Address Search">
-        <TextInput placeholder="Search addressâ€¦" disabled={disabled} />
+        <TextInput placeholder="Search address…" disabled={disabled} />
       </Field>
       <div className="mt-4 space-y-4">
         <Field label="Country">
-          <Select options={picklistOptions(PICKLISTS.country)} placeholder="Selectâ€¦" value={selectValue(addr.country)} disabled={disabled} onChange={(e) => onChange({ country: e.target.value })} />
+          <Select options={picklistOptions(PICKLISTS.country)} placeholder="Select…" value={selectValue(addr.country)} disabled={disabled} onChange={(e) => onChange({ country: e.target.value })} />
         </Field>
         <Field label="Street">
           <div data-wizard-field={`${errorPrefix}.street`} id={`wizard-field-${errorPrefix}-street`}>
@@ -1399,7 +1399,7 @@ function AddressPanel({ title, addr, onChange, disabled, header, errorPrefix, er
         </Field>
         <Field label="State / Province">
           <div data-wizard-field={`${errorPrefix}.state`} id={`wizard-field-${errorPrefix}-state`}>
-            <Select options={picklistOptions(PICKLISTS.wizardProvinceState)} placeholder="Selectâ€¦" value={selectValue(addr.state)} disabled={disabled} onChange={(e) => onChange({ state: e.target.value })} aria-invalid={!!errors[`${errorPrefix}.state`]} className={warnInput(errors[`${errorPrefix}.state`])} />
+            <Select options={picklistOptions(PICKLISTS.wizardProvinceState)} placeholder="Select…" value={selectValue(addr.state)} disabled={disabled} onChange={(e) => onChange({ state: e.target.value })} aria-invalid={!!errors[`${errorPrefix}.state`]} className={warnInput(errors[`${errorPrefix}.state`])} />
             <InlineError message={errors[`${errorPrefix}.state`]} />
           </div>
         </Field>
@@ -1475,7 +1475,7 @@ function Step5({ f, setProduct, errors = {} }) {
               <div className="min-w-0 flex-1">
                 <div className="text-sm font-medium text-ink">{p.name}</div>
                 <div className="text-xs text-ink-muted">
-                  {p.family} Â· <span className="mono">{p.code}</span>
+                  {p.family} · <span className="mono">{p.code}</span>
                 </div>
               </div>
               {row.selected && (
@@ -1521,7 +1521,7 @@ function Step6({ f, addRoute, removeRoute, setRoute, toggleRouteDay, errors = {}
               </div>
               <div>
                 {i === 0 && <div className="type-overline mb-1">Collection Type</div>}
-                <Select options={picklistOptions(PICKLISTS.routeCollectionType)} placeholder="Selectâ€¦" value={selectValue(r.collectionType)} onChange={(e) => setRoute(i, { collectionType: e.target.value })} />
+                <Select options={picklistOptions(PICKLISTS.routeCollectionType)} placeholder="Select…" value={selectValue(r.collectionType)} onChange={(e) => setRoute(i, { collectionType: e.target.value })} />
               </div>
               <div data-wizard-field={`routes.${i}.days`} id={`wizard-field-routes-${i}-days`}>
                 {i === 0 && <div className="type-overline mb-1">Days</div>}
@@ -1543,7 +1543,7 @@ function Step6({ f, addRoute, removeRoute, setRoute, toggleRouteDay, errors = {}
               <div className="flex items-end gap-2">
                 <div className="flex-1">
                   {i === 0 && <div className="type-overline mb-1">Frequency</div>}
-                  <Select options={['Weekly', 'Bi-Weekly']} placeholder="Selectâ€¦" value={selectValue(r.frequency)} onChange={(e) => setRoute(i, { frequency: e.target.value })} />
+                  <Select options={['Weekly', 'Bi-Weekly']} placeholder="Select…" value={selectValue(r.frequency)} onChange={(e) => setRoute(i, { frequency: e.target.value })} />
                 </div>
                 <button
                   onClick={() => removeRoute(i)}
@@ -1596,7 +1596,7 @@ function Step7({ f, addContact, removeContact, setContact, errors = {} }) {
               </div>
               <div>
                 {i === 0 && <div className="type-overline mb-1">Role</div>}
-                <Select options={picklistOptions(PICKLISTS.wizardRole)} placeholder="Selectâ€¦" value={selectValue(c.role)} onChange={(e) => setContact(i, { role: e.target.value })} />
+                <Select options={picklistOptions(PICKLISTS.wizardRole)} placeholder="Select…" value={selectValue(c.role)} onChange={(e) => setContact(i, { role: e.target.value })} />
               </div>
               <div className="flex items-end justify-between gap-2">
                 <Checkbox label="Portal user" checked={c.portal} onChange={(e) => setContact(i, { portal: e.target.checked })} />
@@ -1750,7 +1750,7 @@ function StepScreenAccess({ modules, onChange }) {
 }
 
 function Step8({ f, errors = {}, issues = [], onJump, onOpenAssistant }) {
-  const dash = <span className="text-ink-faint">â€”</span>;
+  const dash = <span className="text-ink-faint">—</span>;
   const products = Object.values(f.products).filter((p) => p.selected).length;
   const routes = f.routes.filter((r) => r.routeNumber);
   const contacts = f.contacts.filter((c) => c.firstName || c.lastName);
@@ -1809,31 +1809,31 @@ function Step8({ f, errors = {}, issues = [], onJump, onOpenAssistant }) {
       {issues.length === 0 && (
         <div className="mt-4 flex items-start gap-2 rounded-panel border border-success/25 bg-success-soft px-4 py-3">
           <Icon name="checkCircle" size={16} className="mt-0.5 shrink-0 text-success" />
-          <p className="text-sm font-medium text-ink-soft">Everything looks good â€” you can activate this service provider.</p>
+          <p className="text-sm font-medium text-ink-soft">Everything looks good — you can activate this service provider.</p>
         </div>
       )}
       <div className="mt-4 space-y-2">
         <ReviewCard label="Service Provider">{f.accountName || dash}</ReviewCard>
-        <ReviewCard label="Type Â· Industry">
-          {f.type || dash} Â· {f.industry || dash}
+        <ReviewCard label="Type · Industry">
+          {f.type || dash} · {f.industry || dash}
         </ReviewCard>
         <ReviewCard label="Service Provider UID">{f.uid || dash}</ReviewCard>
         <ReviewCard label="Service Types">
-          {f.serviceTypes.length ? f.serviceTypes.join(' Â· ') : <span className="text-danger">At least one required</span>}
+          {f.serviceTypes.length ? f.serviceTypes.join(' · ') : <span className="text-danger">At least one required</span>}
         </ReviewCard>
-        <ReviewCard label="Tracking flags">{tracking.length ? tracking.join(' Â· ') : 'None'}</ReviewCard>
-        <ReviewCard label="Hardware Â· Modules">
-          {f.hardwareType || dash} Â· {f.modules || dash}
+        <ReviewCard label="Tracking flags">{tracking.length ? tracking.join(' · ') : 'None'}</ReviewCard>
+        <ReviewCard label="Hardware · Modules">
+          {f.hardwareType || dash} · {f.modules || dash}
         </ReviewCard>
         <ReviewCard label="Billing Address">{billingLine || dash}</ReviewCard>
         <ReviewCard label="Shipping Address">{shippingLine || dash}</ReviewCard>
-        <ReviewCard label="Automation flags">{autoFlags.length ? autoFlags.join(' Â· ') : 'None'}</ReviewCard>
+        <ReviewCard label="Automation flags">{autoFlags.length ? autoFlags.join(' · ') : 'None'}</ReviewCard>
         <ReviewCard label="Notification window">
-          {f.notif.startTime} to {f.notif.endTime} Â· {f.notif.timeZone} Â· Msg limit {f.notif.messageLimit}
+          {f.notif.startTime} to {f.notif.endTime} · {f.notif.timeZone} · Msg limit {f.notif.messageLimit}
         </ReviewCard>
         <ReviewCard label="Products selected">{products} products</ReviewCard>
         <ReviewCard label="Routes">
-          {routes.length ? routes.map((r) => `${r.routeNumber} (${r.collectionType})`).join(' Â· ') : 'Add later'}
+          {routes.length ? routes.map((r) => `${r.routeNumber} (${r.collectionType})`).join(' · ') : 'Add later'}
         </ReviewCard>
         <ReviewCard label="Screen access">
           {(() => {
@@ -1852,7 +1852,7 @@ function Step8({ f, errors = {}, issues = [], onJump, onOpenAssistant }) {
                 <span key={i}>
                   {c.firstName} {c.lastName}
                   {c.portal && <Icon name="star" size={11} className="ml-0.5 inline text-warn" />}
-                  {i < contacts.length - 1 ? ' Â· ' : ''}
+                  {i < contacts.length - 1 ? ' · ' : ''}
                 </span>
               ))
             : dash}

@@ -30,7 +30,8 @@ import {
   useUpdateSegment,
   useDeleteSegment,
 } from '../hooks/useAccounts.js';
-import { useCreateContact, useRecords, useUpdateContact } from '../hooks/useRecords.js';
+import { useCreateContact, useCreateRecord, useRecords, useUpdateContact, useUpdateRecord } from '../hooks/useRecords.js';
+import { RECORD_SCHEMAS } from '../data/recordSchemas.js';
 import { useNotificationConfig } from '../hooks/useConfig.js';
 import { getErrorMessage } from '../lib/errors.js';
 import { PICKLISTS } from '../data/picklists.js';
@@ -44,7 +45,6 @@ const TABS = [
   { key: 'segments', label: 'Service Provider Segments' },
   { key: 'routes', label: 'Routes' },
   { key: 'notifications', label: 'Service Notifications' },
-  { key: 'mindmap', label: 'Mind Map' },
 ];
 
 function Row({ label, children }) {
@@ -228,7 +228,7 @@ export default function AccountDetail({ accountId, tab }) {
         }
         description={
           <span>
-            {account.industry} Ã‚Â·{' '}
+            {account.industry} ·{' '}
             <span className="font-medium text-brand">{account.ownerName || account.owner}</span>
           </span>
         }
@@ -332,7 +332,14 @@ export default function AccountDetail({ accountId, tab }) {
           onChanged={() => detailQuery.refetch?.()}
         />
       )}
-      {activeTab === 'products' && <ProductsTab products={products} />}
+      {activeTab === 'products' && (
+        <AccountSchemaList
+          kind="products"
+          account={account}
+          fallbackRows={products}
+          canManage={canCreateAccounts || canCreateRecords}
+        />
+      )}
       {activeTab === 'segments' && (
         <SegmentsTab
           account={account}
@@ -341,20 +348,20 @@ export default function AccountDetail({ accountId, tab }) {
           onChanged={() => detailQuery.refetch?.()}
         />
       )}
-      {activeTab === 'routes' && <RoutesTab routes={routes} />}
-      {activeTab === 'notifications' && <NotificationsTab account={account} />}
-      {activeTab === 'mindmap' && (
-        <MindMap
+      {activeTab === 'routes' && (
+        <AccountSchemaList
+          kind="routes"
           account={account}
-          contacts={contacts}
-          segments={segments}
-          products={products}
-          routes={routes}
-          customers={customers}
-          onOpenTab={setTab}
-          canOpenTab={canTab}
-          onOpenModule={openModule}
-          canOpenModule={canAccessModule}
+          fallbackRows={routes}
+          canManage={canCreateAccounts || canCreateRecords}
+        />
+      )}
+      {activeTab === 'notifications' && (
+        <AccountSchemaList
+          kind="serviceNotifications"
+          account={account}
+          fallbackRows={[]}
+          canManage={canCreateAccounts || canCreateRecords}
         />
       )}
     </Page>
@@ -429,7 +436,7 @@ function DetailsTab({ account }) {
                   {k === 'billing' ? 'Billing Address' : 'Shipping Address'}
                 </div>
                 <div className="text-sm leading-relaxed text-brand">
-                  {a.street || 'Ã¢â‚¬â€'}
+                  {a.street || '—'}
                   <br />
                   {[a.city, a.state].filter(Boolean).join(', ')} {a.zip || ''}
                   <br />
@@ -456,6 +463,7 @@ function DetailsTab({ account }) {
 }
 
 function providerFormValues(account) {
+  const n = account.notif || {};
   return {
     name: account.name || '',
     uid: account.uid || '',
@@ -467,6 +475,18 @@ function providerFormValues(account) {
     type: account.type || 'Customer',
     employees: account.employees ?? 0,
     inactive: !!account.inactive,
+    ownerName: account.ownerName || account.owner || '',
+    jdEdwardsId: account.jdEdwardsId || '',
+    numberOfWeeks: account.numberOfWeeks ?? '',
+    serviceModules: account.serviceModules || '',
+    hardwareType: account.hardwareType || '',
+    isTableauCloud: !!account.isTableauCloud,
+    trackObservations: !!account.trackObservations,
+    trackSafetyEvents: !!account.trackSafetyEvents,
+    enableAutoWO: !!account.enableAutoWO,
+    enableAutoHotTicket: !!account.enableAutoHotTicket,
+    autoHotTicketDays: account.autoHotTicketDays ?? '',
+    enableMoveBurntCarts: !!account.enableMoveBurntCarts,
     serviceTypes: Array.isArray(account.serviceTypes)
       ? account.serviceTypes.join(', ')
       : account.serviceTypes || '',
@@ -475,6 +495,10 @@ function providerFormValues(account) {
     billingState: account.billing?.state || '',
     billingZip: account.billing?.zip || '',
     billingCountry: account.billing?.country || '',
+    notifEnableTab: !!n.enableTab,
+    notifSend: !!n.send,
+    notifMessageLimit: n.messageLimit ?? '',
+    notifTimeZone: n.timeZone || '',
   };
 }
 
@@ -513,10 +537,29 @@ export function EditProviderDialog({ account, onClose, onSaved }) {
           type: form.type,
           employees: Number(form.employees) || 0,
           inactive: !!form.inactive,
+          ownerName: form.ownerName.trim(),
+          jdEdwardsId: form.jdEdwardsId.trim(),
+          numberOfWeeks: Number(form.numberOfWeeks) || 0,
+          serviceModules: form.serviceModules.trim(),
+          hardwareType: form.hardwareType.trim(),
+          isTableauCloud: !!form.isTableauCloud,
+          trackObservations: !!form.trackObservations,
+          trackSafetyEvents: !!form.trackSafetyEvents,
+          enableAutoWO: !!form.enableAutoWO,
+          enableAutoHotTicket: !!form.enableAutoHotTicket,
+          autoHotTicketDays: Number(form.autoHotTicketDays) || 0,
+          enableMoveBurntCarts: !!form.enableMoveBurntCarts,
           serviceTypes: form.serviceTypes
             .split(',')
             .map((v) => v.trim())
             .filter(Boolean),
+          notif: {
+            ...(account.notif || {}),
+            enableTab: !!form.notifEnableTab,
+            send: !!form.notifSend,
+            messageLimit: Number(form.notifMessageLimit) || 0,
+            timeZone: form.notifTimeZone.trim(),
+          },
           billing: {
             ...(account.billing || {}),
             street: form.billingStreet.trim(),
@@ -602,6 +645,76 @@ export function EditProviderDialog({ account, onClose, onSaved }) {
                 onChange={(e) => set({ description: e.target.value })}
               />
             </Field>
+            <Field label="Account owner">
+              <TextInput value={form.ownerName} onChange={(e) => set({ ownerName: e.target.value })} />
+            </Field>
+            <Field label="JDEdwards Id">
+              <TextInput value={form.jdEdwardsId} onChange={(e) => set({ jdEdwardsId: e.target.value })} />
+            </Field>
+            <Field label="Number of weeks">
+              <TextInput
+                type="number"
+                value={form.numberOfWeeks}
+                onChange={(e) => set({ numberOfWeeks: e.target.value })}
+              />
+            </Field>
+            <Field label="Service modules">
+              <TextInput value={form.serviceModules} onChange={(e) => set({ serviceModules: e.target.value })} />
+            </Field>
+            <Field label="Hardware type">
+              <TextInput value={form.hardwareType} onChange={(e) => set({ hardwareType: e.target.value })} />
+            </Field>
+            <div className="space-y-2 sm:col-span-2">
+              <Checkbox label="Is Tableau Cloud?" checked={form.isTableauCloud} onChange={(e) => set({ isTableauCloud: e.target.checked })} />
+              <Checkbox label="Track observations" checked={form.trackObservations} onChange={(e) => set({ trackObservations: e.target.checked })} />
+              <Checkbox label="Track safety events" checked={form.trackSafetyEvents} onChange={(e) => set({ trackSafetyEvents: e.target.checked })} />
+            </div>
+      </FieldSection>
+      <FieldSection title="Automated Work Orders" className="border-t border-line pt-5">
+        <div className="space-y-2 sm:col-span-2">
+          <Checkbox label="Enable Auto WO" checked={form.enableAutoWO} onChange={(e) => set({ enableAutoWO: e.target.checked })} />
+        </div>
+      </FieldSection>
+      <FieldSection title="Hot Ticket Conversion" className="border-t border-line pt-5">
+        <div className="sm:col-span-2">
+          <Checkbox
+            label="Enable Auto Hot Ticket"
+            checked={form.enableAutoHotTicket}
+            onChange={(e) => set({ enableAutoHotTicket: e.target.checked })}
+          />
+        </div>
+        <Field label="Auto Hot Ticket Days">
+          <TextInput
+            type="number"
+            value={form.autoHotTicketDays}
+            onChange={(e) => set({ autoHotTicketDays: e.target.value })}
+          />
+        </Field>
+      </FieldSection>
+      <FieldSection title="Move Burnt Carts" className="border-t border-line pt-5">
+        <div className="sm:col-span-2">
+          <Checkbox
+            label="Enable Auto Move Burnt Carts to Yard"
+            checked={form.enableMoveBurntCarts}
+            onChange={(e) => set({ enableMoveBurntCarts: e.target.checked })}
+          />
+        </div>
+      </FieldSection>
+      <FieldSection title="Service Notifications Detail" className="border-t border-line pt-5">
+        <div className="space-y-2 sm:col-span-2">
+          <Checkbox label="Enable Service Notification Tab" checked={form.notifEnableTab} onChange={(e) => set({ notifEnableTab: e.target.checked })} />
+          <Checkbox label="Send Service Notifications" checked={form.notifSend} onChange={(e) => set({ notifSend: e.target.checked })} />
+        </div>
+        <Field label="Message Limit">
+          <TextInput
+            type="number"
+            value={form.notifMessageLimit}
+            onChange={(e) => set({ notifMessageLimit: e.target.value })}
+          />
+        </Field>
+        <Field label="Time Zone">
+          <TextInput value={form.notifTimeZone} onChange={(e) => set({ notifTimeZone: e.target.value })} />
+        </Field>
       </FieldSection>
       <FieldSection title="Billing address" className="border-t border-line pt-5">
             <Field label="Billing street" span2>
@@ -674,11 +787,11 @@ function ContactsTab({ accountId, contacts, canEdit, onChanged }) {
         {contacts.map((c) => (
           <tr key={c.id} className="interactive hover:bg-elevated/70">
             <td className="max-w-[10rem] truncate px-4 py-3 font-medium text-ink">{c.name}</td>
-            <td className="max-w-[8rem] truncate px-4 py-3 text-ink-muted">{c.title || 'Ã¢â‚¬â€'}</td>
-            <td className="max-w-[8rem] truncate px-4 py-3 text-ink-muted">{c.roleTitle || c.role || 'Ã¢â‚¬â€'}</td>
-            <td className="max-w-[12rem] truncate px-4 py-3 text-ink-muted">{c.email || 'Ã¢â‚¬â€'}</td>
-            <td className="max-w-[8rem] truncate px-4 py-3 text-ink-muted">{c.phone || c.mobile || 'Ã¢â‚¬â€'}</td>
-            <td className="max-w-[8rem] truncate px-4 py-3 text-ink-muted">{c.segment || 'Ã¢â‚¬â€'}</td>
+            <td className="max-w-[8rem] truncate px-4 py-3 text-ink-muted">{c.title || '—'}</td>
+            <td className="max-w-[8rem] truncate px-4 py-3 text-ink-muted">{c.roleTitle || c.role || '—'}</td>
+            <td className="max-w-[12rem] truncate px-4 py-3 text-ink-muted">{c.email || '—'}</td>
+            <td className="max-w-[8rem] truncate px-4 py-3 text-ink-muted">{c.phone || c.mobile || '—'}</td>
+            <td className="max-w-[8rem] truncate px-4 py-3 text-ink-muted">{c.segment || '—'}</td>
             <td className="px-4 py-3">
               <Badge color={recordStatusColor(recordStatus(c))}>{recordStatus(c)}</Badge>
             </td>
@@ -1026,7 +1139,7 @@ function CustomersTab({ account, customers, segments, canManage, onChanged }) {
             const inactive = isCustomerInactive(account, customer);
             return (
               <tr key={customer.id} className="interactive hover:bg-elevated/70">
-                <td className="mono px-4 py-3 text-ink-muted">{customer.customerId || 'Ã¢â‚¬â€'}</td>
+                <td className="mono px-4 py-3 text-ink-muted">{customer.customerId || '—'}</td>
                 <td className="px-4 py-3 font-medium text-ink">
                   <button
                     type="button"
@@ -1036,9 +1149,9 @@ function CustomersTab({ account, customers, segments, canManage, onChanged }) {
                     {customer.name}
                   </button>
                 </td>
-                <td className="px-4 py-3 text-ink-muted">{customer.email || 'Ã¢â‚¬â€'}</td>
+                <td className="px-4 py-3 text-ink-muted">{customer.email || '—'}</td>
                 <td className="px-4 py-3 text-ink-muted">
-                  {segmentNamesFor(customer, segments) || 'Ã¢â‚¬â€'}
+                  {segmentNamesFor(customer, segments) || '—'}
                 </td>
                 <td className="px-4 py-3 text-ink-muted">{account.ownerName || account.owner}</td>
                 <td className="px-4 py-3">
@@ -1157,7 +1270,7 @@ function CustomerDrawer({
         onClose={onClose}
         wide
         title={customer.name}
-        description={`Customer ${baseline.accountNumber || customer.id} Ã‚Â· ${account.name}`}
+        description={`Customer ${baseline.accountNumber || customer.id} · ${account.name}`}
       >
         <div className="min-h-0 flex-1 space-y-5 overflow-y-auto px-6 py-5 scroll-thin">
           {sections.map((section) => (
@@ -1205,7 +1318,7 @@ function CustomerDrawer({
       onClose={onClose}
       onSubmit={save}
       title={customer.name}
-      description={`Customer ${baseline.accountNumber || customer.id} Ã‚Â· ${account.name}`}
+      description={`Customer ${baseline.accountNumber || customer.id} · ${account.name}`}
       wide
       dirty={JSON.stringify(form) !== JSON.stringify(baseline)}
       busy={busy}
@@ -1237,7 +1350,7 @@ function CustomerDrawer({
                     options={field.options}
                     value={form[field.key]}
                     onChange={(e) => set({ [field.key]: e.target.value })}
-                    placeholder="Ã¢â‚¬â€"
+                    placeholder="—"
                   />
                 ) : (
                   <TextInput
@@ -1256,44 +1369,135 @@ function CustomerDrawer({
   );
 }
 
-function ProductsTab({ products }) {
+function AccountSchemaList({ kind, account, fallbackRows = [], canManage }) {
+  const schema = RECORD_SCHEMAS[kind];
+  const { toast } = useStore();
+  const query = useRecords(kind);
+  const createMutation = useCreateRecord(kind);
+  const updateMutation = useUpdateRecord(kind);
+  const [formOpen, setFormOpen] = useState(false);
+  const [editing, setEditing] = useState(null);
+  const [values, setValues] = useState({});
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+
+  if (!schema) return null;
+
+  const operational = recordRows(query).filter((row) => belongsToAccount(row, account));
+  const rows = operational.length ? operational : (fallbackRows || []).filter((row) => belongsToAccount(row, account) || !row.account);
+
+  const openNew = () => {
+    setEditing(null);
+    setValues({ account: account.name, accountId: account.id });
+    setError('');
+    setFormOpen(true);
+  };
+  const openEdit = (row) => {
+    setEditing(row);
+    setValues(row);
+    setError('');
+    setFormOpen(true);
+  };
+  const save = async (event) => {
+    event.preventDefault();
+    setBusy(true);
+    setError('');
+    try {
+      const changes = { ...values, account: account.name, accountId: account.id };
+      if (editing) await updateMutation.mutateAsync({ id: editing.id, changes });
+      else await createMutation.mutateAsync(changes);
+      toast?.(`${schema.singular} ${editing ? 'updated' : 'created'}`);
+      setFormOpen(false);
+      query.refetch?.();
+    } catch (err) {
+      setError(getErrorMessage(err, `Could not save ${schema.singular.toLowerCase()}.`));
+    } finally {
+      setBusy(false);
+    }
+  };
+
   return (
-    <Panel>
-      <Table
-        columns={[
-          'SP Product #',
-          'Product',
-          'Product Code',
-          'Size',
-          'Size Type',
-          'Service Category',
-          'Family',
-          'Status',
-        ]}
-      >
-        {products.map((p) => (
-          <tr key={p.id} className="interactive hover:bg-elevated/70">
-            <td className="mono px-4 py-3 text-ink-muted">{p.number}</td>
-            <td className="px-4 py-3 font-medium text-ink">{p.product}</td>
-            <td className="mono px-4 py-3 text-ink-muted">{p.code}</td>
-            <td className="px-4 py-3 text-ink-muted">{p.size}</td>
-            <td className="px-4 py-3 text-ink-muted">{p.sizeType}</td>
-            <td className="px-4 py-3 text-ink-muted">{p.category}</td>
-            <td className="px-4 py-3 text-ink-muted">{p.family}</td>
-            <td className="px-4 py-3">
-              <Badge color={recordStatusColor(recordStatus(p))}>{recordStatus(p)}</Badge>
-            </td>
-          </tr>
-        ))}
-        {products.length === 0 && (
-          <tr>
-            <td colSpan={8} className="px-4 py-8 text-center text-sm text-ink-faint">
-              No products linked yet.
-            </td>
-          </tr>
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="text-sm text-ink-muted">
+          {rows.length} {schema.title.toLowerCase()} for {account.name}
+        </p>
+        {canManage && (
+          <Button variant="primary" onClick={openNew}>
+            <Icon name="plus" size={14} /> {schema.newLabel}
+          </Button>
         )}
-      </Table>
-    </Panel>
+      </div>
+      <Panel>
+        <Table columns={schema.listColumns.map((column) => column.label)}>
+          {rows.map((row) => (
+            <tr key={row.id || row.number || row.name} className="interactive hover:bg-elevated/70">
+              {schema.listColumns.map((column, index) => (
+                <td key={column.key} className="px-4 py-3">
+                  {index === 0 ? (
+                    <button type="button" className="link-brand text-left" onClick={() => openEdit(row)}>
+                      {row[column.key] || '—'}
+                    </button>
+                  ) : column.key === 'status' ? (
+                    <Badge color={recordStatusColor(recordStatus(row))}>{recordStatus(row)}</Badge>
+                  ) : (
+                    <span className="text-ink-muted">{row[column.key] ?? '—'}</span>
+                  )}
+                </td>
+              ))}
+            </tr>
+          ))}
+          {!rows.length && (
+            <tr>
+              <td colSpan={schema.listColumns.length} className="px-4 py-8 text-center text-sm text-ink-faint">
+                No {schema.title.toLowerCase()} yet.
+              </td>
+            </tr>
+          )}
+        </Table>
+      </Panel>
+      {formOpen && (
+        <FormDrawer
+          onClose={() => setFormOpen(false)}
+          onSubmit={save}
+          title={editing ? `Edit ${schema.singular.toLowerCase()}` : schema.newLabel}
+          description={account.name}
+          wide
+          dirty
+          busy={busy}
+          error={error}
+          submitLabel={editing ? 'Save changes' : 'Create record'}
+        >
+          {schema.sections.map((section, index) => (
+            <FieldSection key={section.title} title={section.title} className={index ? 'border-t border-line pt-5' : ''}>
+              {section.fields.map((field) => (
+                <Field key={field.key} label={field.label} required={field.required} span2={!!field.span2}>
+                  {field.type === 'checkbox' ? (
+                    <Checkbox
+                      label="Yes"
+                      checked={!!values[field.key]}
+                      onChange={(e) => setValues((current) => ({ ...current, [field.key]: e.target.checked }))}
+                    />
+                  ) : field.type === 'select' ? (
+                    <Select
+                      options={field.options || []}
+                      value={values[field.key] || ''}
+                      onChange={(e) => setValues((current) => ({ ...current, [field.key]: e.target.value }))}
+                    />
+                  ) : (
+                    <TextInput
+                      type={field.type === 'number' ? 'number' : field.type === 'date' ? 'date' : 'text'}
+                      value={values[field.key] ?? ''}
+                      onChange={(e) => setValues((current) => ({ ...current, [field.key]: e.target.value }))}
+                    />
+                  )}
+                </Field>
+              ))}
+            </FieldSection>
+          ))}
+        </FormDrawer>
+      )}
+    </div>
   );
 }
 
@@ -1510,80 +1714,6 @@ function SegmentsTab({ account, segments, canManage = true, onChanged }) {
   );
 }
 
-function RoutesTab({ routes }) {
-  return (
-    <Panel>
-      <Table
-        columns={[
-          'Route #',
-          'Record Type',
-          'Dispatch',
-          'Route UID',
-          'Duration',
-          'Start',
-          'Truck',
-          'Driver',
-          'Status',
-          'Collection Type',
-          'Days',
-        ]}
-      >
-        {routes.map((r) => (
-          <tr key={r.id} className="interactive hover:bg-elevated/70">
-            <td className="px-4 py-3 font-medium text-ink">{r.routeNumber}</td>
-            <td className="px-4 py-3 text-ink-muted">{r.recordType}</td>
-            <td className="px-4 py-3 text-ink-muted">{r.dispatch}</td>
-            <td className="mono px-4 py-3 text-ink-muted">{r.routeUID}</td>
-            <td className="px-4 py-3 text-ink-muted">{r.duration}</td>
-            <td className="px-4 py-3 text-ink-muted">{r.startTime}</td>
-            <td className="px-4 py-3 text-ink-muted">{r.truck}</td>
-            <td className="px-4 py-3 text-ink-muted">{r.driver}</td>
-            <td className="px-4 py-3">
-              <Badge color={recordStatusColor(r.status)}>{r.status}</Badge>
-            </td>
-            <td className="px-4 py-3 text-ink-muted">{r.collectionType}</td>
-            <td className="px-4 py-3 text-ink-muted">{r.collectionDays || 'Ã¢â‚¬â€'}</td>
-          </tr>
-        ))}
-        {routes.length === 0 && (
-          <tr>
-            <td colSpan={11} className="px-4 py-8 text-center text-sm text-ink-faint">
-              No routes yet.
-            </td>
-          </tr>
-        )}
-      </Table>
-    </Panel>
-  );
-}
-
-function NotificationsTab({ account }) {
-  const notifQuery = useNotificationConfig();
-  const rules = notifQuery.data || [];
-  return (
-    <Panel>
-      <div className="border-b border-line px-5 py-4">
-        <p className="type-overline">Service notifications</p>
-        <p className="mt-1 text-sm text-ink-muted">
-          Platform rules that can notify residents for {account.name}. Edit rules under Notification Config.
-        </p>
-      </div>
-      <Table columns={['Rule', 'Event', 'Channel', 'Priority', 'Status']}>
-        {rules.map((r) => (
-          <tr key={r.id} className="interactive hover:bg-elevated/70">
-            <td className="px-4 py-3 font-medium text-ink">{r.name}</td>
-            <td className="mono px-4 py-3 text-ink-muted">{r.event}</td>
-            <td className="px-4 py-3 text-ink-muted">{r.channel}</td>
-            <td className="px-4 py-3 text-ink-muted">{r.priority}</td>
-            <td className="px-4 py-3">
-              {r.enabled ? <Badge color="green">Enabled</Badge> : <Badge color="slate">Paused</Badge>}
-            </td>
-          </tr>
-        ))}
-      </Table>
-    </Panel>
-  );
-}
 
 function MindMapNode({ icon, label, count, meta, onClick, emphasis, reachable = true, children }) {
   return (
@@ -1658,7 +1788,7 @@ function MindMap({
       icon: 'users',
       label: 'Contacts',
       count: contacts.length,
-      meta: 'Provider employees Ã‚Â· one segment each',
+      meta: 'Provider employees · one segment each',
       tab: 'contacts',
     },
     {
@@ -1666,7 +1796,7 @@ function MindMap({
       icon: 'user',
       label: 'Customers',
       count: customers.length,
-      meta: 'Residents Ã‚Â· customer, junction, location',
+      meta: 'Residents · customer, junction, location',
       tab: 'customers',
     },
     {
@@ -1682,7 +1812,7 @@ function MindMap({
       icon: 'layers',
       label: 'Service Provider Segments',
       count: segments.length,
-      meta: 'Top Ã¢â€ â€™ Market Area Ã¢â€ â€™ District Ã¢â€ â€™ Division',
+      meta: 'Top → Market Area → District → Division',
       tab: 'segments',
     },
     {
@@ -1710,7 +1840,7 @@ function MindMap({
       label: 'Manage account',
       count: serviceModules.length,
       meta: serviceModules.length
-        ? `Service modules Ã‚Â· ${serviceModules.join(', ')}`
+        ? `Service modules · ${serviceModules.join(', ')}`
         : 'Provider settings, automation, notifications',
       tab: 'details',
     },
@@ -1801,7 +1931,7 @@ function MindMap({
           })}
         </div>
         <p className="mt-2 text-xs text-ink-faint">
-          {plural(segments.length, 'segment')} Ã‚Â· {plural(contacts.length, 'provider user')} Ã‚Â·{' '}
+          {plural(segments.length, 'segment')} · {plural(contacts.length, 'provider user')} ·{' '}
           {plural(customers.length, 'resident')}
         </p>
       </div>

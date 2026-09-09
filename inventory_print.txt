@@ -1,0 +1,590 @@
+﻿=== LIST MODULES ===
+accounts|Accounts|cols=['Account Name', 'Type', 'Industry', 'Owner', 'Phone', 'City']|toggles=[]|new=None|import=None|empty=None|hot=False|style=None|global=True|account=False|settings=False
+aggTips|Trip Data|cols=['Date', 'Truck #', '# Tips', 'Total Distance', 'Idle Time (min)', 'Speeding Events']|toggles=[]|new=None|import=None|empty=None|hot=False|style=None|global=False|account=True|settings=False
+assets|Assets / Trucks|cols=['Asset Name', 'Serial Number', 'Status', 'Customer Location', 'Product', 'Install Date']|toggles=['Asset', 'Truck']|new=None|import=None|empty=None|hot=False|style=None|global=False|account=True|settings=False
+contacts|Contacts|cols=['Contact Name', 'Role Title', 'Email', 'Phone', 'Status']|toggles=[]|new=None|import=None|empty=None|hot=False|style=None|global=False|account=True|settings=False
+customers|Customers|cols=['Customer #', 'Name', 'Segment', 'Email', 'Phone']|toggles=[]|new=None|import=None|empty=None|hot=False|style=None|global=False|account=True|settings=False
+dispatches|Dispatches|cols=['Dispatch Number', 'Route Date', 'Status', 'Truck', 'Driver', 'Service Type']|toggles=[]|new=None|import=None|empty=None|hot=False|style=None|global=False|account=True|settings=False
+locations|Locations|cols=['Location Name', 'Address', 'Type', 'Zone', 'Validated']|toggles=[]|new=None|import=None|empty=None|hot=False|style=None|global=False|account=True|settings=False
+maintProfiles|Route Profile Templates|cols=['Profile Name', 'Service Type', '# Trucks', 'Start Time', 'Duration', 'Segment']|toggles=[]|new=None|import=None|empty=None|hot=False|style=None|global=False|account=True|settings=True
+masterProducts|Master Product Catalog|cols=['Product', 'Family', 'Volume', 'Service Type', 'Active']|toggles=[]|new=None|import=None|empty=None|hot=False|style=None|global=True|account=False|settings=False
+notes|Notes & Attachments|cols=['Subject', 'Author', 'Created']|toggles=[]|new=None|import=None|empty=None|hot=False|style=None|global=False|account=True|settings=False
+notifications|Service Notifications|cols=['Notification Name', 'Status', 'Notify Days', 'Trigger', 'From Email', 'Email Subject']|toggles=[]|new=None|import=None|empty=None|hot=False|style=None|global=False|account=True|settings=True
+products|Service Provider Products|cols=['Product', 'Product Code', 'Service Category', 'Status', 'Family']|toggles=[]|new=None|import=None|empty=None|hot=False|style=None|global=False|account=True|settings=True
+reqCodes|Request Type & Resolution Codes|cols=['RRC #', 'Default', 'Request Type', 'Resolution Code', 'Workflow Type', '# of Attempts']|toggles=[]|new=None|import=None|empty=None|hot=False|style=None|global=False|account=True|settings=True
+requestTypes|Request Types|cols=['Code', 'Name', 'Workflow', 'Category', 'Service Category', 'Segment', 'Active']|toggles=[]|new=None|import=None|empty=None|hot=False|style=None|global=False|account=True|settings=True
+resolutionCodes|Resolution Codes|cols=['Code', 'Name', 'Workflow', 'Description', 'Active']|toggles=[]|new=None|import=None|empty=None|hot=False|style=None|global=False|account=True|settings=True
+routes|Routes|cols=['Route Number', 'Type', 'Days', 'Status', 'Truck', 'Driver', 'Segment']|toggles=['Collection', 'Maintenance', 'All']|new=None|import=None|empty=None|hot=False|style=None|global=False|account=True|settings=False
+segments|Service Provider Segments|cols=['Segment Name', 'Type', 'Parent']|toggles=[]|new=None|import=None|empty=None|hot=False|style=tree|global=False|account=True|settings=True
+tips|Tips & Non-Tips|cols=['Event Date / Time', 'Customer Location', 'Collection Route', 'Tipped', 'Truck #']|toggles=['Tip Events', 'Non-Tip Events', 'All']|new=None|import=None|empty=None|hot=False|style=None|global=False|account=True|settings=False
+trucks|Trucks|cols=['Truck Name', 'Truck #', 'Status', 'Service Type', 'Driver']|toggles=[]|new=None|import=None|empty=None|hot=False|style=None|global=False|account=True|settings=False
+workOrders|Work Orders|cols=['Work Order', 'Customer', 'Request Type', 'Subject', 'Due Date', 'Priority', 'Status']|toggles=[]|new=None|import=None|empty=None|hot=True|style=None|global=False|account=True|settings=False
+
+=== NON-LIST MODULES ===
+apiIntegrations|API Integrations|kind=configure|global=True
+assetTypes|Asset Types|kind=configure|global=True
+bulkImport|WOIT Import|kind=bulkImport|global=True
+chatter|Activity|kind=chatter|global=True
+dashboards|Dashboards|kind=dashboards|global=True
+device|Device|kind=configure|global=True
+home|Home|kind=dashboard|global=True
+locationTypes|Location Types|kind=configure|global=True
+manageAccount|Manage Customers|kind=manageAccount|global=False
+mapCenter|Map Center|kind=mapCenter|global=True
+mindmap|Mindmap|kind=special|global=False
+myAccount|My Account|kind=customerPortal|global=True
+myLocations|My Locations|kind=customerPortal|global=True
+myNotifications|Notifications|kind=customerPortal|global=True
+myWorkOrders|My Work Orders|kind=customerPortal|global=True
+productTypes|Product|kind=configure|global=True
+profileMgmtNav|Profile Management|kind=None|global=False
+reportSubs|Report Subscriptions|kind=reportSubs|global=True
+reports|Reports|kind=reports|global=True
+serviceNotifConfig|Service Notification Config|kind=configure|global=True
+serviceTypes|Service Types|kind=configure|global=True
+setup|Workspace|kind=setup|global=True
+tagScheme|Tag Scheme|kind=configure|global=True
+truck|Truck|kind=configure|global=True
+userMgmtNav|User Management|kind=None|global=False
+
+=== FORMS ===
+
+## accounts: Account
+  [Account Information]
+    - Account Name (text)
+    - Account Owner (text)
+    - Type (select)
+    - Parent Account (lookup)
+    - Website (text)
+    - Phone (text)
+    - Description (textarea)
+    - Industry (select)
+    - Service Provider UID (text)
+    - Employees (number)
+    - JDEdwardsId (text)
+    - Number Of Weeks (number)
+    - Service Types (multiselect)
+    - InActive (checkbox)
+    - Track Observations (checkbox)
+    - Support Email (text)
+    - Track Safety Events (checkbox)
+    - Is Tableau Cloud? (checkbox)
+    - Service Modules (text)
+    - Hardware Type (text)
+  [Automated Work Orders]
+    - Enable Auto WO (checkbox)
+  [Hot Ticket Conversion]
+    - Enable Auto Hot Ticket (checkbox)
+    - Auto Hot Ticket Days (number)
+  [Move Burnt Carts]
+    - Enable Auto Move Burnt Carts to Yard (checkbox)
+  [Service Notifications Detail]
+    - Enable Service Notification Tab (checkbox)
+    - SMS Failed (checkbox)
+    - Send Service Notifications (checkbox)
+    - Phone Failed (checkbox)
+    - Message Limit (number)
+    - SendGrid Service Failed (checkbox)
+    - Time Zone (select)
+    - Start Time (time)
+    - End Time (time)
+    - Email Send Time (time)
+    - SMS Send Time (time)
+  [Address Information]
+    - Billing Address (sublabel)
+    - Shipping Address (sublabel)
+    - Billing Address Search (text)
+    - Shipping Address Search (text)
+    - Billing Country (select)
+    - Shipping Country (select)
+    - Billing Street (textarea)
+    - Shipping Street (textarea)
+    - Billing City (text)
+    - Shipping City (text)
+    - Billing State/Province (select)
+    - Shipping State/Province (select)
+    - Billing Zip/Postal Code (text)
+    - Shipping Zip/Postal Code (text)
+    - IsShippingAddressUpdated (checkbox)
+
+## contacts: Contact
+  [Contact Information]
+    - Salutation (select)
+    - Email (text)
+    - First Name (text)
+    - Phone (text)
+    - Last Name (text)
+    - Home Phone (text)
+    - Service Provider (lookup)
+    - Mobile (text)
+    - Service Provider Segment (lookup)
+    - Fax (text)
+    - Role Title (select)
+    - Title (text)
+    - Department (text)
+    - Assistant (text)
+    - Reports To (lookup)
+    - Asst. Phone (text)
+    - Nick Name (text)
+    - Birthdate (date)
+  [Address Information]
+    - Mailing Address (sublabel)
+    - Other Address (sublabel)
+    - Mailing Country (select)
+    - Other Country (select)
+    - Mailing Street (textarea)
+    - Other Street (textarea)
+    - Mailing City (text)
+    - Other City (text)
+    - Mailing State/Province (select)
+    - Other State/Province (select)
+    - Mailing Zip/Postal Code (text)
+    - Other Zip/Postal Code (text)
+
+## products: Product
+  [Product Information]
+    - Product Name (text)
+    - Product Family (select)
+    - Product Code (text)
+    - External ID (text)
+    - Product Size (text)
+    - Active (checkbox)
+    - Service Type (select)
+    - Service Category (select)
+    - Product Description (textarea)
+
+## assets: Asset
+  [Asset Details]
+    - Un-Validated Serial Number (checkbox)
+    - External Id (text)
+    - Pool Id (text)
+  [Asset Information]
+    - Asset Name (text)
+    - Asset Status (select)
+    - Product (lookup)
+    - Asset Sub-Status (select)
+    - Account (lookup)
+    - Serial Number (text)
+    - Competitor Asset (checkbox)
+    - Industrial Container Conditions (multiselect)
+    - Usage End Date (date)
+    - Asset Record Type (text)
+  [Asset Details]
+    - RFID Number (text)
+    - Home Location (sublabel)
+    - Container Number (text)
+    - Latitude (text)
+    - Container Barcode Number (text)
+    - Longitude (text)
+    - Price (number)
+    - Customer Location (lookup)
+    - Quantity (number)
+    - Warehouse (lookup)
+    - Unit of Measure (text)
+    - Purchase Date (date)
+    - Install Date (date)
+  [Additional Information]
+    - Custom 1 (text)
+    - Custom 6 (text)
+    - Custom 2 (text)
+    - Custom 7 (text)
+    - Custom 3 (text)
+    - Custom 8 (text)
+    - Custom 4 (text)
+    - Custom 5 (text)
+  [System Information]
+    - Created By (text)
+    - Last Modified By (text)
+
+## locations: Location
+  [Information]
+    - Location Number (text)
+    - Location Name (text)
+    - Service Provider (lookup)
+    - Location Type (select)
+    - House Number (text)
+    - Geolocation (sublabel)
+    - Street (textarea)
+    - Latitude (text)
+    - Longitude (text)
+    - Unit # (text)
+    - Zone (text)
+    - City (text)
+    - Trash Collection Route (lookup)
+    - State (select)
+    - Recycle Collection Route (lookup)
+    - Zip Code (text)
+    - Organic Collection Route (lookup)
+    - Country (select)
+    - Yard Waste Route (lookup)
+    - County (text)
+    - Parcel Id (text)
+    - Site Id (text)
+    - Repair Facility (checkbox)
+    - Segment (lookup)
+    - Owner (text)
+    - Missing Cart Retrieve Only? (checkbox)
+    - External ID (text)
+    - ShipToId (text)
+  [System Information]
+    - Created By (text)
+    - Last Modified By (text)
+
+## customers: Customer
+  [Information]
+    - Email (text)
+    - Service Provider (lookup)
+    - Name (text)
+    - Customer # (text)
+    - Fax (text)
+    - Phone (text)
+    - Mobile Phone (text)
+    - Parent Customer (lookup)
+    - Owner (text)
+    - Segment (lookup)
+    - Custom 1 (text)
+    - Custom 2 (text)
+    - Custom 3 (text)
+    - Custom 4 (text)
+    - Custom 5 (text)
+    - Custom 6 (text)
+
+## trucks: Truck
+  [Information]
+    - Truck Name (text)
+    - Truck # (text)
+    - Service Provider (lookup)
+    - Warehouse Location (lookup)
+    - Status (select)
+    - Assign to this truck (checkbox)
+    - Segment (lookup)
+    - Timezone (select)
+  [Truck Details]
+    - Body Make (text)
+    - Service Type (select)
+    - Chassis Make (text)
+    - Type (select)
+    - Body Model (text)
+    - Fuel Type (select)
+    - Chassis Model (text)
+    - Plate # (text)
+    - Size (text)
+  [Devices]
+    - RFID Reader (text)
+    - All-in-One Device (text)
+    - Telematics Device (text)
+    - Device 4 (text)
+
+## routes: Route
+  [Information]
+    - Route Number (text)
+    - Record Type (text)
+    - Dispatch (lookup)
+    - Configured Duration (text)
+    - Route UID (text)
+    - Configured Start Time (time)
+    - Truck (lookup)
+    - Service Provider Segment (lookup)
+    - Driver (lookup)
+    - Service Provider (lookup)
+    - Status (select)
+    - Collection Type (select)
+    - Collection Days (text)
+    - # of Expected Containers (number)
+
+## dispatches: Dispatch
+  [Information]
+    - Dispatch Number (text)
+    - Maintenance Route Profile (lookup)
+    - Service Provider (lookup)
+    - Status (select)
+    - Route Date (date)
+    - Service Provider Segment (lookup)
+    - Service Type (multiselect)
+    - Truck (lookup)
+    - Driver (lookup)
+    - Start Time (time)
+
+## workOrders: Work Order
+  [Detail]
+    - Work Order Owner (text)
+    - Request Type Name (text)
+    - Work Order Number (text)
+    - Case Status (text)
+    - Contact Name (lookup)
+    - Closed w/ Desired Resolution (checkbox)
+    - Account Name (lookup)
+    - Contact Phone (text)
+    - Work Order # (Link) (text)
+    - Contact Email (text)
+    - Case Route (text)
+    - Number of Attachments (number)
+    - Truck Status (text)
+    - Service Type (select)
+    - Product Name (text)
+    - Work Order LUID (text)
+    - Contact Name (Formula) (text)
+    - SP Work Order Route # (text)
+    - Work Order # (Text) (text)
+    - Collection Route Number (text)
+    - Actual Container Size+Type (text)
+    - External Id (text)
+    - Expected Asset Size+Type (text)
+    - Work Order Id Calc (text)
+    - Yesterday After 3 pm (text)
+    - Collection Route Number # (lookup)
+    - Formatted ClosedDate EST (text)
+    - Segment Work Order GUID Mapping (text)
+    - Lakeland WO Notes (text)
+    - Work Order GUID (text)
+    - Completion Day (text)
+    - Attachment 1 Photo (text)
+    - Completion Time (text)
+    - Photo 1 Url (text)
+    - Last Attempt Date (text)
+    - Photo 1 Text URL (text)
+    - Last Attempt Time (text)
+    - Attachment 2 Photo (text)
+    - Request Type Description (text)
+    - Photo 2 Url (text)
+    - Collection Route Number Name Formula (text)
+    - Photo 2 Text URL (text)
+    - Quantity/Size (text)
+    - Observation (lookup)
+    - Pickup Type (text)
+    - Billing Account Number (text)
+    - Pickup Size (text)
+    - Date/Time Opened (Formula) (text)
+    - Dispatch SFDC ID (text)
+    - Completion Date (Formula) (text)
+    - Asset Type Product Name (text)
+    - Last Attempt Date/Time (Formula) (text)
+    - Pickup Date (date)
+    - Pickup Time (time)
+    - Yard Location Id (text)
+    - Sent Date Time (Formula) (text)
+    - Last Modified By: Full Name (Formula) (text)
+    - 24 Hrs Date/Time Opened (text)
+  [Work Order Information]
+    - Due Date (date)
+    - Hot Ticket (checkbox)
+    - Due Date Type (select)
+    - Service Day (text)
+    - Request Date (date)
+    - Request Type (lookup)
+    - Completion Date (date)
+    - Completion Time (time)
+    - Request Type Resolution Code (lookup)
+    - Customer Account (lookup)
+    - Resolution Code Name (text)
+    - Dispatch (lookup)
+    - Resolution Comments (textarea)
+    - Route Date (date)
+    - WO Notes (textarea)
+    - Last Attempt Date (date)
+    - Last Attempt Time (time)
+    - Attempt Latitude (text)
+    - Attempt Longitude (text)
+    - # of Attempts (number)
+  [Asset Information]
+    - Asset (lookup)
+    - Asset To Remove/Repair (lookup)
+    - Asset Type (lookup)
+    - Removed Asset Serial # (lookup)
+    - Asset Type To Remove (lookup)
+    - Removed Asset Link (text)
+    - Delivered Asset Serial # (lookup)
+    - Relocated Asset (lookup)
+    - Delivered Asset Link (text)
+    - Asset (Additional) (lookup)
+    - Asset To Relocate (lookup)
+  [Dispatch Detail]
+    - Dispatch Number (text)
+    - Route ID (text)
+    - Dispatch Date (date)
+    - Route Number (text)
+    - Dispatch Id (text)
+    - Dispatch Status (text)
+    - Driver ID (text)
+    - Dispatch Created By (lookup)
+    - Driver Name (lookup)
+    - Dispatch Last Modified By (lookup)
+    - Stop Number (number)
+    - Yard Location Id (text)
+    - Truck Number (text)
+  [Additional Information]
+    - Maintenance Type Group (text)
+    - Work Order Attempt Status (text)
+    - Maintenance Type Removal (text)
+    - Work Order created past 24 hours (checkbox)
+    - Maintenance Type Deliver (text)
+    - Work Order Origin (select)
+    - Service Day Number (text)
+    - Status (select)
+    - Subject (text)
+    - Priority (select)
+    - Description (textarea)
+    - Internal Comments (textarea)
+  [Recurrence Information]
+    - Recurrence Frequency (select)
+    - Recurs Every (multiselect)
+    - Recurrence Start Date (date)
+    - Recurrence End Date (date)
+    - Created via recurrence? (checkbox)
+    - Work Order Number (recurrence-scoped) (text)
+  [QAlert Sync Info]
+    - Ext Integration Source (text)
+    - Ext Integration Date (date)
+    - Ext Integration Time (time)
+    - Ext Integration Sync (checkbox)
+    - Ext Integration Attempt Count (number)
+  [Web Information]
+    - Date/Time Opened (text)
+    - Date/Time Closed (text)
+    - Web Name (text)
+    - Web Company (text)
+  [System Information]
+    - Close all removal work order (text)
+    - Close asset removal work order (text)
+    - Created By (text)
+    - Last Modified By (text)
+
+## maintProfiles: Maintenance Route Profile
+  [Information]
+    - Maintenance Route Profile Name (text)
+    - Number Of Trucks (number)
+    - Service Provider (lookup)
+    - Capacity Buffer (number)
+    - Start Location (lookup)
+    - End Location (lookup)
+    - Start Time (time)
+    - Duration (text)
+    - Service Type (select)
+    - Service Provider Segment (lookup)
+
+## segments: Service Provider Segment
+  [Information]
+    - Service Provider Segment Name (text)
+    - Service Provider (lookup)
+    - Type (select)
+    - Name (text)
+    - Parent (lookup)
+    - Delay Sharing (checkbox)
+    - Delay Duration (number)
+  [Record Sharing Items]
+    - Public Group ID (text)
+
+## aggTips: Aggregated Truck and Tip
+  [Information]
+    - Aggregated Truck and Tip Name (text)
+    - Owner (text)
+    - Service Provider (lookup)
+    - Collection Route (lookup)
+    - Truck (lookup)
+    - Device (text)
+    - Date (date)
+    - # of Tips (RFID read or Arm Lift) (number)
+    - Avg Time Between Stops (text)
+    - Truck # (text)
+    - Truck Type (text)
+    - Truck Start Time (time)
+    - Truck Run Time (minutes) (number)
+    - Average Speed (miles/Hour) (number)
+    - Idle Time (minutes) (number)
+    - Total Distance Traveled (Miles) (number)
+    - # of Hard Brakes (number)
+    - # of Hard Accels (number)
+    - # of Speeding Events (number)
+    - Gallons used (Diesel) (number)
+    - Gallons used (CNG) (number)
+    - Miles Until Next Service (number)
+    - # of Non-Tip/Overrides (number)
+
+## tips: Individual Tip / Non-Tip Event
+  [Information]
+    - Individual Tip / Non-Tip Events Name (text)
+    - Service Provider (lookup)
+    - SFDC Device Id (text)
+    - SFDC Truck ID (lookup)
+    - Error Code (text)
+    - InsyncId (text)
+    - Error Description (select)
+    - Record Type (text)
+    - Event Start Date/Time (datetime)
+    - Collection Route (lookup)
+    - Event End Date/Time (datetime)
+    - Event Start (sublabel)
+    - Event End (sublabel)
+    - Latitude (text)
+    - Longitude (text)
+    - Latitude (text)
+    - Longitude (text)
+    - Heading (number)
+    - Amount Over Limit (Miles per hour) (number)
+    - Max Speed (Miles per hour) (number)
+    - Timezone (select)
+    - Duration (number)
+    - ImageUrl (text)
+    - readerEvent (text)
+    - Owner (text)
+
+## reqCodes: Request Type Resolution Code
+  [Junction Identity]
+    - RRC # (text)
+    - Service Provider (lookup)
+    - Segment (lookup)
+  [The Mapping]
+    - Request Type (lookup)
+    - Resolution Code (lookup)
+    - Workflow Type (select)
+    - Number of Attempts (number)
+    - Is Default (checkbox)
+
+## requestTypes: Request Type
+  [Identity]
+    - Code (text)
+    - Name (text)
+    - Service Provider (lookup)
+    - Segment (lookup)
+  [Classification]
+    - Workflow (select)
+    - Request Type Category (select)
+    - Service Category (select)
+  [Due Date Computation (Collection routes)]
+    - Due Date Type (select)
+    - Completion Days (number)
+  [Availability]
+    - Active (checkbox)
+
+## resolutionCodes: Resolution Code
+  [Identity]
+    - Code (text)
+    - Name (text)
+    - Service Provider (lookup)
+  [Classification]
+    - Workflow (select)
+    - Description (textarea)
+  [Availability]
+    - Active (checkbox)
+
+## notes: Note
+  [Note]
+    - Subject (text)
+    - Author (text)
+    - Account (lookup)
+    - Created (date)
+    - Body (textarea)
+
+## notifications: Service Notification
+  [Information]
+    - Service Notification Name (text)
+    - To be sent based on (select)
+    - Service Provider (lookup)
+    - Notify Days (number)
+    - From Email (text)
+    - Email Subject (text)
+    - Email Body (textarea)
+    - Message Body (textarea)
+    - Display Name (text)
+    - Automated Message (textarea)
+    - Enable Service Notifications (checkbox)

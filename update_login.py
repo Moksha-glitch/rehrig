@@ -1,124 +1,37 @@
-import React, { useEffect, useId, useRef, useState } from 'react';
-import Icon from '../components/Icon.jsx';
-import RehrigLogo from '../components/RehrigLogo.jsx';
-import ThemeToggle from '../components/ThemeToggle.jsx';
-import { useAuth } from '../state/AuthContext.jsx';
-import { useStore } from '../state/AppStore.jsx';
-import { useDemoUsers } from '../hooks/useDemoUsers.js';
-import { getErrorMessage } from '../lib/errors.js';
-const PERSONA_TABS = [
-  { key: 'rehrig', label: 'Rehrig' },
-  { key: 'sp', label: 'Provider' },
-  { key: 'customer', label: 'Customer' },
-];
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+import re
 
-function validateFields(username, password) {
-  const next = {};
-  const trimmed = username.trim();
-  if (!trimmed) next.username = 'Enter your username.';
-  else if (!EMAIL_RE.test(trimmed)) next.username = 'Use your work email as your username.';
-  if (!password) next.password = 'Enter your password.';
-  return next;
-}
+with open('src/screens/Login.jsx', 'r', encoding='utf-8') as f:
+    content = f.read()
 
-export default function Login() {
-  const { login, rememberDefault } = useAuth();
-  const { state, setTheme } = useStore();
-  const usernameId = useId();
-  const passwordId = useId();
-  const formErrorId = useId();
-  const usernameErrorId = useId();
-  const passwordErrorId = useId();
-  const formDomId = 'login-form';
-
-  const usernameRef = useRef(null);
-  const passwordRef = useRef(null);
-  const formErrorRef = useRef(null);
-
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const [formError, setFormError] = useState('');
-  const [fieldErrors, setFieldErrors] = useState({});
-  const [demoOpen, setDemoOpen] = useState(false);
-  const [demoTab, setDemoTab] = useState('rehrig');
-  const demoPanelId = useId();
-  const tablistId = useId();
-
-  const demoUsersQuery = useDemoUsers();
-  const allDemoUsers = demoUsersQuery.data || [];
-  const demoUsers = allDemoUsers.filter((user) => user.persona === demoTab);
-
-  useEffect(() => {
-    usernameRef.current?.focus();
-  }, []);
-
-  useEffect(() => {
-    if (formError) formErrorRef.current?.focus();
-  }, [formError]);
-
-  const clearErrors = () => {
-    setFormError('');
-    setFieldErrors({});
-  };
-
-  const finishLogin = async (loginEmail, loginPassword) => {
-    setFormError('');
-    setBusy(true);
-    try {
-      await login(loginEmail, loginPassword, { remember: rememberDefault });
-    } catch (error) {
-      setFormError(getErrorMessage(error, 'Unable to sign in. Check your username and password.'));
-      passwordRef.current?.focus();
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  const signIn = async (event) => {
-    event.preventDefault();
-    const next = validateFields(username, password);
-    setFieldErrors(next);
-    setFormError('');
-
-    if (next.username) {
-      usernameRef.current?.focus();
-      return;
-    }
-    if (next.password) {
-      passwordRef.current?.focus();
-      return;
-    }
-
-    await finishLogin(username.trim().toLowerCase(), password);
-  };
-
-  const useDemoUser = (user) => {
-    if (!user.active) {
-      setFormError('This account is inactive and cannot sign in.');
-      return;
-    }
-    setUsername(user.email);
-    setPassword('vision');
-    setFieldErrors({});
-    finishLogin(user.email, 'vision');
-  };
-
-  const startSso = () => {
-    setFieldErrors({});
-    setFormError(
-      'Single sign-on must be enabled for your organization. Contact your administrator to request access.'
-    );
-  };
-
+# Find index of "  return (" followed by the return statement
+start_idx = content.index('\n  return (')
+new_return = r"""
   return (
     <main
       className="box-border flex min-h-screen w-full flex-col items-center justify-center p-6 lg:p-12 relative overflow-hidden"
-      style={{ background: '#1E2761' }}
+      style={{
+        background: 'linear-gradient(135deg, #111827 0%, #1E2761 50%, #0F1940 100%)',
+        backgroundImage: `url(${loginBg})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
     >
+      {/* Gradient overlays for depth */}
+      <div className="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
+        <div style={{
+          position:'absolute',top:'-20%',right:'-10%',
+          width:'60%',height:'80%',
+          background:'radial-gradient(ellipse, rgba(52,87,213,0.3) 0%, transparent 70%)',
+          filter:'blur(40px)',
+        }} />
+        <div style={{
+          position:'absolute',bottom:'-20%',left:'-10%',
+          width:'50%',height:'70%',
+          background:'radial-gradient(ellipse, rgba(30,39,97,0.4) 0%, transparent 70%)',
+          filter:'blur(50px)',
+        }} />
+      </div>
 
       {/* Absolute Logo */}
       <div className="absolute top-6 left-6 lg:top-12 lg:left-12 z-10">
@@ -138,7 +51,7 @@ export default function Login() {
             <span className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-white/70 border border-white/10">Rehrig Pacific Company</span>
           </div>
           <h1 className="font-display text-4xl lg:text-[4.5rem] font-bold tracking-tight mb-5 text-white leading-[1.05]">
-            Secure<br />Partner<br /><span className="text-[#CADCFC]">Gateway</span>
+            Secure<br />Partner<br /><span style={{background:'linear-gradient(135deg, #CADCFC, #9FBEF8)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent'}}>Gateway</span>
           </h1>
           <p className="text-sm lg:text-base leading-relaxed text-white/60 max-w-sm">
             Your operational companion designed to scale your service partner operations safely, efficiently, and beautifully.
@@ -165,7 +78,7 @@ export default function Login() {
         >
           <div
             className="px-3 py-2 text-center text-[11px] font-semibold text-white"
-            style={{ background: '#1E2761' }}
+            style={{background:'linear-gradient(135deg, #1E2761 0%, #3457D5 100%)'}}
           >
             Vision Operations Platform
           </div>
@@ -174,7 +87,7 @@ export default function Login() {
             <div className="mb-8 flex items-center gap-2.5 text-brand">
               <div
                 className="flex h-7 w-7 items-center justify-center rounded-lg text-white"
-                style={{ background: '#1E2761', boxShadow: '0 2px 8px rgba(30,39,97,0.3)' }}
+                style={{background:'linear-gradient(135deg, #1E2761, #3457D5)', boxShadow:'0 2px 8px rgba(30,39,97,0.3)'}}
               >
                 <Icon name="star" size={14} className="fill-current" />
               </div>
@@ -319,7 +232,7 @@ export default function Login() {
                 aria-busy={busy}
                 className="mt-2 flex min-h-[3rem] w-full items-center justify-center gap-2 rounded-xl text-sm font-bold text-white transition-all disabled:opacity-60"
                 style={{
-                  background: '#1E2761',
+                  background: 'linear-gradient(135deg, #1E2761 0%, #3457D5 100%)',
                   boxShadow: '0 4px 16px rgba(30,39,97,0.4)',
                 }}
               >
@@ -435,3 +348,12 @@ export default function Login() {
     </main>
   );
 }
+"""
+
+# Replace from "  return (" to the end of the file
+content = content[:start_idx] + new_return
+
+with open('src/screens/Login.jsx', 'w', encoding='utf-8') as f:
+    f.write(content)
+
+print('Login.jsx updated successfully')

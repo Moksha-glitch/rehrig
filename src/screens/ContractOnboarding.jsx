@@ -5,7 +5,7 @@ import { FileConfirm, WizardChatbot, validateContractFile } from './wizard/Wizar
 import { extractContractFile } from '@backend/assistant.js';
 
 /**
- * Contract Onboarding â€” upload â†’ AI ingest â†’ form + reactive chatbot.
+ * Contract Onboarding — upload → AI ingest → form + reactive chatbot.
  *
  * State architecture (shared parent):
  *   ContractOnboarding (parent)
@@ -13,8 +13,8 @@ import { extractContractFile } from '@backend/assistant.js';
  *     â”œâ”€ missingFields (derived) â† drives warning banner + chat context
  *     â”œâ”€ handleFieldChange       â† form edits
  *     â””â”€ handleChatUpdate        â† chatbot writes into the same form state
- *          â†’ Form re-renders immediately (two-way binding)
- *          â†’ when missingFields.length === 0, warning clears & Complete enables
+ *          → Form re-renders immediately (two-way binding)
+ *          → when missingFields.length === 0, warning clears & Complete enables
  */
 
 const MANDATORY_FIELDS = [
@@ -22,52 +22,52 @@ const MANDATORY_FIELDS = [
     key: 'companyName',
     label: 'Company Name',
     question: 'What is the company name?',
-    placeholder: 'Type the company nameâ€¦',
-    hint: 'Type just the value â€” or pick another missing field below.',
+    placeholder: 'Type the company name…',
+    hint: 'Type just the value — or pick another missing field below.',
   },
   {
     key: 'registrationNumber',
     label: 'Registration Number',
     question: 'What is the registration number?',
-    placeholder: 'Type the registration numberâ€¦',
-    hint: 'Type just the value â€” or pick another missing field below.',
+    placeholder: 'Type the registration number…',
+    hint: 'Type just the value — or pick another missing field below.',
   },
   {
     key: 'contractValue',
     label: 'Contract Value',
     question: 'What is the contract value?',
-    placeholder: 'Type the contract valueâ€¦',
-    hint: 'Type just the amount â€” or pick another missing field below.',
+    placeholder: 'Type the contract value…',
+    hint: 'Type just the amount — or pick another missing field below.',
   },
   {
     key: 'startDate',
     label: 'Start Date',
     question: 'What is the contract start date?',
-    placeholder: 'Type the start date (YYYY-MM-DD)â€¦',
-    hint: 'Type just the date â€” or pick another missing field below.',
+    placeholder: 'Type the start date (YYYY-MM-DD)…',
+    hint: 'Type just the date — or pick another missing field below.',
   },
   {
     key: 'signatoryName',
     label: 'Signatory Name',
     question: 'Who is the signatory?',
-    placeholder: 'Type the signatory nameâ€¦',
-    hint: 'Type just the name â€” or pick another missing field below.',
+    placeholder: 'Type the signatory name…',
+    hint: 'Type just the name — or pick another missing field below.',
   },
 ];
 
 const OPTIONAL_FIELDS = [
-  { key: 'endDate', label: 'End Date', question: 'What is the end date?', placeholder: 'Type the end dateâ€¦' },
+  { key: 'endDate', label: 'End Date', question: 'What is the end date?', placeholder: 'Type the end date…' },
   {
     key: 'signatoryEmail',
     label: 'Signatory Email',
     question: 'What is the signatory email?',
-    placeholder: 'Type the emailâ€¦',
+    placeholder: 'Type the email…',
   },
   {
     key: 'serviceTypes',
     label: 'Service Types',
     question: 'Which service types apply?',
-    placeholder: 'Type the service typesâ€¦',
+    placeholder: 'Type the service types…',
   },
 ];
 
@@ -102,7 +102,7 @@ function validateContract(form) {
     if (!String(form[field.key] ?? '').trim()) errors[field.key] = `${field.label} is required.`;
   });
   if (form.registrationNumber && !REGISTRATION_RE.test(form.registrationNumber.trim())) {
-    errors.registrationNumber = 'Use 3â€“30 letters, numbers, spaces, periods, slashes, or hyphens.';
+    errors.registrationNumber = 'Use 3–30 letters, numbers, spaces, periods, slashes, or hyphens.';
   }
   const amount = Number(String(form.contractValue).replace(/[$,\s]/g, ''));
   if (form.contractValue && (!Number.isFinite(amount) || amount <= 0)) {
@@ -129,7 +129,7 @@ async function mockExtractContract(fileOrName) {
   const data = await extractContractFile(file);
   return {
     companyName: data.companyName,
-    registrationNumber: '', // missing â€” chat will fill
+    registrationNumber: '', // missing — chat will fill
     contractValue: '', // missing
     startDate: data.startDate || '2026-08-01',
     endDate: data.endDate || '2029-07-31',
@@ -249,7 +249,7 @@ function UploadZone({ onFile, disabled }) {
       <p className="mt-4 text-base font-semibold text-ink">
         Drop your contract here, or click to browse
       </p>
-      <p className="mt-1 text-sm text-ink-muted">PDF or TXT Â· max 20 MB</p>
+      <p className="mt-1 text-sm text-ink-muted">PDF or TXT · max 20 MB</p>
       <input
         ref={inputRef}
         type="file"
@@ -363,14 +363,14 @@ export default function ContractOnboarding({ onComplete }) {
     setMessages((prev) => [...prev, { id: msgId.current, role, text, options }]);
   }, []);
 
-  // Form â†’ state
+  // Form → state
   const handleFieldChange = useCallback((field, value) => {
     chatRun.current += 1;
     setChatBusy(false);
     setForm((prev) => ({ ...prev, [field]: value }));
   }, []);
 
-  // Chatbot â†’ same state (two-way binding)
+  // Chatbot → same state (two-way binding)
   const handleChatUpdate = useCallback((field, value) => {
     if (!field) return;
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -514,7 +514,7 @@ export default function ContractOnboarding({ onComplete }) {
   return (
     <Page>
       <PageHeader
-        overline="Onboarding Â· Contract ingest"
+        overline="Onboarding · Contract ingest"
         title="Contract Onboarding"
         description="Upload a contract. AI extracts fields into the form; fill any gaps manually or via the assistant."
         actions={
@@ -554,7 +554,7 @@ export default function ContractOnboarding({ onComplete }) {
           ) : (
             <>
               <div className="h-10 w-10 animate-spin rounded-full border-4 border-brand-soft border-t-brand" />
-              <p className="mt-4 text-sm font-semibold text-ink" role="status">Ingesting contractâ€¦</p>
+              <p className="mt-4 text-sm font-semibold text-ink" role="status">Ingesting contract…</p>
               <p className="mt-1 text-xs text-ink-muted">
                 Extracting entities from <span className="font-medium">{fileName}</span>
               </p>
@@ -566,7 +566,7 @@ export default function ContractOnboarding({ onComplete }) {
 
       {phase === 'form' && (
         <>
-          {/* Warning banner â€” non-blocking */}
+          {/* Warning banner — non-blocking */}
           {!isComplete && (
             <div className="mb-4 flex items-start gap-3 rounded-panel border border-line bg-warn-soft px-4 py-3">
               <Icon name="alert" size={18} className="mt-0.5 shrink-0 text-warn" />
@@ -591,11 +591,11 @@ export default function ContractOnboarding({ onComplete }) {
           )}
 
           <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-5">
-            {/* Form â€” 3 cols */}
+            {/* Form — 3 cols */}
             <div className="surface-panel p-6 sm:p-7 lg:col-span-3">
               <div className="mb-6">
                 <div className="font-display text-title-sm text-ink">Extracted contract data</div>
-                <div className="mt-1 text-sm text-ink-muted">Source Â· {fileName}</div>
+                <div className="mt-1 text-sm text-ink-muted">Source · {fileName}</div>
               </div>
               <ContractForm
                 form={form}
@@ -610,13 +610,13 @@ export default function ContractOnboarding({ onComplete }) {
                   className="btn-brand disabled:cursor-not-allowed"
                 >
                   <Icon name="check" size={16} />
-                  {done ? 'Onboarding complete' : submitting ? 'Completingâ€¦' : 'Complete Onboarding'}
+                  {done ? 'Onboarding complete' : submitting ? 'Completing…' : 'Complete Onboarding'}
                 </button>
               </div>
               {submitError && <p className="mt-3 text-right text-sm text-danger" role="alert">{submitError}</p>}
             </div>
 
-            {/* Chat â€” 2 cols */}
+            {/* Chat — 2 cols */}
             <div className="lg:col-span-2">
               <WizardChatbot
                 variant="card"

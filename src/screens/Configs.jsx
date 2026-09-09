@@ -115,6 +115,17 @@ const CONFIG_FIELDS = {
     { key: 'isActive', label: 'Is Active', type: 'checkbox', list: true },
     { key: 'description', label: 'Description', type: 'textarea', span2: true },
   ],
+  tagScheme: [
+    { key: 'name', label: 'Name', required: true, list: true },
+    { key: 'status', label: 'Status', type: 'select', options: ['Active', 'Inactive'], list: true },
+    { key: 'headerFormat', label: 'Header Format', type: 'select', options: ['ASCII', 'Hexadecimal'], list: true },
+    { key: 'headerLength', label: 'Header Length', type: 'number', list: true },
+    { key: 'headerId', label: 'Header ID', list: true },
+    { key: 'serialFormat', label: 'Serial Format', type: 'select', options: ['ASCII', 'Hexadecimal'] },
+    { key: 'serialLength', label: 'Serial Length', type: 'number' },
+    { key: 'serialId', label: 'Serial ID' },
+    { key: 'description', label: 'Description', type: 'textarea', span2: true },
+  ],
 };
 
 function listColumnsFor(configKey) {
@@ -173,6 +184,14 @@ const CONFIG_META = {
     columns: listColumnsFor('truck'),
     newLabel: 'New Truck',
     stateList: 'truck',
+    kind: 'config',
+  },
+  tagScheme: {
+    title: 'Tag Scheme',
+    subtitle: 'RFID tag header and serial-number schemes. Managed centrally by Rehrig.',
+    columns: listColumnsFor('tagScheme'),
+    newLabel: 'New Tag Scheme',
+    stateList: 'tagScheme',
     kind: 'config',
   },
   apiIntegrations: {

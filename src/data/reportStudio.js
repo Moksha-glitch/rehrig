@@ -105,6 +105,23 @@ export function blankReportSpec(overrides = {}) {
   };
 }
 
+export const REPORT_CATEGORIES = [
+  'Operations',
+  'Collections',
+  'Fleet Health',
+  'Customer Insights',
+  'SLA & Compliance',
+];
+
+export function validateAiReport(draft) {
+  if (!String(draft?.name || '').trim()) return 'Report name is required.';
+  if (!draft?.category) return 'Category is required.';
+  if (!draft?.source) return 'Data source is required.';
+  if (!draft?.timeframe) return 'Timeframe is required.';
+  if (!draft?.chart) return 'Chart type is required.';
+  return '';
+}
+
 export const SEED_REPORT_SPECS = [
   blankReportSpec({
     id: 'rpt-hot-aging',

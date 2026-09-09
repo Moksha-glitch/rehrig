@@ -93,7 +93,7 @@ export function ApiAppStoreProvider({ children }) {
     if (requested.module === 'home') {
       const nav =
         user.role === 'Analyst'
-          ? { module: 'analytics', params: { view: 'dashboards' } }
+          ? { module: 'dashboards', params: {} }
           : { module: homeModuleFor(user), params: {} };
       dispatch({ type: 'NAVIGATE', ...nav });
       writeNavigation(nav, { replace: true });

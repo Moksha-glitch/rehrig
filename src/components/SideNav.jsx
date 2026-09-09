@@ -23,13 +23,15 @@ function NavButton({ item, active, onClick, collapsed }) {
       aria-current={active ? 'page' : undefined}
       className={
         collapsed
-          ? `flex h-10 w-10 items-center justify-center rounded-xl ${
+          ? `flex h-10 w-10 items-center justify-center rounded-xl transition-colors duration-200 ${
               active
-                ? 'nav-item-active text-ink'
-                : 'text-ink-muted hover:bg-surface hover:text-ink'
+                ? 'bg-white/10 text-white font-semibold'
+                : 'text-white/70 hover:bg-white/10 hover:text-white'
             }`
-          : `nav-item flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-[13.5px] ${
-              active ? 'nav-item-active' : 'text-ink-muted hover:bg-surface hover:text-ink'
+          : `nav-item flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-[13.5px] transition-colors duration-200 ${
+              active
+                ? 'bg-white/10 text-white font-semibold'
+                : 'text-white/70 hover:bg-white/10 hover:text-white'
             }`
       }
     >
@@ -37,13 +39,13 @@ function NavButton({ item, active, onClick, collapsed }) {
         <Icon
           name={item.icon}
           size={collapsed ? 18 : 16}
-          className={`shrink-0 ${active ? 'text-ink' : 'text-ink-faint'}`}
+          className={`shrink-0 ${active ? 'text-white' : 'text-white/70'}`}
         />
       ) : (
         <span
           className={`flex shrink-0 items-center justify-center font-semibold ${
             collapsed ? 'h-5 w-5 text-[11px]' : 'h-4 w-4 text-[10px]'
-          } ${active ? 'text-ink' : 'text-ink-faint'}`}
+          } ${active ? 'text-white' : 'text-white/70'}`}
         >
           {item.label.charAt(0)}
         </span>
@@ -82,7 +84,7 @@ function FolderFlyout({ anchorEl, section, isItemActive, onSelect }) {
       role="menu"
       aria-label={section.label}
       style={{ top: pos.top, left: pos.left }}
-      className="fixed z-[60] min-w-[13.5rem] rounded-2xl border border-line bg-elevated p-1.5 shadow-float"
+      className="fixed z-[60] min-w-[13.5rem] rounded-2xl border border-white/10 bg-[#2E3A73] p-1.5 shadow-float"
     >
       {section.children.map((item) => {
         const active = isItemActive(item);
@@ -92,15 +94,15 @@ function FolderFlyout({ anchorEl, section, isItemActive, onSelect }) {
             type="button"
             role="menuitem"
             onClick={() => onSelect(item)}
-            className={`flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-[13.5px] interactive ${
-              active ? 'nav-item-active-soft text-ink' : 'text-ink-muted hover:bg-surface hover:text-ink'
+            className={`flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-[13.5px] interactive transition-colors duration-200 ${
+              active ? 'bg-white/10 text-white' : 'text-white/70 hover:bg-white/10 hover:text-white'
             }`}
           >
             {item.icon ? (
               <Icon
                 name={item.icon}
                 size={16}
-                className={`shrink-0 ${active ? 'text-ink' : 'text-ink-faint'}`}
+                className={`shrink-0 ${active ? 'text-white' : 'text-white/70'}`}
               />
             ) : (
               <span className="flex h-4 w-4 shrink-0 items-center justify-center text-[10px] font-semibold">
@@ -116,8 +118,20 @@ function FolderFlyout({ anchorEl, section, isItemActive, onSelect }) {
   );
 }
 
+const SECTION_RAIL_ICONS = {
+  ACTIVITIES: 'clipboard',
+  ANALYTICS: 'barChart',
+  CONFIGURATION: 'settings',
+};
+
+function sectionRailIcon(section) {
+  if (section.icon && section.icon !== 'none') return section.icon;
+  return SECTION_RAIL_ICONS[section.label] || section.children?.[0]?.icon || 'grid';
+}
+
 function FolderButton({ section, collapsed, open, active, onToggle, isItemActive, onSelect }) {
   const buttonRef = useRef(null);
+  const showIcon = true;
 
   return (
     <div className="relative">
@@ -131,34 +145,36 @@ function FolderButton({ section, collapsed, open, active, onToggle, isItemActive
         onClick={onToggle}
         className={
           collapsed
-            ? `flex h-10 w-10 items-center justify-center rounded-xl ${
+            ? `flex h-10 w-10 items-center justify-center rounded-xl transition-colors duration-200 ${
                 active
-                  ? 'nav-item-active text-ink'
+                  ? 'bg-white/10 text-white font-semibold'
                   : open
-                    ? 'bg-surface/70 text-ink'
-                    : 'text-ink-muted hover:bg-surface hover:text-ink'
+                    ? 'bg-[#2E3A73] text-white'
+                    : 'text-white/70 hover:bg-white/10 hover:text-white'
               }`
-            : `nav-item flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-[13.5px] ${
+            : `nav-item flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-[13.5px] transition-colors duration-200 ${
                 active
-                  ? 'nav-item-active text-ink'
-                  : 'text-ink-muted hover:bg-surface hover:text-ink'
+                  ? 'bg-white/10 text-white font-semibold'
+                  : 'text-white/70 hover:bg-white/10 hover:text-white'
               }`
         }
       >
-        {(!section.icon || section.icon !== 'none') && (
+        {showIcon && (
           <Icon
-            name={section.icon || section.children?.[0]?.icon || 'grid'}
+            name={sectionRailIcon(section)}
             size={collapsed ? 18 : 16}
-            className={`shrink-0 ${active || open ? 'text-ink' : 'text-ink-faint'}`}
+            className={`shrink-0 ${active || open ? 'text-white' : 'text-white/70'}`}
           />
         )}
         {!collapsed && (
           <>
-            <span className={`min-w-0 flex-1 truncate text-left ${section.icon === 'none' ? 'tracking-wider text-xs font-semibold' : ''}`}>{section.label}</span>
+            <span className="min-w-0 flex-1 truncate text-left">
+              {section.label.charAt(0) + section.label.slice(1).toLowerCase()}
+            </span>
             <Icon
               name="chevronRight"
               size={14}
-              className={`shrink-0 ${active ? 'text-ink-muted' : 'text-ink-faint'} transition-transform ${open ? 'rotate-90' : ''}`}
+              className={`shrink-0 ${active ? 'text-white/80' : 'text-white/50'} transition-transform ${open ? 'rotate-90' : ''}`}
             />
           </>
         )}
@@ -172,7 +188,7 @@ function FolderButton({ section, collapsed, open, active, onToggle, isItemActive
         />
       )}
       {open && !collapsed && (
-        <div className="mb-1 ml-4 mt-0.5 space-y-0.5 border-l border-line pl-2" role="menu" aria-label={section.label}>
+        <div className="mb-1 ml-4 mt-0.5 space-y-0.5 border-l border-white/10 pl-2" role="menu" aria-label={section.label}>
           {section.children.map((item) => {
             const itemActive = isItemActive(item);
             return (
@@ -181,15 +197,15 @@ function FolderButton({ section, collapsed, open, active, onToggle, isItemActive
                 type="button"
                 role="menuitem"
                 onClick={() => onSelect(item)}
-                className={`flex w-full items-center gap-3 rounded-xl px-3 py-1.5 text-left text-[13px] interactive ${
-                  itemActive ? 'nav-item-active-soft text-ink' : 'text-ink-muted hover:bg-surface hover:text-ink'
+                className={`flex w-full items-center gap-3 rounded-xl px-3 py-1.5 text-left text-[13px] interactive transition-colors duration-200 ${
+                  itemActive ? 'bg-white/10 text-white font-medium' : 'text-white/70 hover:bg-white/10 hover:text-white'
                 }`}
               >
                 {item.icon ? (
                   <Icon
                     name={item.icon}
                     size={15}
-                    className={`shrink-0 ${itemActive ? 'text-ink' : 'text-ink-faint'}`}
+                    className={`shrink-0 ${itemActive ? 'text-white' : 'text-white/70'}`}
                   />
                 ) : (
                   <span className="flex h-4 w-4 shrink-0 items-center justify-center text-[10px] font-semibold">
@@ -197,6 +213,11 @@ function FolderButton({ section, collapsed, open, active, onToggle, isItemActive
                   </span>
                 )}
                 <span className="min-w-0 flex-1 truncate">{item.label}</span>
+                {item.badge !== undefined && (
+                  <span className="ml-2 flex h-5 items-center justify-center rounded bg-danger px-1.5 text-[10.5px] font-semibold text-white">
+                    {item.badge}
+                  </span>
+                )}
               </button>
             );
           })}
@@ -297,13 +318,13 @@ export default function SideNav({ open, onToggle }) {
       : isNavItemActive(item, activeModule, activeParams);
 
   return (
-    <div ref={shellRef} className={`side-nav hidden lg:block ${open ? 'w-[16.5rem]' : 'w-14'}`}>
+    <div ref={shellRef} className={`side-nav hidden lg:block ${open ? 'w-[16.5rem]' : 'w-[4.25rem]'}`}>
       <aside
-        className="flex h-full w-full flex-col border-r border-line bg-elevated/70"
+        className="flex h-full w-full flex-col overflow-hidden bg-brand"
         aria-label="Main navigation"
       >
         <div
-          className="flex h-14 shrink-0 items-center px-4"
+          className={`flex h-14 shrink-0 items-center ${open ? 'px-4' : 'justify-center px-0'}`}
         >
           {open ? (
             <button
@@ -312,10 +333,10 @@ export default function SideNav({ open, onToggle }) {
               className="flex min-w-0 items-center gap-2 interactive"
               aria-label="VisionPulse home"
             >
-              <div className="flex h-6 w-6 items-center justify-center rounded bg-[#0b386e] text-white">
-                <Icon name="star" size={14} className="fill-current" />
+              <div className="grid h-8 w-8 place-items-center rounded-[9px] bg-[#CADCFC] text-[13px] font-extrabold tracking-wide text-brand">
+                VP
               </div>
-              <span className="font-display text-[1.1rem] font-bold tracking-tight text-[#0b386e]">
+              <span className="font-display text-base font-extrabold tracking-tight text-white">
                 VisionPulse
               </span>
             </button>
@@ -323,17 +344,17 @@ export default function SideNav({ open, onToggle }) {
             <button
               type="button"
               onClick={() => navigate('home')}
-              className="mx-auto flex h-8 w-8 items-center justify-center rounded bg-[#0b386e] text-white interactive"
+              className="mx-auto grid h-8 w-8 place-items-center rounded-[9px] bg-[#CADCFC] text-[13px] font-extrabold tracking-wide text-brand interactive"
               aria-label="VisionPulse home"
             >
-              <Icon name="star" size={16} className="fill-current" />
+              VP
             </button>
           )}
         </div>
 
         <nav
-          className={`flex min-h-0 flex-1 flex-col overflow-y-auto pt-1 pb-3 scroll-thin ${
-            open ? 'space-y-0.5 px-3' : 'items-center gap-1 px-2'
+          className={`flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto pt-1 pb-3 scroll-thin ${
+            open ? 'space-y-0.5 px-3' : 'items-center gap-1 px-1.5'
           }`}
         >
           {tree.map((node) => {
@@ -369,18 +390,21 @@ export default function SideNav({ open, onToggle }) {
           })}
         </nav>
 
-        <div className="mt-auto shrink-0 border-t border-line px-3 py-3 flex items-center justify-between">
+        <div className={`mt-auto shrink-0 border-t border-white/10 py-2.5 ${open ? 'px-2.5' : 'px-1.5'}`}>
           {open && scopedAccount && (
-            <div className="truncate px-2 text-[11px] font-medium text-ink-faint">{scopedAccount.name}</div>
+            <div className="mb-1 truncate px-2 text-[11px] font-medium text-white/50">{scopedAccount.name}</div>
           )}
           <button
             type="button"
             onClick={onToggle}
-            aria-label={open ? 'Collapse sidebar' : 'Expand sidebar'}
-            title={open ? 'Collapse sidebar' : 'Expand sidebar'}
-            className={`rounded-lg p-1.5 text-ink-muted interactive hover:bg-surface hover:text-ink ${open ? '' : 'mx-auto'}`}
+            aria-label={open ? 'Collapse menu' : 'Expand menu'}
+            title={open ? 'Collapse menu' : 'Expand menu'}
+            className={`flex w-full items-center rounded-xl px-2.5 py-2.5 text-[13.5px] font-semibold text-white/70 transition-colors duration-200 hover:bg-white/10 hover:text-white ${
+              open ? 'gap-2.5' : 'justify-center px-0'
+            }`}
           >
-            <Icon name="panelLeft" size={16} />
+            <Icon name="chevronsLeft" size={16} className={`shrink-0 ${open ? '' : 'rotate-180'}`} />
+            {open && <span>Collapse</span>}
           </button>
         </div>
       </aside>

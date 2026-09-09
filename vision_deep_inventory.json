@@ -1,0 +1,5215 @@
+{
+  "module_catalog": {
+    "home": {
+      "key": "home",
+      "label": "Home",
+      "kind": "dashboard",
+      "data": null,
+      "singular": null,
+      "global": true,
+      "accountScoped": false,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "chatter": {
+      "key": "chatter",
+      "label": "Activity",
+      "kind": "chatter",
+      "data": null,
+      "singular": null,
+      "global": true,
+      "accountScoped": false,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "accounts": {
+      "key": "accounts",
+      "label": "Accounts",
+      "kind": "list",
+      "data": "accounts",
+      "singular": "Account",
+      "global": true,
+      "accountScoped": false,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [
+        {
+          "k": "name",
+          "label": "Account Name"
+        },
+        {
+          "k": "accountType",
+          "label": "Type"
+        },
+        {
+          "k": "industry",
+          "label": "Industry"
+        },
+        {
+          "k": "owner",
+          "label": "Owner"
+        },
+        {
+          "k": "phone",
+          "label": "Phone"
+        },
+        {
+          "k": "billingCity",
+          "label": "City"
+        }
+      ],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "masterProducts": {
+      "key": "masterProducts",
+      "label": "Master Product Catalog",
+      "kind": "list",
+      "data": "masterProducts",
+      "singular": "Master Product",
+      "global": true,
+      "accountScoped": false,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [
+        {
+          "k": "productName",
+          "label": "Product"
+        },
+        {
+          "k": "productFamily",
+          "label": "Family"
+        },
+        {
+          "k": "volume",
+          "label": "Volume"
+        },
+        {
+          "k": "serviceType",
+          "label": "Service Type"
+        },
+        {
+          "k": "active",
+          "label": "Active"
+        }
+      ],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "bulkImport": {
+      "key": "bulkImport",
+      "label": "WOIT Import",
+      "kind": "bulkImport",
+      "data": null,
+      "singular": null,
+      "global": true,
+      "accountScoped": false,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "reports": {
+      "key": "reports",
+      "label": "Reports",
+      "kind": "reports",
+      "data": null,
+      "singular": null,
+      "global": true,
+      "accountScoped": false,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "dashboards": {
+      "key": "dashboards",
+      "label": "Dashboards",
+      "kind": "dashboards",
+      "data": null,
+      "singular": null,
+      "global": true,
+      "accountScoped": false,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "mapCenter": {
+      "key": "mapCenter",
+      "label": "Map Center",
+      "kind": "mapCenter",
+      "data": null,
+      "singular": null,
+      "global": true,
+      "accountScoped": false,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "reportSubs": {
+      "key": "reportSubs",
+      "label": "Report Subscriptions",
+      "kind": "reportSubs",
+      "data": null,
+      "singular": null,
+      "global": true,
+      "accountScoped": false,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "setup": {
+      "key": "setup",
+      "label": "Workspace",
+      "kind": "setup",
+      "data": null,
+      "singular": null,
+      "global": true,
+      "accountScoped": false,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "serviceTypes": {
+      "key": "serviceTypes",
+      "label": "Service Types",
+      "kind": "configure",
+      "data": null,
+      "singular": null,
+      "global": true,
+      "accountScoped": false,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "locationTypes": {
+      "key": "locationTypes",
+      "label": "Location Types",
+      "kind": "configure",
+      "data": null,
+      "singular": null,
+      "global": true,
+      "accountScoped": false,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "assetTypes": {
+      "key": "assetTypes",
+      "label": "Asset Types",
+      "kind": "configure",
+      "data": null,
+      "singular": null,
+      "global": true,
+      "accountScoped": false,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "productTypes": {
+      "key": "productTypes",
+      "label": "Product",
+      "kind": "configure",
+      "data": null,
+      "singular": null,
+      "global": true,
+      "accountScoped": false,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "apiIntegrations": {
+      "key": "apiIntegrations",
+      "label": "API Integrations",
+      "kind": "configure",
+      "data": null,
+      "singular": null,
+      "global": true,
+      "accountScoped": false,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "serviceNotifConfig": {
+      "key": "serviceNotifConfig",
+      "label": "Service Notification Config",
+      "kind": "configure",
+      "data": null,
+      "singular": null,
+      "global": true,
+      "accountScoped": false,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "device": {
+      "key": "device",
+      "label": "Device",
+      "kind": "configure",
+      "data": null,
+      "singular": null,
+      "global": true,
+      "accountScoped": false,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "truck": {
+      "key": "truck",
+      "label": "Truck",
+      "kind": "configure",
+      "data": null,
+      "singular": null,
+      "global": true,
+      "accountScoped": false,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "tagScheme": {
+      "key": "tagScheme",
+      "label": "Tag Scheme",
+      "kind": "configure",
+      "data": null,
+      "singular": null,
+      "global": true,
+      "accountScoped": false,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "profileMgmtNav": {
+      "key": "profileMgmtNav",
+      "label": "Profile Management",
+      "kind": null,
+      "data": null,
+      "singular": null,
+      "global": false,
+      "accountScoped": false,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "userMgmtNav": {
+      "key": "userMgmtNav",
+      "label": "User Management",
+      "kind": null,
+      "data": null,
+      "singular": null,
+      "global": false,
+      "accountScoped": false,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "myLocations": {
+      "key": "myLocations",
+      "label": "My Locations",
+      "kind": "customerPortal",
+      "data": null,
+      "singular": null,
+      "global": true,
+      "accountScoped": false,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "myWorkOrders": {
+      "key": "myWorkOrders",
+      "label": "My Work Orders",
+      "kind": "customerPortal",
+      "data": null,
+      "singular": null,
+      "global": true,
+      "accountScoped": false,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "myNotifications": {
+      "key": "myNotifications",
+      "label": "Notifications",
+      "kind": "customerPortal",
+      "data": null,
+      "singular": null,
+      "global": true,
+      "accountScoped": false,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "myAccount": {
+      "key": "myAccount",
+      "label": "My Account",
+      "kind": "customerPortal",
+      "data": null,
+      "singular": null,
+      "global": true,
+      "accountScoped": false,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "mindmap": {
+      "key": "mindmap",
+      "label": "Mindmap",
+      "kind": "special",
+      "data": null,
+      "singular": null,
+      "global": false,
+      "accountScoped": false,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "products": {
+      "key": "products",
+      "label": "Service Provider Products",
+      "kind": "list",
+      "data": "products",
+      "singular": "Product",
+      "global": false,
+      "accountScoped": true,
+      "settingsOnly": true,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [
+        {
+          "k": "productName",
+          "label": "Product"
+        },
+        {
+          "k": "productCode",
+          "label": "Product Code"
+        },
+        {
+          "k": "serviceCategory",
+          "label": "Service Category"
+        },
+        {
+          "k": "active",
+          "label": "Status"
+        },
+        {
+          "k": "productFamily",
+          "label": "Family"
+        }
+      ],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "contacts": {
+      "key": "contacts",
+      "label": "Contacts",
+      "kind": "list",
+      "data": "contacts",
+      "singular": "Contact",
+      "global": false,
+      "accountScoped": true,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [
+        {
+          "k": "lastName",
+          "label": "Contact Name"
+        },
+        {
+          "k": "roleTitle",
+          "label": "Role Title"
+        },
+        {
+          "k": "email",
+          "label": "Email"
+        },
+        {
+          "k": "phone",
+          "label": "Phone"
+        },
+        {
+          "k": "isUserActive",
+          "label": "Status"
+        }
+      ],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "assets": {
+      "key": "assets",
+      "label": "Assets / Trucks",
+      "kind": "list",
+      "data": "assets",
+      "singular": "Asset",
+      "global": false,
+      "accountScoped": true,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [
+        {
+          "k": "assetName",
+          "label": "Asset Name"
+        },
+        {
+          "k": "serialNumber",
+          "label": "Serial Number"
+        },
+        {
+          "k": "assetStatus",
+          "label": "Status"
+        },
+        {
+          "k": "customerLocation",
+          "label": "Customer Location"
+        },
+        {
+          "k": "product",
+          "label": "Product"
+        },
+        {
+          "k": "installDate",
+          "label": "Install Date"
+        }
+      ],
+      "recordTypeToggle": [
+        "Asset",
+        "Truck"
+      ],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "maintProfiles": {
+      "key": "maintProfiles",
+      "label": "Route Profile Templates",
+      "kind": "list",
+      "data": "maintProfiles",
+      "singular": "Maintenance Route Profile",
+      "global": false,
+      "accountScoped": true,
+      "settingsOnly": true,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [
+        {
+          "k": "maintenanceRouteProfileName",
+          "label": "Profile Name"
+        },
+        {
+          "k": "serviceType",
+          "label": "Service Type"
+        },
+        {
+          "k": "numberOfTrucks",
+          "label": "# Trucks"
+        },
+        {
+          "k": "startTime",
+          "label": "Start Time"
+        },
+        {
+          "k": "duration",
+          "label": "Duration"
+        },
+        {
+          "k": "serviceProviderSegment",
+          "label": "Segment"
+        }
+      ],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "locations": {
+      "key": "locations",
+      "label": "Locations",
+      "kind": "list",
+      "data": "locations",
+      "singular": "Location",
+      "global": false,
+      "accountScoped": true,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [
+        {
+          "k": "locationName",
+          "label": "Location Name"
+        },
+        {
+          "k": "__address",
+          "label": "Address"
+        },
+        {
+          "k": "locationType",
+          "label": "Type"
+        },
+        {
+          "k": "zone",
+          "label": "Zone"
+        },
+        {
+          "k": "isValidated",
+          "label": "Validated"
+        }
+      ],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "customers": {
+      "key": "customers",
+      "label": "Customers",
+      "kind": "list",
+      "data": "customers",
+      "singular": "Customer",
+      "global": false,
+      "accountScoped": true,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [
+        {
+          "k": "customerId",
+          "label": "Customer #"
+        },
+        {
+          "k": "name",
+          "label": "Name"
+        },
+        {
+          "k": "segment",
+          "label": "Segment"
+        },
+        {
+          "k": "email",
+          "label": "Email"
+        },
+        {
+          "k": "phone",
+          "label": "Phone"
+        }
+      ],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "manageAccount": {
+      "key": "manageAccount",
+      "label": "Manage Customers",
+      "kind": "manageAccount",
+      "data": "customers",
+      "singular": "Account",
+      "global": false,
+      "accountScoped": true,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "dispatches": {
+      "key": "dispatches",
+      "label": "Dispatches",
+      "kind": "list",
+      "data": "dispatches",
+      "singular": "Dispatch",
+      "global": false,
+      "accountScoped": true,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": "routeDate",
+      "mergedWith": null,
+      "cols": [
+        {
+          "k": "dispatchNumber",
+          "label": "Dispatch Number"
+        },
+        {
+          "k": "routeDate",
+          "label": "Route Date"
+        },
+        {
+          "k": "status",
+          "label": "Status"
+        },
+        {
+          "k": "truck",
+          "label": "Truck"
+        },
+        {
+          "k": "driver",
+          "label": "Driver"
+        },
+        {
+          "k": "serviceType",
+          "label": "Service Type"
+        }
+      ],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "notes": {
+      "key": "notes",
+      "label": "Notes & Attachments",
+      "kind": "list",
+      "data": "notes",
+      "singular": "Note",
+      "global": false,
+      "accountScoped": true,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [
+        {
+          "k": "subject",
+          "label": "Subject"
+        },
+        {
+          "k": "author",
+          "label": "Author"
+        },
+        {
+          "k": "created",
+          "label": "Created"
+        }
+      ],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "workOrders": {
+      "key": "workOrders",
+      "label": "Work Orders",
+      "kind": "list",
+      "data": "workOrders",
+      "singular": "Work Order",
+      "global": false,
+      "accountScoped": true,
+      "settingsOnly": false,
+      "hotTicketFilter": true,
+      "listStyle": null,
+      "defaultSort": "dueDate",
+      "mergedWith": null,
+      "cols": [
+        {
+          "k": "workOrderNumber",
+          "label": "Work Order"
+        },
+        {
+          "k": "account",
+          "label": "Customer"
+        },
+        {
+          "k": "requestType",
+          "label": "Request Type"
+        },
+        {
+          "k": "subject",
+          "label": "Subject"
+        },
+        {
+          "k": "dueDate",
+          "label": "Due Date"
+        },
+        {
+          "k": "priority",
+          "label": "Priority"
+        },
+        {
+          "k": "caseStatus",
+          "label": "Status"
+        }
+      ],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "reqCodes": {
+      "key": "reqCodes",
+      "label": "Request Type & Resolution Codes",
+      "kind": "list",
+      "data": "reqCodes",
+      "singular": "Request Type Resolution Code",
+      "global": false,
+      "accountScoped": true,
+      "settingsOnly": true,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [
+        {
+          "k": "id",
+          "label": "RRC #"
+        },
+        {
+          "k": "isDefault",
+          "label": "Default"
+        },
+        {
+          "k": "requestType",
+          "label": "Request Type"
+        },
+        {
+          "k": "resolutionCode",
+          "label": "Resolution Code"
+        },
+        {
+          "k": "workflowType",
+          "label": "Workflow Type"
+        },
+        {
+          "k": "numberOfAttempts",
+          "label": "# of Attempts"
+        }
+      ],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "requestTypes": {
+      "key": "requestTypes",
+      "label": "Request Types",
+      "kind": "list",
+      "data": "requestTypes",
+      "singular": "Request Type",
+      "global": false,
+      "accountScoped": true,
+      "settingsOnly": true,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [
+        {
+          "k": "code",
+          "label": "Code"
+        },
+        {
+          "k": "name",
+          "label": "Name"
+        },
+        {
+          "k": "workflow",
+          "label": "Workflow"
+        },
+        {
+          "k": "category",
+          "label": "Category"
+        },
+        {
+          "k": "serviceCategory",
+          "label": "Service Category"
+        },
+        {
+          "k": "segment",
+          "label": "Segment"
+        },
+        {
+          "k": "active",
+          "label": "Active"
+        }
+      ],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "resolutionCodes": {
+      "key": "resolutionCodes",
+      "label": "Resolution Codes",
+      "kind": "list",
+      "data": "resolutionCodes",
+      "singular": "Resolution Code",
+      "global": false,
+      "accountScoped": true,
+      "settingsOnly": true,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [
+        {
+          "k": "code",
+          "label": "Code"
+        },
+        {
+          "k": "name",
+          "label": "Name"
+        },
+        {
+          "k": "workflow",
+          "label": "Workflow"
+        },
+        {
+          "k": "description",
+          "label": "Description"
+        },
+        {
+          "k": "active",
+          "label": "Active"
+        }
+      ],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "segments": {
+      "key": "segments",
+      "label": "Service Provider Segments",
+      "kind": "list",
+      "data": "segments",
+      "singular": "Service Provider Segment",
+      "global": false,
+      "accountScoped": true,
+      "settingsOnly": true,
+      "hotTicketFilter": false,
+      "listStyle": "tree",
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [
+        {
+          "k": "segmentName",
+          "label": "Segment Name"
+        },
+        {
+          "k": "type",
+          "label": "Type"
+        },
+        {
+          "k": "parent",
+          "label": "Parent"
+        }
+      ],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "aggTips": {
+      "key": "aggTips",
+      "label": "Trip Data",
+      "kind": "list",
+      "data": "aggTips",
+      "singular": "Trip Record",
+      "global": false,
+      "accountScoped": true,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": "date",
+      "mergedWith": "assets",
+      "cols": [
+        {
+          "k": "date",
+          "label": "Date"
+        },
+        {
+          "k": "truckNumber",
+          "label": "Truck #"
+        },
+        {
+          "k": "numTips",
+          "label": "# Tips"
+        },
+        {
+          "k": "totalDistance",
+          "label": "Total Distance"
+        },
+        {
+          "k": "idleTime",
+          "label": "Idle Time (min)"
+        },
+        {
+          "k": "speedingEvents",
+          "label": "Speeding Events"
+        }
+      ],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "trucks": {
+      "key": "trucks",
+      "label": "Trucks",
+      "kind": "list",
+      "data": "trucks",
+      "singular": "Truck",
+      "global": false,
+      "accountScoped": true,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": "assets",
+      "cols": [
+        {
+          "k": "truckName",
+          "label": "Truck Name"
+        },
+        {
+          "k": "truckNumber",
+          "label": "Truck #"
+        },
+        {
+          "k": "status",
+          "label": "Status"
+        },
+        {
+          "k": "serviceType",
+          "label": "Service Type"
+        },
+        {
+          "k": "driver",
+          "label": "Driver"
+        }
+      ],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "tips": {
+      "key": "tips",
+      "label": "Tips & Non-Tips",
+      "kind": "list",
+      "data": "tips",
+      "singular": "Tip / Non-Tip Event",
+      "global": false,
+      "accountScoped": true,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": "eventStartDateTime",
+      "mergedWith": null,
+      "cols": [
+        {
+          "k": "eventStartDateTime",
+          "label": "Event Date / Time"
+        },
+        {
+          "k": "customerLocation",
+          "label": "Customer Location"
+        },
+        {
+          "k": "collectionRoute",
+          "label": "Collection Route"
+        },
+        {
+          "k": "wasTipped",
+          "label": "Tipped"
+        },
+        {
+          "k": "sfdcTruckId",
+          "label": "Truck #"
+        }
+      ],
+      "recordTypeToggle": [
+        "Tip Events",
+        "Non-Tip Events",
+        "All"
+      ],
+      "variants": [
+        {
+          "key": "individual",
+          "label": "Individual",
+          "useModule": null
+        },
+        {
+          "key": "aggregated",
+          "label": "Aggregated",
+          "useModule": "aggTips"
+        }
+      ],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "routes": {
+      "key": "routes",
+      "label": "Routes",
+      "kind": "list",
+      "data": "routes",
+      "singular": "Route",
+      "global": false,
+      "accountScoped": true,
+      "settingsOnly": false,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [
+        {
+          "k": "routeNumber",
+          "label": "Route Number"
+        },
+        {
+          "k": "collectionType",
+          "label": "Type"
+        },
+        {
+          "k": "collectionDays",
+          "label": "Days"
+        },
+        {
+          "k": "status",
+          "label": "Status"
+        },
+        {
+          "k": "truck",
+          "label": "Truck"
+        },
+        {
+          "k": "driver",
+          "label": "Driver"
+        },
+        {
+          "k": "serviceProviderSegment",
+          "label": "Segment"
+        }
+      ],
+      "recordTypeToggle": [
+        "Collection",
+        "Maintenance",
+        "All"
+      ],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    },
+    "notifications": {
+      "key": "notifications",
+      "label": "Service Notifications",
+      "kind": "list",
+      "data": "notifications",
+      "singular": "Service Notification",
+      "global": false,
+      "accountScoped": true,
+      "settingsOnly": true,
+      "hotTicketFilter": false,
+      "listStyle": null,
+      "defaultSort": null,
+      "mergedWith": null,
+      "cols": [
+        {
+          "k": "serviceNotificationName",
+          "label": "Notification Name"
+        },
+        {
+          "k": "enableServiceNotifications",
+          "label": "Status"
+        },
+        {
+          "k": "notifyDays",
+          "label": "Notify Days"
+        },
+        {
+          "k": "toBeSentBasedOn",
+          "label": "Trigger"
+        },
+        {
+          "k": "fromEmail",
+          "label": "From Email"
+        },
+        {
+          "k": "emailSubject",
+          "label": "Email Subject"
+        }
+      ],
+      "recordTypeToggle": [],
+      "variants": [],
+      "newLabel": null,
+      "importLabel": null,
+      "emptyTitle": null,
+      "emptyText": null
+    }
+  },
+  "form_schemas_p6": {
+    "accounts": {
+      "title": "Account",
+      "sections": [
+        {
+          "title": "Account Information",
+          "fields": [
+            {
+              "name": "name",
+              "label": "Account Name",
+              "type": "text"
+            },
+            {
+              "name": "owner",
+              "label": "Account Owner",
+              "type": "text"
+            },
+            {
+              "name": "type",
+              "label": "Type",
+              "type": "select"
+            },
+            {
+              "name": "parentAccount",
+              "label": "Parent Account",
+              "type": "lookup"
+            },
+            {
+              "name": "website",
+              "label": "Website",
+              "type": "text"
+            },
+            {
+              "name": "phone",
+              "label": "Phone",
+              "type": "text"
+            },
+            {
+              "name": "description",
+              "label": "Description",
+              "type": "textarea"
+            },
+            {
+              "name": "industry",
+              "label": "Industry",
+              "type": "select"
+            },
+            {
+              "name": "serviceProviderUID",
+              "label": "Service Provider UID",
+              "type": "text"
+            },
+            {
+              "name": "employees",
+              "label": "Employees",
+              "type": "number"
+            },
+            {
+              "name": "jdEdwardsId",
+              "label": "JDEdwardsId",
+              "type": "text"
+            },
+            {
+              "name": "numberOfWeeks",
+              "label": "Number Of Weeks",
+              "type": "number"
+            },
+            {
+              "name": "serviceTypes",
+              "label": "Service Types",
+              "type": "multiselect"
+            },
+            {
+              "name": "inactive",
+              "label": "InActive",
+              "type": "checkbox"
+            },
+            {
+              "name": "trackObservations",
+              "label": "Track Observations",
+              "type": "checkbox"
+            },
+            {
+              "name": "supportEmail",
+              "label": "Support Email",
+              "type": "text"
+            },
+            {
+              "name": "trackSafetyEvents",
+              "label": "Track Safety Events",
+              "type": "checkbox"
+            },
+            {
+              "name": "isTableauCloud",
+              "label": "Is Tableau Cloud?",
+              "type": "checkbox"
+            },
+            {
+              "name": "serviceModules",
+              "label": "Service Modules",
+              "type": "text"
+            },
+            {
+              "name": "hardwareType",
+              "label": "Hardware Type",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "title": "Automated Work Orders",
+          "fields": [
+            {
+              "name": "enableAutoWO",
+              "label": "Enable Auto WO",
+              "type": "checkbox"
+            }
+          ]
+        },
+        {
+          "title": "Hot Ticket Conversion",
+          "fields": [
+            {
+              "name": "enableAutoHotTicket",
+              "label": "Enable Auto Hot Ticket",
+              "type": "checkbox"
+            },
+            {
+              "name": "autoHotTicketDays",
+              "label": "Auto Hot Ticket Days",
+              "type": "number"
+            }
+          ]
+        },
+        {
+          "title": "Move Burnt Carts",
+          "fields": [
+            {
+              "name": "enableAutoMoveBurntCarts",
+              "label": "Enable Auto Move Burnt Carts to Yard",
+              "type": "checkbox"
+            }
+          ]
+        },
+        {
+          "title": "Service Notifications Detail",
+          "fields": [
+            {
+              "name": "enableServiceNotificationTab",
+              "label": "Enable Service Notification Tab",
+              "type": "checkbox"
+            },
+            {
+              "name": "smsFailed",
+              "label": "SMS Failed",
+              "type": "checkbox"
+            },
+            {
+              "name": "sendServiceNotifications",
+              "label": "Send Service Notifications",
+              "type": "checkbox"
+            },
+            {
+              "name": "phoneFailed",
+              "label": "Phone Failed",
+              "type": "checkbox"
+            },
+            {
+              "name": "messageLimit",
+              "label": "Message Limit",
+              "type": "number"
+            },
+            {
+              "name": "sendGridServiceFailed",
+              "label": "SendGrid Service Failed",
+              "type": "checkbox"
+            },
+            {
+              "name": "timeZone",
+              "label": "Time Zone",
+              "type": "select"
+            },
+            {
+              "name": "startTime",
+              "label": "Start Time",
+              "type": "time"
+            },
+            {
+              "name": "endTime",
+              "label": "End Time",
+              "type": "time"
+            },
+            {
+              "name": "emailSendTime",
+              "label": "Email Send Time",
+              "type": "time"
+            },
+            {
+              "name": "smsSendTime",
+              "label": "SMS Send Time",
+              "type": "time"
+            }
+          ]
+        },
+        {
+          "title": "Address Information",
+          "fields": [
+            {
+              "name": "__billingHeader",
+              "label": "Billing Address",
+              "type": "sublabel"
+            },
+            {
+              "name": "__shippingHeader",
+              "label": "Shipping Address",
+              "type": "sublabel"
+            },
+            {
+              "name": "billingAddressSearch",
+              "label": "Billing Address Search",
+              "type": "text"
+            },
+            {
+              "name": "shippingAddressSearch",
+              "label": "Shipping Address Search",
+              "type": "text"
+            },
+            {
+              "name": "billingCountry",
+              "label": "Billing Country",
+              "type": "select"
+            },
+            {
+              "name": "shippingCountry",
+              "label": "Shipping Country",
+              "type": "select"
+            },
+            {
+              "name": "billingStreet",
+              "label": "Billing Street",
+              "type": "textarea"
+            },
+            {
+              "name": "shippingStreet",
+              "label": "Shipping Street",
+              "type": "textarea"
+            },
+            {
+              "name": "billingCity",
+              "label": "Billing City",
+              "type": "text"
+            },
+            {
+              "name": "shippingCity",
+              "label": "Shipping City",
+              "type": "text"
+            },
+            {
+              "name": "billingState",
+              "label": "Billing State/Province",
+              "type": "select"
+            },
+            {
+              "name": "shippingState",
+              "label": "Shipping State/Province",
+              "type": "select"
+            },
+            {
+              "name": "billingZip",
+              "label": "Billing Zip/Postal Code",
+              "type": "text"
+            },
+            {
+              "name": "shippingZip",
+              "label": "Shipping Zip/Postal Code",
+              "type": "text"
+            },
+            {
+              "name": "isShippingAddressUpdated",
+              "label": "IsShippingAddressUpdated",
+              "type": "checkbox"
+            }
+          ]
+        }
+      ]
+    },
+    "contacts": {
+      "title": "Contact",
+      "sections": [
+        {
+          "title": "Contact Information",
+          "fields": [
+            {
+              "name": "salutation",
+              "label": "Salutation",
+              "type": "select"
+            },
+            {
+              "name": "email",
+              "label": "Email",
+              "type": "text"
+            },
+            {
+              "name": "firstName",
+              "label": "First Name",
+              "type": "text"
+            },
+            {
+              "name": "phone",
+              "label": "Phone",
+              "type": "text"
+            },
+            {
+              "name": "lastName",
+              "label": "Last Name",
+              "type": "text"
+            },
+            {
+              "name": "homePhone",
+              "label": "Home Phone",
+              "type": "text"
+            },
+            {
+              "name": "account",
+              "label": "Service Provider",
+              "type": "lookup"
+            },
+            {
+              "name": "mobile",
+              "label": "Mobile",
+              "type": "text"
+            },
+            {
+              "name": "segment",
+              "label": "Service Provider Segment",
+              "type": "lookup"
+            },
+            {
+              "name": "fax",
+              "label": "Fax",
+              "type": "text"
+            },
+            {
+              "name": "roleTitle",
+              "label": "Role Title",
+              "type": "select"
+            },
+            {
+              "name": "title",
+              "label": "Title",
+              "type": "text"
+            },
+            {
+              "name": "department",
+              "label": "Department",
+              "type": "text"
+            },
+            {
+              "name": "assistant",
+              "label": "Assistant",
+              "type": "text"
+            },
+            {
+              "name": "reportsTo",
+              "label": "Reports To",
+              "type": "lookup"
+            },
+            {
+              "name": "asstPhone",
+              "label": "Asst. Phone",
+              "type": "text"
+            },
+            {
+              "name": "nickName",
+              "label": "Nick Name",
+              "type": "text"
+            },
+            {
+              "name": "birthdate",
+              "label": "Birthdate",
+              "type": "date"
+            }
+          ]
+        },
+        {
+          "title": "Address Information",
+          "fields": [
+            {
+              "name": "__mailingHeader",
+              "label": "Mailing Address",
+              "type": "sublabel"
+            },
+            {
+              "name": "__otherHeader",
+              "label": "Other Address",
+              "type": "sublabel"
+            },
+            {
+              "name": "mailingCountry",
+              "label": "Mailing Country",
+              "type": "select"
+            },
+            {
+              "name": "otherCountry",
+              "label": "Other Country",
+              "type": "select"
+            },
+            {
+              "name": "mailingStreet",
+              "label": "Mailing Street",
+              "type": "textarea"
+            },
+            {
+              "name": "otherStreet",
+              "label": "Other Street",
+              "type": "textarea"
+            },
+            {
+              "name": "mailingCity",
+              "label": "Mailing City",
+              "type": "text"
+            },
+            {
+              "name": "otherCity",
+              "label": "Other City",
+              "type": "text"
+            },
+            {
+              "name": "mailingState",
+              "label": "Mailing State/Province",
+              "type": "select"
+            },
+            {
+              "name": "otherState",
+              "label": "Other State/Province",
+              "type": "select"
+            },
+            {
+              "name": "mailingZip",
+              "label": "Mailing Zip/Postal Code",
+              "type": "text"
+            },
+            {
+              "name": "otherZip",
+              "label": "Other Zip/Postal Code",
+              "type": "text"
+            }
+          ]
+        }
+      ]
+    },
+    "products": {
+      "title": "Product",
+      "sections": [
+        {
+          "title": "Product Information",
+          "fields": [
+            {
+              "name": "productName",
+              "label": "Product Name",
+              "type": "text"
+            },
+            {
+              "name": "productFamily",
+              "label": "Product Family",
+              "type": "select"
+            },
+            {
+              "name": "productCode",
+              "label": "Product Code",
+              "type": "text"
+            },
+            {
+              "name": "externalId",
+              "label": "External ID",
+              "type": "text"
+            },
+            {
+              "name": "productSize",
+              "label": "Product Size",
+              "type": "text"
+            },
+            {
+              "name": "active",
+              "label": "Active",
+              "type": "checkbox"
+            },
+            {
+              "name": "serviceType",
+              "label": "Service Type",
+              "type": "select"
+            },
+            {
+              "name": "serviceCategory",
+              "label": "Service Category",
+              "type": "select"
+            },
+            {
+              "name": "productDescription",
+              "label": "Product Description",
+              "type": "textarea"
+            }
+          ]
+        }
+      ]
+    },
+    "assets": {
+      "title": "Asset",
+      "sections": [
+        {
+          "title": "Asset Details",
+          "fields": [
+            {
+              "name": "unvalidatedSerialNumber",
+              "label": "Un-Validated Serial Number",
+              "type": "checkbox"
+            },
+            {
+              "name": "externalId",
+              "label": "External Id",
+              "type": "text"
+            },
+            {
+              "name": "poolId",
+              "label": "Pool Id",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "title": "Asset Information",
+          "fields": [
+            {
+              "name": "assetName",
+              "label": "Asset Name",
+              "type": "text"
+            },
+            {
+              "name": "assetStatus",
+              "label": "Asset Status",
+              "type": "select"
+            },
+            {
+              "name": "product",
+              "label": "Product",
+              "type": "lookup"
+            },
+            {
+              "name": "assetSubStatus",
+              "label": "Asset Sub-Status",
+              "type": "select"
+            },
+            {
+              "name": "account",
+              "label": "Account",
+              "type": "lookup"
+            },
+            {
+              "name": "serialNumber",
+              "label": "Serial Number",
+              "type": "text"
+            },
+            {
+              "name": "competitorAsset",
+              "label": "Competitor Asset",
+              "type": "checkbox"
+            },
+            {
+              "name": "containerConditions",
+              "label": "Industrial Container Conditions",
+              "type": "multiselect"
+            },
+            {
+              "name": "usageEndDate",
+              "label": "Usage End Date",
+              "type": "date"
+            },
+            {
+              "name": "assetRecordType",
+              "label": "Asset Record Type",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "title": "Asset Details",
+          "fields": [
+            {
+              "name": "rfidNumber",
+              "label": "RFID Number",
+              "type": "text"
+            },
+            {
+              "name": "__homeLocationLabel",
+              "label": "Home Location",
+              "type": "sublabel"
+            },
+            {
+              "name": "containerNumber",
+              "label": "Container Number",
+              "type": "text"
+            },
+            {
+              "name": "homeLatitude",
+              "label": "Latitude",
+              "type": "text"
+            },
+            {
+              "name": "containerBarcodeNumber",
+              "label": "Container Barcode Number",
+              "type": "text"
+            },
+            {
+              "name": "homeLongitude",
+              "label": "Longitude",
+              "type": "text"
+            },
+            {
+              "name": "price",
+              "label": "Price",
+              "type": "number"
+            },
+            {
+              "name": "customerLocation",
+              "label": "Customer Location",
+              "type": "lookup"
+            },
+            {
+              "name": "quantity",
+              "label": "Quantity",
+              "type": "number"
+            },
+            {
+              "name": "warehouse",
+              "label": "Warehouse",
+              "type": "lookup"
+            },
+            {
+              "name": "uom",
+              "label": "Unit of Measure",
+              "type": "text"
+            },
+            {
+              "name": "purchaseDate",
+              "label": "Purchase Date",
+              "type": "date"
+            },
+            {
+              "name": "installDate",
+              "label": "Install Date",
+              "type": "date"
+            }
+          ]
+        },
+        {
+          "title": "Additional Information",
+          "fields": [
+            {
+              "name": "custom1",
+              "label": "Custom 1",
+              "type": "text"
+            },
+            {
+              "name": "custom6",
+              "label": "Custom 6",
+              "type": "text"
+            },
+            {
+              "name": "custom2",
+              "label": "Custom 2",
+              "type": "text"
+            },
+            {
+              "name": "custom7",
+              "label": "Custom 7",
+              "type": "text"
+            },
+            {
+              "name": "custom3",
+              "label": "Custom 3",
+              "type": "text"
+            },
+            {
+              "name": "custom8",
+              "label": "Custom 8",
+              "type": "text"
+            },
+            {
+              "name": "custom4",
+              "label": "Custom 4",
+              "type": "text"
+            },
+            {
+              "name": "custom5",
+              "label": "Custom 5",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "title": "System Information",
+          "fields": [
+            {
+              "name": "createdBy",
+              "label": "Created By",
+              "type": "text"
+            },
+            {
+              "name": "lastModifiedBy",
+              "label": "Last Modified By",
+              "type": "text"
+            }
+          ]
+        }
+      ]
+    },
+    "locations": {
+      "title": "Location",
+      "sections": [
+        {
+          "title": "Information",
+          "fields": [
+            {
+              "name": "locationNumber",
+              "label": "Location Number",
+              "type": "text"
+            },
+            {
+              "name": "locationName",
+              "label": "Location Name",
+              "type": "text"
+            },
+            {
+              "name": "account",
+              "label": "Service Provider",
+              "type": "lookup"
+            },
+            {
+              "name": "locationType",
+              "label": "Location Type",
+              "type": "select"
+            },
+            {
+              "name": "houseNumber",
+              "label": "House Number",
+              "type": "text"
+            },
+            {
+              "name": "__geoloc",
+              "label": "Geolocation",
+              "type": "sublabel"
+            },
+            {
+              "name": "street",
+              "label": "Street",
+              "type": "textarea"
+            },
+            {
+              "name": "latitude",
+              "label": "Latitude",
+              "type": "text"
+            },
+            {
+              "name": "longitude",
+              "label": "Longitude",
+              "type": "text"
+            },
+            {
+              "name": "unitNumber",
+              "label": "Unit #",
+              "type": "text"
+            },
+            {
+              "name": "zone",
+              "label": "Zone",
+              "type": "text"
+            },
+            {
+              "name": "city",
+              "label": "City",
+              "type": "text"
+            },
+            {
+              "name": "trashCollectionRoute",
+              "label": "Trash Collection Route",
+              "type": "lookup"
+            },
+            {
+              "name": "state",
+              "label": "State",
+              "type": "select"
+            },
+            {
+              "name": "recycleCollectionRoute",
+              "label": "Recycle Collection Route",
+              "type": "lookup"
+            },
+            {
+              "name": "zipCode",
+              "label": "Zip Code",
+              "type": "text"
+            },
+            {
+              "name": "organicCollectionRoute",
+              "label": "Organic Collection Route",
+              "type": "lookup"
+            },
+            {
+              "name": "country",
+              "label": "Country",
+              "type": "select"
+            },
+            {
+              "name": "yardWasteRoute",
+              "label": "Yard Waste Route",
+              "type": "lookup"
+            },
+            {
+              "name": "county",
+              "label": "County",
+              "type": "text"
+            },
+            {
+              "name": "parcelId",
+              "label": "Parcel Id",
+              "type": "text"
+            },
+            {
+              "name": "siteId",
+              "label": "Site Id",
+              "type": "text"
+            },
+            {
+              "name": "repairFacility",
+              "label": "Repair Facility",
+              "type": "checkbox"
+            },
+            {
+              "name": "segment",
+              "label": "Segment",
+              "type": "lookup"
+            },
+            {
+              "name": "owner",
+              "label": "Owner",
+              "type": "text"
+            },
+            {
+              "name": "missingCartRetrieveOnly",
+              "label": "Missing Cart Retrieve Only?",
+              "type": "checkbox"
+            },
+            {
+              "name": "externalId",
+              "label": "External ID",
+              "type": "text"
+            },
+            {
+              "name": "shipToId",
+              "label": "ShipToId",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "title": "System Information",
+          "fields": [
+            {
+              "name": "createdBy",
+              "label": "Created By",
+              "type": "text"
+            },
+            {
+              "name": "lastModifiedBy",
+              "label": "Last Modified By",
+              "type": "text"
+            }
+          ]
+        }
+      ]
+    },
+    "customers": {
+      "title": "Customer",
+      "sections": [
+        {
+          "title": "Information",
+          "fields": [
+            {
+              "name": "email",
+              "label": "Email",
+              "type": "text"
+            },
+            {
+              "name": "account",
+              "label": "Service Provider",
+              "type": "lookup"
+            },
+            {
+              "name": "name",
+              "label": "Name",
+              "type": "text"
+            },
+            {
+              "name": "customerId",
+              "label": "Customer #",
+              "type": "text"
+            },
+            {
+              "name": "fax",
+              "label": "Fax",
+              "type": "text"
+            },
+            {
+              "name": "phone",
+              "label": "Phone",
+              "type": "text"
+            },
+            {
+              "name": "mobilePhone",
+              "label": "Mobile Phone",
+              "type": "text"
+            },
+            {
+              "name": "parentCustomer",
+              "label": "Parent Customer",
+              "type": "lookup"
+            },
+            {
+              "name": "owner",
+              "label": "Owner",
+              "type": "text"
+            },
+            {
+              "name": "segment",
+              "label": "Segment",
+              "type": "lookup"
+            },
+            {
+              "name": "custom1",
+              "label": "Custom 1",
+              "type": "text"
+            },
+            {
+              "name": "custom2",
+              "label": "Custom 2",
+              "type": "text"
+            },
+            {
+              "name": "custom3",
+              "label": "Custom 3",
+              "type": "text"
+            },
+            {
+              "name": "custom4",
+              "label": "Custom 4",
+              "type": "text"
+            },
+            {
+              "name": "custom5",
+              "label": "Custom 5",
+              "type": "text"
+            },
+            {
+              "name": "custom6",
+              "label": "Custom 6",
+              "type": "text"
+            }
+          ]
+        }
+      ]
+    },
+    "trucks": {
+      "title": "Truck",
+      "sections": [
+        {
+          "title": "Information",
+          "fields": [
+            {
+              "name": "truckName",
+              "label": "Truck Name",
+              "type": "text"
+            },
+            {
+              "name": "truckNumber",
+              "label": "Truck #",
+              "type": "text"
+            },
+            {
+              "name": "account",
+              "label": "Service Provider",
+              "type": "lookup"
+            },
+            {
+              "name": "warehouseLocation",
+              "label": "Warehouse Location",
+              "type": "lookup"
+            },
+            {
+              "name": "status",
+              "label": "Status",
+              "type": "select"
+            },
+            {
+              "name": "assignToTruck",
+              "label": "Assign to this truck",
+              "type": "checkbox"
+            },
+            {
+              "name": "segment",
+              "label": "Segment",
+              "type": "lookup"
+            },
+            {
+              "name": "timezone",
+              "label": "Timezone",
+              "type": "select"
+            }
+          ]
+        },
+        {
+          "title": "Truck Details",
+          "fields": [
+            {
+              "name": "bodyMake",
+              "label": "Body Make",
+              "type": "text"
+            },
+            {
+              "name": "serviceType",
+              "label": "Service Type",
+              "type": "select"
+            },
+            {
+              "name": "chassisMake",
+              "label": "Chassis Make",
+              "type": "text"
+            },
+            {
+              "name": "type",
+              "label": "Type",
+              "type": "select"
+            },
+            {
+              "name": "bodyModel",
+              "label": "Body Model",
+              "type": "text"
+            },
+            {
+              "name": "fuelType",
+              "label": "Fuel Type",
+              "type": "select"
+            },
+            {
+              "name": "chassisModel",
+              "label": "Chassis Model",
+              "type": "text"
+            },
+            {
+              "name": "plate",
+              "label": "Plate #",
+              "type": "text"
+            },
+            {
+              "name": "size",
+              "label": "Size",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "title": "Devices",
+          "fields": [
+            {
+              "name": "rfidReader",
+              "label": "RFID Reader",
+              "type": "text"
+            },
+            {
+              "name": "allInOneDevice",
+              "label": "All-in-One Device",
+              "type": "text"
+            },
+            {
+              "name": "telematicsDevice",
+              "label": "Telematics Device",
+              "type": "text"
+            },
+            {
+              "name": "device4",
+              "label": "Device 4",
+              "type": "text"
+            }
+          ]
+        }
+      ]
+    },
+    "routes": {
+      "title": "Route",
+      "sections": [
+        {
+          "title": "Information",
+          "fields": [
+            {
+              "name": "routeNumber",
+              "label": "Route Number",
+              "type": "text"
+            },
+            {
+              "name": "recordType",
+              "label": "Record Type",
+              "type": "text"
+            },
+            {
+              "name": "dispatch",
+              "label": "Dispatch",
+              "type": "lookup"
+            },
+            {
+              "name": "configuredDuration",
+              "label": "Configured Duration",
+              "type": "text"
+            },
+            {
+              "name": "routeUID",
+              "label": "Route UID",
+              "type": "text"
+            },
+            {
+              "name": "configuredStartTime",
+              "label": "Configured Start Time",
+              "type": "time"
+            },
+            {
+              "name": "truck",
+              "label": "Truck",
+              "type": "lookup"
+            },
+            {
+              "name": "serviceProviderSegment",
+              "label": "Service Provider Segment",
+              "type": "lookup"
+            },
+            {
+              "name": "driver",
+              "label": "Driver",
+              "type": "lookup"
+            },
+            {
+              "name": "account",
+              "label": "Service Provider",
+              "type": "lookup"
+            },
+            {
+              "name": "status",
+              "label": "Status",
+              "type": "select"
+            },
+            {
+              "name": "collectionType",
+              "label": "Collection Type",
+              "type": "select"
+            },
+            {
+              "name": "collectionDays",
+              "label": "Collection Days",
+              "type": "text"
+            },
+            {
+              "name": "expectedContainers",
+              "label": "# of Expected Containers",
+              "type": "number"
+            }
+          ]
+        }
+      ]
+    },
+    "dispatches": {
+      "title": "Dispatch",
+      "sections": [
+        {
+          "title": "Information",
+          "fields": [
+            {
+              "name": "dispatchNumber",
+              "label": "Dispatch Number",
+              "type": "text"
+            },
+            {
+              "name": "maintenanceRouteProfile",
+              "label": "Maintenance Route Profile",
+              "type": "lookup"
+            },
+            {
+              "name": "account",
+              "label": "Service Provider",
+              "type": "lookup"
+            },
+            {
+              "name": "status",
+              "label": "Status",
+              "type": "select"
+            },
+            {
+              "name": "routeDate",
+              "label": "Route Date",
+              "type": "date"
+            },
+            {
+              "name": "serviceProviderSegment",
+              "label": "Service Provider Segment",
+              "type": "lookup"
+            },
+            {
+              "name": "serviceType",
+              "label": "Service Type",
+              "type": "multiselect"
+            },
+            {
+              "name": "truck",
+              "label": "Truck",
+              "type": "lookup"
+            },
+            {
+              "name": "driver",
+              "label": "Driver",
+              "type": "lookup"
+            },
+            {
+              "name": "startTime",
+              "label": "Start Time",
+              "type": "time"
+            }
+          ]
+        }
+      ]
+    },
+    "workOrders": {
+      "title": "Work Order",
+      "sections": [
+        {
+          "title": "Detail",
+          "fields": [
+            {
+              "name": "workOrderOwner",
+              "label": "Work Order Owner",
+              "type": "text"
+            },
+            {
+              "name": "requestTypeName",
+              "label": "Request Type Name",
+              "type": "text"
+            },
+            {
+              "name": "workOrderNumber",
+              "label": "Work Order Number",
+              "type": "text"
+            },
+            {
+              "name": "caseStatus",
+              "label": "Case Status",
+              "type": "text"
+            },
+            {
+              "name": "contactName",
+              "label": "Contact Name",
+              "type": "lookup"
+            },
+            {
+              "name": "closedWithDesiredResolution",
+              "label": "Closed w/ Desired Resolution",
+              "type": "checkbox"
+            },
+            {
+              "name": "account",
+              "label": "Account Name",
+              "type": "lookup"
+            },
+            {
+              "name": "contactPhone",
+              "label": "Contact Phone",
+              "type": "text"
+            },
+            {
+              "name": "workOrderLink",
+              "label": "Work Order # (Link)",
+              "type": "text"
+            },
+            {
+              "name": "contactEmail",
+              "label": "Contact Email",
+              "type": "text"
+            },
+            {
+              "name": "caseRoute",
+              "label": "Case Route",
+              "type": "text"
+            },
+            {
+              "name": "numberOfAttachments",
+              "label": "Number of Attachments",
+              "type": "number"
+            },
+            {
+              "name": "truckStatus",
+              "label": "Truck Status",
+              "type": "text"
+            },
+            {
+              "name": "serviceType",
+              "label": "Service Type",
+              "type": "select"
+            },
+            {
+              "name": "productName",
+              "label": "Product Name",
+              "type": "text"
+            },
+            {
+              "name": "workOrderLUID",
+              "label": "Work Order LUID",
+              "type": "text"
+            },
+            {
+              "name": "contactName2",
+              "label": "Contact Name (Formula)",
+              "type": "text"
+            },
+            {
+              "name": "spWorkOrderRouteNum",
+              "label": "SP Work Order Route #",
+              "type": "text"
+            },
+            {
+              "name": "workOrderText",
+              "label": "Work Order # (Text)",
+              "type": "text"
+            },
+            {
+              "name": "collectionRouteNumberText",
+              "label": "Collection Route Number",
+              "type": "text"
+            },
+            {
+              "name": "actualContainerSizeType",
+              "label": "Actual Container Size+Type",
+              "type": "text"
+            },
+            {
+              "name": "externalId",
+              "label": "External Id",
+              "type": "text"
+            },
+            {
+              "name": "expectedAssetSizeType",
+              "label": "Expected Asset Size+Type",
+              "type": "text"
+            },
+            {
+              "name": "workOrderIdCalc",
+              "label": "Work Order Id Calc",
+              "type": "text"
+            },
+            {
+              "name": "yesterdayAfter3pm",
+              "label": "Yesterday After 3 pm",
+              "type": "text"
+            },
+            {
+              "name": "collectionRouteNumber",
+              "label": "Collection Route Number #",
+              "type": "lookup"
+            },
+            {
+              "name": "formattedClosedDateEst",
+              "label": "Formatted ClosedDate EST",
+              "type": "text"
+            },
+            {
+              "name": "segmentWorkOrderGuidMapping",
+              "label": "Segment Work Order GUID Mapping",
+              "type": "text"
+            },
+            {
+              "name": "lakelandWoNotes",
+              "label": "Lakeland WO Notes",
+              "type": "text"
+            },
+            {
+              "name": "workOrderGuid",
+              "label": "Work Order GUID",
+              "type": "text"
+            },
+            {
+              "name": "completionDay",
+              "label": "Completion Day",
+              "type": "text"
+            },
+            {
+              "name": "attachment1Photo",
+              "label": "Attachment 1 Photo",
+              "type": "text"
+            },
+            {
+              "name": "completionTime",
+              "label": "Completion Time",
+              "type": "text"
+            },
+            {
+              "name": "photo1Url",
+              "label": "Photo 1 Url",
+              "type": "text"
+            },
+            {
+              "name": "lastAttemptDate",
+              "label": "Last Attempt Date",
+              "type": "text"
+            },
+            {
+              "name": "photo1TextUrl",
+              "label": "Photo 1 Text URL",
+              "type": "text"
+            },
+            {
+              "name": "lastAttemptTime",
+              "label": "Last Attempt Time",
+              "type": "text"
+            },
+            {
+              "name": "attachment2Photo",
+              "label": "Attachment 2 Photo",
+              "type": "text"
+            },
+            {
+              "name": "requestTypeDescription",
+              "label": "Request Type Description",
+              "type": "text"
+            },
+            {
+              "name": "photo2Url",
+              "label": "Photo 2 Url",
+              "type": "text"
+            },
+            {
+              "name": "collectionRouteNumberNameFormula",
+              "label": "Collection Route Number Name Formula",
+              "type": "text"
+            },
+            {
+              "name": "photo2TextUrl",
+              "label": "Photo 2 Text URL",
+              "type": "text"
+            },
+            {
+              "name": "quantitySize",
+              "label": "Quantity/Size",
+              "type": "text"
+            },
+            {
+              "name": "observation",
+              "label": "Observation",
+              "type": "lookup"
+            },
+            {
+              "name": "pickupType",
+              "label": "Pickup Type",
+              "type": "text"
+            },
+            {
+              "name": "billingAccountNumber",
+              "label": "Billing Account Number",
+              "type": "text"
+            },
+            {
+              "name": "pickupSize",
+              "label": "Pickup Size",
+              "type": "text"
+            },
+            {
+              "name": "dateTimeOpenedFormula",
+              "label": "Date/Time Opened (Formula)",
+              "type": "text"
+            },
+            {
+              "name": "dispatchSfdcId",
+              "label": "Dispatch SFDC ID",
+              "type": "text"
+            },
+            {
+              "name": "completionDateFormula",
+              "label": "Completion Date (Formula)",
+              "type": "text"
+            },
+            {
+              "name": "assetTypeProductName",
+              "label": "Asset Type Product Name",
+              "type": "text"
+            },
+            {
+              "name": "lastAttemptDateTimeFormula",
+              "label": "Last Attempt Date/Time (Formula)",
+              "type": "text"
+            },
+            {
+              "name": "pickupDateDate",
+              "label": "Pickup Date",
+              "type": "date"
+            },
+            {
+              "name": "pickupDateTime",
+              "label": "Pickup Time",
+              "type": "time"
+            },
+            {
+              "name": "yardLocationId",
+              "label": "Yard Location Id",
+              "type": "text"
+            },
+            {
+              "name": "sentDateTimeFormula",
+              "label": "Sent Date Time (Formula)",
+              "type": "text"
+            },
+            {
+              "name": "lastModifiedByFullNameFormula",
+              "label": "Last Modified By: Full Name (Formula)",
+              "type": "text"
+            },
+            {
+              "name": "hrs24DateTimeOpened",
+              "label": "24 Hrs Date/Time Opened",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "title": "Work Order Information",
+          "fields": [
+            {
+              "name": "dueDate",
+              "label": "Due Date",
+              "type": "date"
+            },
+            {
+              "name": "hotTicket",
+              "label": "Hot Ticket",
+              "type": "checkbox"
+            },
+            {
+              "name": "dueDateType",
+              "label": "Due Date Type",
+              "type": "select"
+            },
+            {
+              "name": "serviceDay",
+              "label": "Service Day",
+              "type": "text"
+            },
+            {
+              "name": "requestDate",
+              "label": "Request Date",
+              "type": "date"
+            },
+            {
+              "name": "requestType",
+              "label": "Request Type",
+              "type": "lookup"
+            },
+            {
+              "name": "completionDateDate",
+              "label": "Completion Date",
+              "type": "date"
+            },
+            {
+              "name": "completionDateTime",
+              "label": "Completion Time",
+              "type": "time"
+            },
+            {
+              "name": "requestTypeResolutionCode",
+              "label": "Request Type Resolution Code",
+              "type": "lookup"
+            },
+            {
+              "name": "customerAccount",
+              "label": "Customer Account",
+              "type": "lookup"
+            },
+            {
+              "name": "resolutionCodeName",
+              "label": "Resolution Code Name",
+              "type": "text"
+            },
+            {
+              "name": "dispatch",
+              "label": "Dispatch",
+              "type": "lookup"
+            },
+            {
+              "name": "resolutionComments",
+              "label": "Resolution Comments",
+              "type": "textarea"
+            },
+            {
+              "name": "routeDate",
+              "label": "Route Date",
+              "type": "date"
+            },
+            {
+              "name": "woNotes",
+              "label": "WO Notes",
+              "type": "textarea"
+            },
+            {
+              "name": "lastAttemptDateDate",
+              "label": "Last Attempt Date",
+              "type": "date"
+            },
+            {
+              "name": "lastAttemptDateTime",
+              "label": "Last Attempt Time",
+              "type": "time"
+            },
+            {
+              "name": "attemptLatitude",
+              "label": "Attempt Latitude",
+              "type": "text"
+            },
+            {
+              "name": "attemptLongitude",
+              "label": "Attempt Longitude",
+              "type": "text"
+            },
+            {
+              "name": "numOfAttempts",
+              "label": "# of Attempts",
+              "type": "number"
+            }
+          ]
+        },
+        {
+          "title": "Asset Information",
+          "fields": [
+            {
+              "name": "asset",
+              "label": "Asset",
+              "type": "lookup"
+            },
+            {
+              "name": "assetToRemoveOrRepair",
+              "label": "Asset To Remove/Repair",
+              "type": "lookup"
+            },
+            {
+              "name": "assetType",
+              "label": "Asset Type",
+              "type": "lookup"
+            },
+            {
+              "name": "removedAssetSerial",
+              "label": "Removed Asset Serial #",
+              "type": "lookup"
+            },
+            {
+              "name": "assetTypeToRemove",
+              "label": "Asset Type To Remove",
+              "type": "lookup"
+            },
+            {
+              "name": "removedAssetLink",
+              "label": "Removed Asset Link",
+              "type": "text"
+            },
+            {
+              "name": "deliveredAssetSerial",
+              "label": "Delivered Asset Serial #",
+              "type": "lookup"
+            },
+            {
+              "name": "relocatedAsset",
+              "label": "Relocated Asset",
+              "type": "lookup"
+            },
+            {
+              "name": "deliveredAssetLink",
+              "label": "Delivered Asset Link",
+              "type": "text"
+            },
+            {
+              "name": "assetLookup2",
+              "label": "Asset (Additional)",
+              "type": "lookup"
+            },
+            {
+              "name": "assetToRelocate",
+              "label": "Asset To Relocate",
+              "type": "lookup"
+            }
+          ]
+        },
+        {
+          "title": "Dispatch Detail",
+          "fields": [
+            {
+              "name": "dispatchNumber",
+              "label": "Dispatch Number",
+              "type": "text"
+            },
+            {
+              "name": "routeId",
+              "label": "Route ID",
+              "type": "text"
+            },
+            {
+              "name": "dispatchDate",
+              "label": "Dispatch Date",
+              "type": "date"
+            },
+            {
+              "name": "routeNumber",
+              "label": "Route Number",
+              "type": "text"
+            },
+            {
+              "name": "dispatchId",
+              "label": "Dispatch Id",
+              "type": "text"
+            },
+            {
+              "name": "dispatchStatus",
+              "label": "Dispatch Status",
+              "type": "text"
+            },
+            {
+              "name": "driverId",
+              "label": "Driver ID",
+              "type": "text"
+            },
+            {
+              "name": "dispatchCreatedBy",
+              "label": "Dispatch Created By",
+              "type": "lookup"
+            },
+            {
+              "name": "driverName",
+              "label": "Driver Name",
+              "type": "lookup"
+            },
+            {
+              "name": "dispatchLastModifiedBy",
+              "label": "Dispatch Last Modified By",
+              "type": "lookup"
+            },
+            {
+              "name": "stopNumber",
+              "label": "Stop Number",
+              "type": "number"
+            },
+            {
+              "name": "yardLocationIdDispatch",
+              "label": "Yard Location Id",
+              "type": "text"
+            },
+            {
+              "name": "truckNumber",
+              "label": "Truck Number",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "title": "Additional Information",
+          "fields": [
+            {
+              "name": "maintenanceTypeGroup",
+              "label": "Maintenance Type Group",
+              "type": "text"
+            },
+            {
+              "name": "workOrderAttemptStatus",
+              "label": "Work Order Attempt Status",
+              "type": "text"
+            },
+            {
+              "name": "maintenanceTypeRemoval",
+              "label": "Maintenance Type Removal",
+              "type": "text"
+            },
+            {
+              "name": "workOrderCreatedPast24Hrs",
+              "label": "Work Order created past 24 hours",
+              "type": "checkbox"
+            },
+            {
+              "name": "maintenanceTypeDeliver",
+              "label": "Maintenance Type Deliver",
+              "type": "text"
+            },
+            {
+              "name": "workOrderOrigin",
+              "label": "Work Order Origin",
+              "type": "select"
+            },
+            {
+              "name": "serviceDayNumber",
+              "label": "Service Day Number",
+              "type": "text"
+            },
+            {
+              "name": "status",
+              "label": "Status",
+              "type": "select"
+            },
+            {
+              "name": "subject",
+              "label": "Subject",
+              "type": "text"
+            },
+            {
+              "name": "priority",
+              "label": "Priority",
+              "type": "select"
+            },
+            {
+              "name": "description",
+              "label": "Description",
+              "type": "textarea"
+            },
+            {
+              "name": "internalComments",
+              "label": "Internal Comments",
+              "type": "textarea"
+            }
+          ]
+        },
+        {
+          "title": "Recurrence Information",
+          "fields": [
+            {
+              "name": "recurrenceFrequency",
+              "label": "Recurrence Frequency",
+              "type": "select"
+            },
+            {
+              "name": "recursEvery",
+              "label": "Recurs Every",
+              "type": "multiselect"
+            },
+            {
+              "name": "recurrenceStartDate",
+              "label": "Recurrence Start Date",
+              "type": "date"
+            },
+            {
+              "name": "recurrenceEndDate",
+              "label": "Recurrence End Date",
+              "type": "date"
+            },
+            {
+              "name": "createdViaRecurrence",
+              "label": "Created via recurrence?",
+              "type": "checkbox"
+            },
+            {
+              "name": "recurrenceWorkOrderNumber",
+              "label": "Work Order Number (recurrence-scoped)",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "title": "QAlert Sync Info",
+          "fields": [
+            {
+              "name": "extIntegrationSource",
+              "label": "Ext Integration Source",
+              "type": "text"
+            },
+            {
+              "name": "extIntegrationDate",
+              "label": "Ext Integration Date",
+              "type": "date"
+            },
+            {
+              "name": "extIntegrationTime",
+              "label": "Ext Integration Time",
+              "type": "time"
+            },
+            {
+              "name": "extIntegrationSync",
+              "label": "Ext Integration Sync",
+              "type": "checkbox"
+            },
+            {
+              "name": "extIntegrationAttemptCount",
+              "label": "Ext Integration Attempt Count",
+              "type": "number"
+            }
+          ]
+        },
+        {
+          "title": "Web Information",
+          "fields": [
+            {
+              "name": "webDateTimeOpened",
+              "label": "Date/Time Opened",
+              "type": "text"
+            },
+            {
+              "name": "webDateTimeClosed",
+              "label": "Date/Time Closed",
+              "type": "text"
+            },
+            {
+              "name": "webName",
+              "label": "Web Name",
+              "type": "text"
+            },
+            {
+              "name": "webCompany",
+              "label": "Web Company",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "title": "System Information",
+          "fields": [
+            {
+              "name": "closeAllRemovalWorkOrder",
+              "label": "Close all removal work order",
+              "type": "text"
+            },
+            {
+              "name": "closeAssetRemovalWorkOrder",
+              "label": "Close asset removal work order",
+              "type": "text"
+            },
+            {
+              "name": "createdBy",
+              "label": "Created By",
+              "type": "text"
+            },
+            {
+              "name": "lastModifiedBy",
+              "label": "Last Modified By",
+              "type": "text"
+            }
+          ]
+        }
+      ]
+    },
+    "maintProfiles": {
+      "title": "Maintenance Route Profile",
+      "sections": [
+        {
+          "title": "Information",
+          "fields": [
+            {
+              "name": "maintenanceRouteProfileName",
+              "label": "Maintenance Route Profile Name",
+              "type": "text"
+            },
+            {
+              "name": "numberOfTrucks",
+              "label": "Number Of Trucks",
+              "type": "number"
+            },
+            {
+              "name": "account",
+              "label": "Service Provider",
+              "type": "lookup"
+            },
+            {
+              "name": "capacityBuffer",
+              "label": "Capacity Buffer",
+              "type": "number"
+            },
+            {
+              "name": "startLocation",
+              "label": "Start Location",
+              "type": "lookup"
+            },
+            {
+              "name": "endLocation",
+              "label": "End Location",
+              "type": "lookup"
+            },
+            {
+              "name": "startTime",
+              "label": "Start Time",
+              "type": "time"
+            },
+            {
+              "name": "duration",
+              "label": "Duration",
+              "type": "text"
+            },
+            {
+              "name": "serviceType",
+              "label": "Service Type",
+              "type": "select"
+            },
+            {
+              "name": "serviceProviderSegment",
+              "label": "Service Provider Segment",
+              "type": "lookup"
+            }
+          ]
+        }
+      ]
+    },
+    "segments": {
+      "title": "Service Provider Segment",
+      "sections": [
+        {
+          "title": "Information",
+          "fields": [
+            {
+              "name": "segmentName",
+              "label": "Service Provider Segment Name",
+              "type": "text"
+            },
+            {
+              "name": "account",
+              "label": "Service Provider",
+              "type": "lookup"
+            },
+            {
+              "name": "type",
+              "label": "Type",
+              "type": "select"
+            },
+            {
+              "name": "name",
+              "label": "Name",
+              "type": "text"
+            },
+            {
+              "name": "parent",
+              "label": "Parent",
+              "type": "lookup"
+            },
+            {
+              "name": "delaySharing",
+              "label": "Delay Sharing",
+              "type": "checkbox"
+            },
+            {
+              "name": "delayDuration",
+              "label": "Delay Duration",
+              "type": "number"
+            }
+          ]
+        },
+        {
+          "title": "Record Sharing Items",
+          "fields": [
+            {
+              "name": "publicGroupId",
+              "label": "Public Group ID",
+              "type": "text"
+            }
+          ]
+        }
+      ]
+    },
+    "aggTips": {
+      "title": "Aggregated Truck and Tip",
+      "sections": [
+        {
+          "title": "Information",
+          "fields": [
+            {
+              "name": "aggregatedName",
+              "label": "Aggregated Truck and Tip Name",
+              "type": "text"
+            },
+            {
+              "name": "owner",
+              "label": "Owner",
+              "type": "text"
+            },
+            {
+              "name": "account",
+              "label": "Service Provider",
+              "type": "lookup"
+            },
+            {
+              "name": "collectionRoute",
+              "label": "Collection Route",
+              "type": "lookup"
+            },
+            {
+              "name": "truck",
+              "label": "Truck",
+              "type": "lookup"
+            },
+            {
+              "name": "device",
+              "label": "Device",
+              "type": "text"
+            },
+            {
+              "name": "date",
+              "label": "Date",
+              "type": "date"
+            },
+            {
+              "name": "numTips",
+              "label": "# of Tips (RFID read or Arm Lift)",
+              "type": "number"
+            },
+            {
+              "name": "avgTimeBetweenStops",
+              "label": "Avg Time Between Stops",
+              "type": "text"
+            },
+            {
+              "name": "truckNumber",
+              "label": "Truck #",
+              "type": "text"
+            },
+            {
+              "name": "truckType",
+              "label": "Truck Type",
+              "type": "text"
+            },
+            {
+              "name": "truckStartTime",
+              "label": "Truck Start Time",
+              "type": "time"
+            },
+            {
+              "name": "truckRunTime",
+              "label": "Truck Run Time (minutes)",
+              "type": "number"
+            },
+            {
+              "name": "averageSpeed",
+              "label": "Average Speed (miles/Hour)",
+              "type": "number"
+            },
+            {
+              "name": "idleTime",
+              "label": "Idle Time (minutes)",
+              "type": "number"
+            },
+            {
+              "name": "totalDistance",
+              "label": "Total Distance Traveled (Miles)",
+              "type": "number"
+            },
+            {
+              "name": "hardBrakes",
+              "label": "# of Hard Brakes",
+              "type": "number"
+            },
+            {
+              "name": "hardAccels",
+              "label": "# of Hard Accels",
+              "type": "number"
+            },
+            {
+              "name": "speedingEvents",
+              "label": "# of Speeding Events",
+              "type": "number"
+            },
+            {
+              "name": "gallonsDiesel",
+              "label": "Gallons used (Diesel)",
+              "type": "number"
+            },
+            {
+              "name": "gallonsCNG",
+              "label": "Gallons used (CNG)",
+              "type": "number"
+            },
+            {
+              "name": "milesUntilNextService",
+              "label": "Miles Until Next Service",
+              "type": "number"
+            },
+            {
+              "name": "nonTipOverrides",
+              "label": "# of Non-Tip/Overrides",
+              "type": "number"
+            }
+          ]
+        }
+      ]
+    },
+    "tips": {
+      "title": "Individual Tip / Non-Tip Event",
+      "sections": [
+        {
+          "title": "Information",
+          "fields": [
+            {
+              "name": "individualTipName",
+              "label": "Individual Tip / Non-Tip Events Name",
+              "type": "text"
+            },
+            {
+              "name": "account",
+              "label": "Service Provider",
+              "type": "lookup"
+            },
+            {
+              "name": "sfdcDeviceId",
+              "label": "SFDC Device Id",
+              "type": "text"
+            },
+            {
+              "name": "sfdcTruckId",
+              "label": "SFDC Truck ID",
+              "type": "lookup"
+            },
+            {
+              "name": "errorCode",
+              "label": "Error Code",
+              "type": "text"
+            },
+            {
+              "name": "insyncId",
+              "label": "InsyncId",
+              "type": "text"
+            },
+            {
+              "name": "errorDescription",
+              "label": "Error Description",
+              "type": "select"
+            },
+            {
+              "name": "recordType",
+              "label": "Record Type",
+              "type": "text"
+            },
+            {
+              "name": "eventStartDateTime",
+              "label": "Event Start Date/Time",
+              "type": "datetime"
+            },
+            {
+              "name": "collectionRoute",
+              "label": "Collection Route",
+              "type": "lookup"
+            },
+            {
+              "name": "eventEndDateTime",
+              "label": "Event End Date/Time",
+              "type": "datetime"
+            },
+            {
+              "name": "__eventStart",
+              "label": "Event Start",
+              "type": "sublabel"
+            },
+            {
+              "name": "__eventEnd",
+              "label": "Event End",
+              "type": "sublabel"
+            },
+            {
+              "name": "eventStartLat",
+              "label": "Latitude",
+              "type": "text"
+            },
+            {
+              "name": "eventStartLong",
+              "label": "Longitude",
+              "type": "text"
+            },
+            {
+              "name": "eventEndLat",
+              "label": "Latitude",
+              "type": "text"
+            },
+            {
+              "name": "eventEndLong",
+              "label": "Longitude",
+              "type": "text"
+            },
+            {
+              "name": "heading",
+              "label": "Heading",
+              "type": "number"
+            },
+            {
+              "name": "amountOverLimit",
+              "label": "Amount Over Limit (Miles per hour)",
+              "type": "number"
+            },
+            {
+              "name": "maxSpeed",
+              "label": "Max Speed (Miles per hour)",
+              "type": "number"
+            },
+            {
+              "name": "timezone",
+              "label": "Timezone",
+              "type": "select"
+            },
+            {
+              "name": "duration",
+              "label": "Duration",
+              "type": "number"
+            },
+            {
+              "name": "imageUrl",
+              "label": "ImageUrl",
+              "type": "text"
+            },
+            {
+              "name": "readerEvent",
+              "label": "readerEvent",
+              "type": "text"
+            },
+            {
+              "name": "owner",
+              "label": "Owner",
+              "type": "text"
+            }
+          ]
+        }
+      ]
+    },
+    "reqCodes": {
+      "title": "Request Type Resolution Code",
+      "sections": [
+        {
+          "title": "Junction Identity",
+          "fields": [
+            {
+              "name": "id",
+              "label": "RRC #",
+              "type": "text"
+            },
+            {
+              "name": "account",
+              "label": "Service Provider",
+              "type": "lookup"
+            },
+            {
+              "name": "segment",
+              "label": "Segment",
+              "type": "lookup"
+            }
+          ]
+        },
+        {
+          "title": "The Mapping",
+          "fields": [
+            {
+              "name": "requestType",
+              "label": "Request Type",
+              "type": "lookup"
+            },
+            {
+              "name": "resolutionCode",
+              "label": "Resolution Code",
+              "type": "lookup"
+            },
+            {
+              "name": "workflowType",
+              "label": "Workflow Type",
+              "type": "select"
+            },
+            {
+              "name": "numberOfAttempts",
+              "label": "Number of Attempts",
+              "type": "number"
+            },
+            {
+              "name": "isDefault",
+              "label": "Is Default",
+              "type": "checkbox"
+            }
+          ]
+        }
+      ]
+    },
+    "requestTypes": {
+      "title": "Request Type",
+      "sections": [
+        {
+          "title": "Identity",
+          "fields": [
+            {
+              "name": "code",
+              "label": "Code",
+              "type": "text"
+            },
+            {
+              "name": "name",
+              "label": "Name",
+              "type": "text"
+            },
+            {
+              "name": "account",
+              "label": "Service Provider",
+              "type": "lookup"
+            },
+            {
+              "name": "segment",
+              "label": "Segment",
+              "type": "lookup"
+            }
+          ]
+        },
+        {
+          "title": "Classification",
+          "fields": [
+            {
+              "name": "workflow",
+              "label": "Workflow",
+              "type": "select"
+            },
+            {
+              "name": "category",
+              "label": "Request Type Category",
+              "type": "select"
+            },
+            {
+              "name": "serviceCategory",
+              "label": "Service Category",
+              "type": "select"
+            }
+          ]
+        },
+        {
+          "title": "Due Date Computation (Collection routes)",
+          "fields": [
+            {
+              "name": "dueDateType",
+              "label": "Due Date Type",
+              "type": "select"
+            },
+            {
+              "name": "completionDays",
+              "label": "Completion Days",
+              "type": "number"
+            }
+          ]
+        },
+        {
+          "title": "Availability",
+          "fields": [
+            {
+              "name": "active",
+              "label": "Active",
+              "type": "checkbox"
+            }
+          ]
+        }
+      ]
+    },
+    "resolutionCodes": {
+      "title": "Resolution Code",
+      "sections": [
+        {
+          "title": "Identity",
+          "fields": [
+            {
+              "name": "code",
+              "label": "Code",
+              "type": "text"
+            },
+            {
+              "name": "name",
+              "label": "Name",
+              "type": "text"
+            },
+            {
+              "name": "account",
+              "label": "Service Provider",
+              "type": "lookup"
+            }
+          ]
+        },
+        {
+          "title": "Classification",
+          "fields": [
+            {
+              "name": "workflow",
+              "label": "Workflow",
+              "type": "select"
+            },
+            {
+              "name": "description",
+              "label": "Description",
+              "type": "textarea"
+            }
+          ]
+        },
+        {
+          "title": "Availability",
+          "fields": [
+            {
+              "name": "active",
+              "label": "Active",
+              "type": "checkbox"
+            }
+          ]
+        }
+      ]
+    },
+    "notes": {
+      "title": "Note",
+      "sections": [
+        {
+          "title": "Note",
+          "fields": [
+            {
+              "name": "subject",
+              "label": "Subject",
+              "type": "text"
+            },
+            {
+              "name": "author",
+              "label": "Author",
+              "type": "text"
+            },
+            {
+              "name": "account",
+              "label": "Account",
+              "type": "lookup"
+            },
+            {
+              "name": "created",
+              "label": "Created",
+              "type": "date"
+            },
+            {
+              "name": "body",
+              "label": "Body",
+              "type": "textarea"
+            }
+          ]
+        }
+      ]
+    },
+    "notifications": {
+      "title": "Service Notification",
+      "sections": [
+        {
+          "title": "Information",
+          "fields": [
+            {
+              "name": "serviceNotificationName",
+              "label": "Service Notification Name",
+              "type": "text"
+            },
+            {
+              "name": "toBeSentBasedOn",
+              "label": "To be sent based on",
+              "type": "select"
+            },
+            {
+              "name": "account",
+              "label": "Service Provider",
+              "type": "lookup"
+            },
+            {
+              "name": "notifyDays",
+              "label": "Notify Days",
+              "type": "number"
+            },
+            {
+              "name": "fromEmail",
+              "label": "From Email",
+              "type": "text"
+            },
+            {
+              "name": "emailSubject",
+              "label": "Email Subject",
+              "type": "text"
+            },
+            {
+              "name": "emailBody",
+              "label": "Email Body",
+              "type": "textarea"
+            },
+            {
+              "name": "messageBody",
+              "label": "Message Body",
+              "type": "textarea"
+            },
+            {
+              "name": "displayName",
+              "label": "Display Name",
+              "type": "text"
+            },
+            {
+              "name": "automatedMessage",
+              "label": "Automated Message",
+              "type": "textarea"
+            },
+            {
+              "name": "enableServiceNotifications",
+              "label": "Enable Service Notifications",
+              "type": "checkbox"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "nav_trees_by_persona": {},
+  "account_scoped_rails": {
+    "uA_upper": [
+      {
+        "key": "assets",
+        "label": "Assets / Trucks"
+      },
+      {
+        "key": "customers",
+        "label": "Customers"
+      },
+      {
+        "key": "dispatches",
+        "label": "Dispatches"
+      },
+      {
+        "key": "locations",
+        "label": "Locations"
+      },
+      {
+        "key": "manageAccount",
+        "label": "Manage Customers"
+      },
+      {
+        "key": "notes",
+        "label": "Notes & Attachments"
+      },
+      {
+        "key": "routes",
+        "label": "Routes"
+      },
+      {
+        "key": "notifications",
+        "label": "Service Notifications"
+      },
+      {
+        "key": "tips",
+        "label": "Tips & Non-Tips"
+      },
+      {
+        "key": "workOrders",
+        "label": "Work Orders"
+      }
+    ],
+    "lA_lower": [
+      {
+        "key": "requestTypes",
+        "label": "Request Types"
+      },
+      {
+        "key": "resolutionCodes",
+        "label": "Resolution Codes"
+      },
+      {
+        "key": "reqCodes",
+        "label": "Request Type & Resolution Codes"
+      },
+      {
+        "key": "maintProfiles",
+        "label": "Route Profile Templates"
+      },
+      {
+        "key": "serviceNotifConfig",
+        "label": "Service Notification Config"
+      },
+      {
+        "key": "products",
+        "label": "Service Provider Products"
+      },
+      {
+        "key": "segments",
+        "label": "Service Provider Segments"
+      },
+      {
+        "key": "trucks",
+        "label": "Trucks"
+      },
+      {
+        "key": "setup",
+        "label": "Workspace"
+      }
+    ]
+  },
+  "onboard_screens": [
+    {
+      "module": "Platform Access & Identity",
+      "screens": [
+        {
+          "name": "Login Page",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "Forgot Password / Reset Password",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "Your Account (personal preferences)",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "Login History / Security Audit",
+          "type": "PAGE",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Home Dashboard",
+      "screens": [
+        {
+          "name": "Home \\u2014 SP Admin View",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "Home \\u2014 SP Segment Admin View",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "Customize Home (slide-over)",
+          "type": "MODAL/DRAWER",
+          "fields": []
+        },
+        {
+          "name": "App Launcher",
+          "type": "PAGE",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Contacts",
+      "screens": [
+        {
+          "name": "Contacts List",
+          "type": "PAGE",
+          "fields": [
+            "First Name",
+            "Last Name",
+            "Email",
+            "Phone",
+            "Role Title",
+            "Profile",
+            "Segment",
+            "Status",
+            "Enabled as Customer User"
+          ]
+        },
+        {
+          "name": "New / Edit Contact",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "Contact Detail (popup)",
+          "type": "MODAL/DRAWER",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Segments",
+      "screens": [
+        {
+          "name": "Service Provider Segments List",
+          "type": "PAGE",
+          "fields": [
+            "Segment Name",
+            "Type",
+            "Parent Segment",
+            "Service Provider"
+          ]
+        },
+        {
+          "name": "New / Edit Segment",
+          "type": "PAGE",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Product Configuration",
+      "screens": [
+        {
+          "name": "Product Master Catalog List",
+          "type": "PAGE",
+          "fields": [
+            "Product Name",
+            "Product Code",
+            "Product Size",
+            "Service Type",
+            "Service Category",
+            "Product Description",
+            "Active",
+            "Product Family",
+            "External ID"
+          ]
+        },
+        {
+          "name": "New / Edit Master Product",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "Service Provider Products List",
+          "type": "PAGE",
+          "fields": [
+            "Product (Master)",
+            "Resident-Facing Name",
+            "Product Code",
+            "Service Category",
+            "Status",
+            "Family"
+          ]
+        },
+        {
+          "name": "New / Edit Service Provider Product",
+          "type": "PAGE",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Request Types & Resolution Codes",
+      "screens": [
+        {
+          "name": "Request Types List",
+          "type": "PAGE",
+          "fields": [
+            "Request Type",
+            "Workflow Type",
+            "Category"
+          ]
+        },
+        {
+          "name": "New / Edit Request Type",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "Resolution Codes List",
+          "type": "PAGE",
+          "fields": [
+            "Resolution Code",
+            "Workflow Type"
+          ]
+        },
+        {
+          "name": "New / Edit Resolution Code",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "Request Type Resolution Codes (RRC) List",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "New / Edit RRC Record",
+          "type": "PAGE",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Rehrig Master Configuration",
+      "screens": [
+        {
+          "name": "Service Types List",
+          "type": "PAGE",
+          "fields": [
+            "Type Name",
+            "Category",
+            "Active"
+          ]
+        },
+        {
+          "name": "New / Edit Service Type",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "Location Types List",
+          "type": "PAGE",
+          "fields": [
+            "Type Name",
+            "Category",
+            "Active"
+          ]
+        },
+        {
+          "name": "New / Edit Location Type",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "Route Profile Templates List",
+          "type": "PAGE",
+          "fields": [
+            "Profile Name",
+            "Start Location",
+            "End Location",
+            "Service Type",
+            "# Trucks",
+            "Start Time",
+            "Duration",
+            "Segment"
+          ]
+        },
+        {
+          "name": "New / Edit Route Profile Template",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "Service Notification Config List",
+          "type": "PAGE",
+          "fields": [
+            "Enable Notification Toggle",
+            "Message Limit",
+            "Time Zone",
+            "Phone Call Window",
+            "SMS Window",
+            "Email Window",
+            "Notification Trigger Logic",
+            "Message Templates",
+            "Twilio Credentials",
+            "SendGrid Credentials"
+          ]
+        },
+        {
+          "name": "New / Edit Service Notification Config",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "Device Master Registry List",
+          "type": "PAGE",
+          "fields": [
+            "Device ID",
+            "Device Name",
+            "Device Type"
+          ]
+        },
+        {
+          "name": "New / Edit Device",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "Truck Master Registry List",
+          "type": "PAGE",
+          "fields": [
+            "Truck ID",
+            "Truck Name",
+            "Truck Type"
+          ]
+        },
+        {
+          "name": "New / Edit Truck (Master Registry)",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "API Integrations List",
+          "type": "PAGE",
+          "fields": [
+            "Name",
+            "Description",
+            "Endpoint",
+            "Status",
+            "Calls / 30 days"
+          ]
+        },
+        {
+          "name": "New / Edit API Integration",
+          "type": "PAGE",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Customers & Manage Account",
+      "screens": [
+        {
+          "name": "Customers List",
+          "type": "PAGE",
+          "fields": [
+            "Customer Account Number",
+            "Customer Name",
+            "Phone",
+            "Email",
+            "Segment",
+            "Custom 1",
+            "Custom 2",
+            "Custom 3",
+            "Custom 4",
+            "Custom 5",
+            "Custom 6",
+            "Notes"
+          ]
+        },
+        {
+          "name": "New / Edit Customer",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "Locations List",
+          "type": "PAGE",
+          "fields": [
+            "House Number",
+            "Street Name",
+            "Unit Number",
+            "City",
+            "State/Province",
+            "Postal Code",
+            "County",
+            "Zone",
+            "Site ID",
+            "Parcel ID",
+            "Latitude",
+            "Longitude",
+            "Location Type",
+            "Warehouse"
+          ]
+        },
+        {
+          "name": "New / Edit Location",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "Manage Customers \\u2014 Search Screen",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "Manage Customers \\u2014 Account Detail View",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "Manage Customers \\u2014 Asset Action Panel",
+          "type": "MODAL/DRAWER",
+          "fields": []
+        },
+        {
+          "name": "Manage Customers \\u2014 Assign New Asset Modal",
+          "type": "MODAL/DRAWER",
+          "fields": []
+        },
+        {
+          "name": "Manage Customers \\u2014 Tip History View",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "Manage Customers \\u2014 Map Asset View",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "Manage Customers \\u2014 Observation History View",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "Mass Upload Customers",
+          "type": "PAGE",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Assets & Trucks",
+      "screens": [
+        {
+          "name": "Assets List",
+          "type": "PAGE",
+          "fields": [
+            "Asset Name / Serial Number",
+            "Product",
+            "Status",
+            "Account",
+            "Home Location",
+            "Customer Location",
+            "Warehouse",
+            "Install Date"
+          ]
+        },
+        {
+          "name": "New / Edit Asset",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "Asset Import \\u2014 Standard",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "Asset Import \\u2014 Legacy / Cart System",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "Trucks List",
+          "type": "PAGE",
+          "fields": [
+            "Truck Name",
+            "Truck #",
+            "Status",
+            "Service Type",
+            "Driver",
+            "Segment",
+            "Service Provider"
+          ]
+        },
+        {
+          "name": "New / Edit Truck",
+          "type": "PAGE",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Work Orders",
+      "screens": [
+        {
+          "name": "Work Orders List",
+          "type": "PAGE",
+          "fields": [
+            "Work Order # (Case)",
+            "LUID (External Order ID)",
+            "Customer",
+            "Request Type",
+            "Subject",
+            "Due Date",
+            "Priority",
+            "Status",
+            "Service Type",
+            "Asset Type",
+            "Asset Size",
+            "Dispatch Number",
+            "Route ID",
+            "Stop Number",
+            "Hot Ticket",
+            "Resolution Code",
+            "Number of Attempts",
+            "Last Attempt Date/Time",
+            "Attempt Lat/Long",
+            "Notification Required",
+            "Notification Sent",
+            "Notification Channel",
+            "Sent Date/Time",
+            "Photo URL 1",
+            "Photo URL 2",
+            "Created Date",
+            "Last Modified By"
+          ]
+        },
+        {
+          "name": "Work Order Source Picker",
+          "type": "MODAL/DRAWER",
+          "fields": []
+        },
+        {
+          "name": "New / Edit Work Order",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "WOIT \\u2014 Stage 1: Upload",
+          "type": "WIZARD_STEP",
+          "fields": []
+        },
+        {
+          "name": "WOIT \\u2014 Stage 2: Preview Mapping",
+          "type": "WIZARD_STEP",
+          "fields": []
+        },
+        {
+          "name": "WOIT \\u2014 Stage 3: Validate Sample",
+          "type": "WIZARD_STEP",
+          "fields": []
+        },
+        {
+          "name": "WOIT \\u2014 Stage 4: Commit",
+          "type": "WIZARD_STEP",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Routing & Dispatch",
+      "screens": [
+        {
+          "name": "Routes List",
+          "type": "PAGE",
+          "fields": [
+            "Route Name",
+            "Route Number",
+            "Collection Day(s)",
+            "Frequency",
+            "Collection Type",
+            "Stop Interval",
+            "Truck Assignment",
+            "Driver Assignment",
+            "Average Tips",
+            "Service Provider",
+            "Segment"
+          ]
+        },
+        {
+          "name": "New / Edit Route",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "Dispatch \\u2014 Route Table / Grid View",
+          "type": "PAGE",
+          "fields": [
+            "Dispatch Number",
+            "Dispatch Date",
+            "Dispatch ID",
+            "Route ID",
+            "Dispatch Status",
+            "Truck Number",
+            "Driver ID",
+            "Stop Number",
+            "Created By",
+            "Last Modified By"
+          ]
+        },
+        {
+          "name": "Dispatch \\u2014 Lasso Routing View",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "Dispatch \\u2014 Manage Profiles",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "Dispatch \\u2014 Publish Confirmation",
+          "type": "PAGE",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Map Center",
+      "screens": [
+        {
+          "name": "Map Center \\u2014 Main Map View",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "Map Center \\u2014 Address Search Panel",
+          "type": "MODAL/DRAWER",
+          "fields": []
+        },
+        {
+          "name": "Map Center \\u2014 Route Progress View",
+          "type": "PAGE",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Telematics / Tips",
+      "screens": [
+        {
+          "name": "Individual Tips / Non-Tip Events List",
+          "type": "PAGE",
+          "fields": [
+            "Event Date / Time",
+            "Customer Location",
+            "Collection Route",
+            "Tipped",
+            "Truck #",
+            "RFID Reference",
+            "Distance"
+          ]
+        },
+        {
+          "name": "New / Edit Individual Tip",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "Aggregated Truck and Tips List",
+          "type": "PAGE",
+          "fields": [
+            "Date",
+            "Truck #",
+            "# Tips",
+            "Total Distance",
+            "Idle Time (min)",
+            "Speeding Events"
+          ]
+        },
+        {
+          "name": "New / Edit Aggregated Tip Record",
+          "type": "PAGE",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Service Notifications",
+      "screens": [
+        {
+          "name": "Service Notifications List (account-level)",
+          "type": "PAGE",
+          "fields": [
+            "Notification Name",
+            "Status",
+            "Channel",
+            "Notify Days (Trigger)",
+            "Trigger Event",
+            "From Email",
+            "Email Subject",
+            "Message Body",
+            "Window Start",
+            "Window End"
+          ]
+        },
+        {
+          "name": "New / Edit Service Notification",
+          "type": "PAGE",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Notes & Attachments",
+      "screens": [
+        {
+          "name": "Notes & Attachments List",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "New Note",
+          "type": "PAGE",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Driver Mobile App",
+      "screens": [
+        {
+          "name": "Mobile \\u2014 Service Provider Admin View",
+          "type": "PAGE",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Activity Feed",
+      "screens": [
+        {
+          "name": "Activity Feed (Chatter equivalent)",
+          "type": "PAGE",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Integration & Device Mapping",
+      "screens": [
+        {
+          "name": "WO Service Provider Mapping",
+          "type": "PAGE",
+          "fields": []
+        },
+        {
+          "name": "Truck Device Sync",
+          "type": "PAGE",
+          "fields": []
+        }
+      ]
+    }
+  ],
+  "profile_permission_modules": [
+    {
+      "module": "Service Provider",
+      "screens": [
+        {
+          "id": "accounts",
+          "name": "Accounts",
+          "fields": [
+            "Account Name",
+            "Account Type",
+            "Service Provider UID",
+            "Industry",
+            "Owner",
+            "Phone",
+            "City",
+            "Automation Work Order",
+            "Hard Ticket Work Order",
+            "Move On Out Card",
+            "Service Notification Detail",
+            "Is Active",
+            "Number of Weeks"
+          ]
+        },
+        {
+          "id": "contacts",
+          "name": "Contacts",
+          "fields": [
+            "First Name",
+            "Last Name",
+            "Email",
+            "Phone",
+            "Role Title",
+            "Profile",
+            "Segment",
+            "Status",
+            "Enabled as Customer User"
+          ]
+        },
+        {
+          "id": "customers",
+          "name": "Customers",
+          "fields": [
+            "Customer Account Number",
+            "Customer Name",
+            "Phone",
+            "Email",
+            "Segment",
+            "Custom 1",
+            "Custom 2",
+            "Custom 3",
+            "Custom 4",
+            "Custom 5",
+            "Custom 6",
+            "Notes"
+          ]
+        },
+        {
+          "id": "locations",
+          "name": "Locations",
+          "fields": [
+            "House Number",
+            "Street Name",
+            "Unit Number",
+            "City",
+            "State/Province",
+            "Postal Code",
+            "County",
+            "Zone",
+            "Site ID",
+            "Parcel ID",
+            "Latitude",
+            "Longitude",
+            "Location Type",
+            "Warehouse"
+          ]
+        },
+        {
+          "id": "manageAccount",
+          "name": "Manage Customers",
+          "fields": []
+        },
+        {
+          "id": "routes",
+          "name": "Routes",
+          "fields": [
+            "Route Name",
+            "Route Number",
+            "Collection Day(s)",
+            "Frequency",
+            "Collection Type",
+            "Stop Interval",
+            "Truck Assignment",
+            "Driver Assignment",
+            "Average Tips",
+            "Service Provider",
+            "Segment"
+          ]
+        },
+        {
+          "id": "segments",
+          "name": "Service Provider Segments",
+          "fields": [
+            "Segment Name",
+            "Type",
+            "Parent Segment",
+            "Service Provider"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "Assets & Products",
+      "screens": [
+        {
+          "id": "assets",
+          "name": "Assets",
+          "fields": [
+            "Asset Name / Serial Number",
+            "Product",
+            "Status",
+            "Account",
+            "Home Location",
+            "Customer Location",
+            "Warehouse",
+            "Install Date"
+          ]
+        },
+        {
+          "id": "masterProducts",
+          "name": "Master Product Catalog",
+          "fields": [
+            "Product Name",
+            "Product Code",
+            "Product Size",
+            "Service Type",
+            "Service Category",
+            "Product Description",
+            "Active",
+            "Product Family",
+            "External ID"
+          ]
+        },
+        {
+          "id": "products",
+          "name": "Service Provider Products",
+          "fields": [
+            "Product (Master)",
+            "Resident-Facing Name",
+            "Product Code",
+            "Service Category",
+            "Status",
+            "Family"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "Operations",
+      "screens": [
+        {
+          "id": "dispatches",
+          "name": "Dispatches",
+          "fields": [
+            "Dispatch Number",
+            "Dispatch Date",
+            "Dispatch ID",
+            "Route ID",
+            "Dispatch Status",
+            "Truck Number",
+            "Driver ID",
+            "Stop Number",
+            "Created By",
+            "Last Modified By"
+          ]
+        },
+        {
+          "id": "mapCenter",
+          "name": "Map Center",
+          "fields": []
+        },
+        {
+          "id": "maintProfiles",
+          "name": "Route Profile Templates",
+          "fields": [
+            "Profile Name",
+            "Start Location",
+            "End Location",
+            "Service Type",
+            "# Trucks",
+            "Start Time",
+            "Duration",
+            "Segment"
+          ]
+        },
+        {
+          "id": "trucks",
+          "name": "Trucks",
+          "fields": [
+            "Truck Name",
+            "Truck #",
+            "Status",
+            "Service Type",
+            "Driver",
+            "Segment",
+            "Service Provider"
+          ]
+        },
+        {
+          "id": "workOrders",
+          "name": "Work Orders",
+          "fields": [
+            "Work Order # (Case)",
+            "LUID (External Order ID)",
+            "Customer",
+            "Request Type",
+            "Subject",
+            "Due Date",
+            "Priority",
+            "Status",
+            "Service Type",
+            "Asset Type",
+            "Asset Size",
+            "Dispatch Number",
+            "Route ID",
+            "Stop Number",
+            "Hot Ticket",
+            "Resolution Code",
+            "Number of Attempts",
+            "Last Attempt Date/Time",
+            "Attempt Lat/Long",
+            "Notification Required",
+            "Notification Sent",
+            "Notification Channel",
+            "Sent Date/Time",
+            "Photo URL 1",
+            "Photo URL 2",
+            "Created Date",
+            "Last Modified By"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "Telematics",
+      "screens": [
+        {
+          "id": "tips",
+          "name": "Tips & Non-Tips",
+          "fields": [
+            "Event Date / Time",
+            "Customer Location",
+            "Collection Route",
+            "Tipped",
+            "Truck #",
+            "RFID Reference",
+            "Distance"
+          ]
+        },
+        {
+          "id": "aggTips",
+          "name": "Trip Data",
+          "fields": [
+            "Date",
+            "Truck #",
+            "# Tips",
+            "Total Distance",
+            "Idle Time (min)",
+            "Speeding Events"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "Analytics",
+      "screens": [
+        {
+          "id": "chatter",
+          "name": "Activity",
+          "fields": []
+        },
+        {
+          "id": "dashboards",
+          "name": "Dashboards",
+          "fields": []
+        },
+        {
+          "id": "reportSubs",
+          "name": "Report Subscriptions",
+          "fields": []
+        },
+        {
+          "id": "reports",
+          "name": "Reports",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Configure",
+      "screens": [
+        {
+          "id": "apiIntegrations",
+          "name": "API Integrations",
+          "fields": []
+        },
+        {
+          "id": "locationTypes",
+          "name": "Location Types",
+          "fields": [
+            "Type Name",
+            "Category",
+            "Active"
+          ]
+        },
+        {
+          "id": "productTypes",
+          "name": "Product Types",
+          "fields": [
+            "Type Name",
+            "Category",
+            "Active"
+          ]
+        },
+        {
+          "id": "serviceTypes",
+          "name": "Service Types",
+          "fields": [
+            "Type Name",
+            "Category",
+            "Active"
+          ]
+        },
+        {
+          "id": "reqCodes",
+          "name": "Request Type & Resolution Codes",
+          "fields": [
+            "RRC #",
+            "Default",
+            "Request Type",
+            "Resolution Code",
+            "Workflow Type",
+            "# of Attempts"
+          ]
+        },
+        {
+          "id": "serviceNotifConfig",
+          "name": "Service Notification Config",
+          "fields": [
+            "Enable Notification Toggle",
+            "Message Limit",
+            "Time Zone",
+            "Phone Call Window",
+            "SMS Window",
+            "Email Window",
+            "Notification Trigger Logic",
+            "Message Templates",
+            "Twilio Credentials",
+            "SendGrid Credentials"
+          ]
+        },
+        {
+          "id": "notifications",
+          "name": "Service Notifications",
+          "fields": [
+            "Notification Name",
+            "Status",
+            "Channel",
+            "Notify Days (Trigger)",
+            "Trigger Event",
+            "From Email",
+            "Email Subject",
+            "Message Body",
+            "Window Start",
+            "Window End"
+          ]
+        },
+        {
+          "id": "setup",
+          "name": "Workspace",
+          "fields": []
+        }
+      ]
+    }
+  ],
+  "setup_sections": [
+    "profileMgmt",
+    "userMgmt"
+  ]
+}

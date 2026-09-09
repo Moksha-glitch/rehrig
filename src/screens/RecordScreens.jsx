@@ -71,7 +71,88 @@ function assetReferences(record, asset) {
 }
 
 function getDispatchType(row) {
+  if (row.recordType === 'Maintenance' || row.mrp) return 'Maintenance';
+  if (row.recordType === 'Collection') return 'Collection';
   return row.mrp ? 'Maintenance' : 'Collection';
+}
+
+function isHotTicket(row) {
+  return row.hotTicket === true || row.hotTicket === 'Yes' || String(row.priority || '').toLowerCase() === 'critical';
+}
+
+function isTipped(row) {
+  return row.wasTipped === true || (row.wasTipped == null && row.type === 'Tip');
+}
+
+function matchesRecordType(kind, row, recordType) {
+  if (!recordType || recordType === 'All') return true;
+  if (kind === 'dispatches') return getDispatchType(row) === recordType;
+  if (kind === 'routes') return (row.recordType || 'Collection') === recordType;
+  if (kind === 'individualTips') {
+    if (recordType === 'Tip Events' || recordType === 'Tip') return isTipped(row);
+    if (recordType === 'Non-Tip Events' || recordType === 'Non-Tip') return !isTipped(row);
+  }
+  if (kind === 'assets') {
+    const isTruck = row.recordType === 'Truck' || /truck|trk-/i.test(`${row.name || ''} ${row.serial || ''}`);
+    return recordType === 'Truck' ? isTruck : !isTruck;
+  }
+  return (row.recordType || row.type || '') === recordType;
+}
+
+function exportCsv(filename, columns, rows) {
+  const escape = (value) => {
+    const text = value == null ? '' : String(value);
+    return /[",\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+  };
+  const lines = [
+    columns.map((column) => escape(column.label)).join(','),
+    ...rows.map((row) => columns.map((column) => escape(row[column.key])).join(',')),
+  ];
+  const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8' });
+  const href = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = href;
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(href);
+}
+
+const WO_SOURCES = [
+  { key: 'manual', label: 'Manual entry', description: 'Create a work order from the form.' },
+  { key: 'portal', label: 'Customer request', description: 'Log a request that originated in the customer portal.' },
+  { key: 'woit', label: 'WOIT Import', description: 'Upload a CSV through the four-stage import tool.' },
+  { key: 'api', label: 'API / External', description: 'Record an order received from an external system.' },
+];
+
+function WorkOrderSourcePicker({ onClose, onSelect }) {
+  return (
+    <Drawer
+      title="New Work Order"
+      description="Choose how this work order is being created."
+      onClose={onClose}
+      footer={
+        <DrawerActions>
+          <Button type="button" variant="secondary" onClick={onClose}>
+            Cancel
+          </Button>
+        </DrawerActions>
+      }
+    >
+      <div className="min-h-0 flex-1 space-y-2 overflow-y-auto px-6 py-5">
+        {WO_SOURCES.map((source) => (
+          <button
+            key={source.key}
+            type="button"
+            className="flex w-full flex-col rounded-panel border border-line bg-surface px-4 py-3 text-left interactive hover:bg-elevated"
+            onClick={() => onSelect(source.key)}
+          >
+            <span className="text-sm font-medium text-ink">{source.label}</span>
+            <span className="mt-0.5 text-xs text-ink-muted">{source.description}</span>
+          </button>
+        ))}
+      </div>
+    </Drawer>
+  );
 }
 
 function compareValues(a, b) {
@@ -88,7 +169,7 @@ function FieldInput({ field, value, onChange, error, disabled = false }) {
   if (disabled && field.type !== 'readonly') {
     return (
       <div className="field-input flex items-center bg-elevated text-ink-muted">
-        {value === true ? 'Yes' : value === false ? 'No' : String(value ?? '') || 'â€”'}
+        {value === true ? 'Yes' : value === false ? 'No' : String(value ?? '') || '—'}
       </div>
     );
   }
@@ -102,7 +183,7 @@ function FieldInput({ field, value, onChange, error, disabled = false }) {
     case 'textarea':
       return <TextArea rows={2} {...common} />;
     case 'select':
-      return <Select options={field.options || []} placeholder="Selectâ€¦" {...common} />;
+      return <Select options={field.options || []} placeholder="Select…" {...common} />;
     case 'number':
       return <TextInput type="number" {...common} />;
     case 'date':
@@ -122,7 +203,7 @@ function FieldInput({ field, value, onChange, error, disabled = false }) {
     case 'lookup':
       return (
         <div className="relative">
-          <TextInput placeholder="Searchâ€¦" {...common} />
+          <TextInput placeholder="Search…" {...common} />
           <Icon
             name="search"
             size={14}
@@ -242,7 +323,7 @@ function RecordForm({ schema, initial, onClose, onSave, onDelete, readOnly = fal
   );
 }
 
-function RowActionMenu({ items, disabled }) {
+function RowActionMenu({ items, disabled, label = 'Actions' }) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef(null);
   const menuRef = useRef(null);
@@ -297,7 +378,7 @@ function RowActionMenu({ items, disabled }) {
           setOpen((v) => !v);
         }}
       >
-        Actions <Icon name="chevronDown" size={12} />
+        {label} <Icon name="chevronDown" size={12} />
       </Button>
       {open && (
         <div
@@ -385,7 +466,7 @@ function AssignAssetDrawer({ accounts, defaultAccount, onClose, onAssign }) {
     >
       <FieldSection title="Assignment">
         <Field label="Asset Serial Number" required span2>
-          <TextInput value={serial} onChange={(e) => setSerial(e.target.value)} autoFocus placeholder="SN-â€¦" />
+          <TextInput value={serial} onChange={(e) => setSerial(e.target.value)} autoFocus placeholder="SN-…" />
         </Field>
         <Field label="Account" required>
           <Select
@@ -414,7 +495,7 @@ function AssetActionDrawer({ action, asset, accounts, yardLocations, onClose, on
       submitLabel: 'Save changes',
     },
     moveToYard: {
-      title: `Move To Yard Â· ${asset.serial || asset.name || ''}`,
+      title: `Move To Yard · ${asset.serial || asset.name || ''}`,
       description: 'Move this asset to a yard location and optionally update its status.',
       submitLabel: 'Confirm move',
     },
@@ -539,7 +620,7 @@ function AssetActionDrawer({ action, asset, accounts, yardLocations, onClose, on
       <FieldSection title="Asset">
         <Field label="Current asset" span2>
           <div className="field-input bg-elevated text-ink-muted">
-            {asset.name || 'â€”'} Â· {asset.serial || 'no serial'} Â· {asset.status || 'â€”'}
+            {asset.name || '—'} · {asset.serial || 'no serial'} · {asset.status || '—'}
           </div>
         </Field>
         {isEdit && (
@@ -649,7 +730,7 @@ function RetrieveReplaceDrawer({ asset, onClose, onSubmit }) {
     <FormDrawer
       onClose={onClose}
       onSubmit={submit}
-      title={`Retrieve & Replace Â· ${asset.serial || asset.name || ''}`}
+      title={`Retrieve & Replace · ${asset.serial || asset.name || ''}`}
       description="Retrieve the current asset and assign a replacement. Both records are updated."
       dirty={!!replacementSerial}
       busy={busy}
@@ -659,7 +740,7 @@ function RetrieveReplaceDrawer({ asset, onClose, onSubmit }) {
       <FieldSection title="Retrieve">
         <Field label="Asset being retrieved" span2>
           <div className="field-input bg-elevated text-ink-muted">
-            {asset.name || 'â€”'} Â· {asset.serial || 'no serial'} Â· {asset.status || 'â€”'}
+            {asset.name || '—'} · {asset.serial || 'no serial'} · {asset.status || '—'}
           </div>
         </Field>
         <Field label="Retrieved Asset Status" span2>
@@ -676,7 +757,7 @@ function RetrieveReplaceDrawer({ asset, onClose, onSubmit }) {
             value={replacementSerial}
             onChange={(e) => setReplacementSerial(e.target.value)}
             autoFocus
-            placeholder="SN-â€¦"
+            placeholder="SN-…"
           />
         </Field>
         <Field label="Replacement Product">
@@ -696,7 +777,7 @@ function DetailGrid({ items }) {
       {items.map(([label, value]) => (
         <div key={label}>
           <dt className="type-overline mb-1">{label}</dt>
-          <dd className="text-sm text-ink">{value === 0 ? '0' : value || 'â€”'}</dd>
+          <dd className="text-sm text-ink">{value === 0 ? '0' : value || '—'}</dd>
         </div>
       ))}
     </dl>
@@ -706,15 +787,15 @@ function DetailGrid({ items }) {
 function AssetRelatedDrawer({ mode, asset, workOrders, tips, dispatches, onClose }) {
   const meta = {
     history: {
-      title: `History Â· ${asset.serial || asset.name || ''}`,
+      title: `History · ${asset.serial || asset.name || ''}`,
       description: 'Change and service timeline assembled from related work orders, tips, and dispatches.',
     },
     lastTip: {
-      title: `Last Tip Details Â· ${asset.serial || asset.name || ''}`,
+      title: `Last Tip Details · ${asset.serial || asset.name || ''}`,
       description: 'The most recent tip / non-tip event that references this asset.',
     },
     lastService: {
-      title: `Last Service Details Â· ${asset.serial || asset.name || ''}`,
+      title: `Last Service Details · ${asset.serial || asset.name || ''}`,
       description: 'The most recent completed work order that references this asset.',
     },
   }[mode];
@@ -731,21 +812,21 @@ function AssetRelatedDrawer({ mode, asset, workOrders, tips, dispatches, onClose
       when: t.timestamp,
       kind: 'Tip',
       title: t.type || (t.wasTipped ? 'Tip' : 'Non-Tip'),
-      detail: [t.truck, t.location].filter(Boolean).join(' Â· '),
+      detail: [t.truck, t.location].filter(Boolean).join(' · '),
     })),
     ...workOrders.map((w) => ({
       time: parseTime(w.completionDate || w.dueDate || w.requestDate),
       when: w.completionDate || w.dueDate || w.requestDate,
       kind: 'Work Order',
-      title: [w.number, w.requestType].filter(Boolean).join(' Â· '),
-      detail: [w.subject, w.status].filter(Boolean).join(' Â· '),
+      title: [w.number, w.requestType].filter(Boolean).join(' · '),
+      detail: [w.subject, w.status].filter(Boolean).join(' · '),
     })),
     ...dispatches.map((d) => ({
       time: parseTime(d.routeDate),
       when: d.routeDate,
       kind: 'Dispatch',
       title: d.number,
-      detail: [d.truck, d.driver, d.status].filter(Boolean).join(' Â· '),
+      detail: [d.truck, d.driver, d.status].filter(Boolean).join(' · '),
     })),
   ].sort((a, b) => b.time - a.time);
 
@@ -759,9 +840,9 @@ function AssetRelatedDrawer({ mode, asset, workOrders, tips, dispatches, onClose
               <Badge color={kindColor[entry.kind] || 'slate'}>{entry.kind}</Badge>
             </div>
             <div className="min-w-0">
-              <p className="text-sm font-medium text-ink">{entry.title || 'â€”'}</p>
+              <p className="text-sm font-medium text-ink">{entry.title || '—'}</p>
               {entry.detail && <p className="text-xs text-ink-muted">{entry.detail}</p>}
-              <p className="mono text-xs text-ink-faint">{entry.when || 'â€”'}</p>
+              <p className="mono text-xs text-ink-faint">{entry.when || '—'}</p>
             </div>
           </li>
         ))}
@@ -830,8 +911,11 @@ export function GenericList({ kind, view }) {
   const [editing, setEditing] = useState(null);
   const [q, setQ] = useState('');
   const [status, setStatus] = useState('All');
-  const [tipFilter, setTipFilter] = useState('All');
-  const [dispatchTypeFilter, setDispatchTypeFilter] = useState('All');
+  const [recordType, setRecordType] = useState('All');
+  const [accountScope, setAccountScope] = useState('All');
+  const [filterCol, setFilterCol] = useState('');
+  const [filterVal, setFilterVal] = useState('');
+  const [hotOnly, setHotOnly] = useState(false);
   const [sortKey, setSortKey] = useState('default');
   const [sortDir, setSortDir] = useState('asc');
   const [deletePending, setDeletePending] = useState(false);
@@ -839,7 +923,9 @@ export function GenericList({ kind, view }) {
   const [assetInfo, setAssetInfo] = useState(null);
   const [retrieveAsset, setRetrieveAsset] = useState(null);
   const [assignOpen, setAssignOpen] = useState(false);
-  const { canCreateRecords, isScoped, state, toast, navigate } = useStore();
+  const [woSourceOpen, setWoSourceOpen] = useState(false);
+  const [woSource, setWoSource] = useState('');
+  const { canCreateRecords, isScoped, persona, state, toast, navigate } = useStore();
   const accountsQuery = useAccounts();
   const recordsQuery = useRecords(kind === 'analytics' ? null : kind);
   const locationsQuery = useRecords(kind === 'assets' ? 'locations' : null);
@@ -860,10 +946,15 @@ export function GenericList({ kind, view }) {
     setAssetInfo(null);
     setRetrieveAsset(null);
     setAssignOpen(false);
+    setWoSourceOpen(false);
+    setWoSource('');
     setQ('');
     setStatus('All');
-    setTipFilter('All');
-    setDispatchTypeFilter('All');
+    setRecordType('All');
+    setAccountScope('All');
+    setFilterCol('');
+    setFilterVal('');
+    setHotOnly(false);
     setSortKey('default');
     setSortDir('asc');
   }, [kind]);
@@ -901,14 +992,17 @@ export function GenericList({ kind, view }) {
     .filter(Boolean);
   const filtered = rows
     .filter((row) => status === 'All' || row.status === status)
+    .filter((row) => matchesRecordType(kind, row, recordType))
     .filter((row) => {
-      if (kind !== 'individualTips' || tipFilter === 'All') return true;
-      const tipped = row.wasTipped === true || (row.wasTipped == null && row.type === 'Tip');
-      return tipFilter === 'Tip' ? tipped : !tipped;
+      if (accountScope === 'All') return true;
+      return row.account === accountScope || row.accountId === accountScope;
     })
+    .filter((row) => !hotOnly || isHotTicket(row))
     .filter((row) => {
-      if (kind !== 'dispatches' || dispatchTypeFilter === 'All') return true;
-      return getDispatchType(row) === dispatchTypeFilter;
+      if (!filterCol || !filterVal.trim()) return true;
+      return String(row[filterCol] ?? '')
+        .toLowerCase()
+        .includes(filterVal.trim().toLowerCase());
     })
     .filter((row) =>
       Object.values(row).some((value) => String(value ?? '').toLowerCase().includes(q.trim().toLowerCase()))
@@ -922,8 +1016,10 @@ export function GenericList({ kind, view }) {
   const filtersActive =
     !!q.trim() ||
     status !== 'All' ||
-    (kind === 'individualTips' && tipFilter !== 'All') ||
-    (kind === 'dispatches' && dispatchTypeFilter !== 'All');
+    recordType !== 'All' ||
+    accountScope !== 'All' ||
+    hotOnly ||
+    !!(filterCol && filterVal.trim());
 
   const saveRecord = async (values) => {
     if (!canCreateRecords) {
@@ -961,6 +1057,7 @@ export function GenericList({ kind, view }) {
       ...(kind === 'individualTips' && !values.recordType
         ? { recordType: 'Individual Telematics Events' }
         : {}),
+      ...(kind === 'workOrders' && woSource && !editing ? { source: woSource } : {}),
     };
     try {
       if (editing) await updateMutation.mutateAsync({ id: editing.id, changes });
@@ -968,6 +1065,7 @@ export function GenericList({ kind, view }) {
       toast?.(`${schema.singular} ${editing ? 'updated' : 'created'}`);
       setFormOpen(false);
       setEditing(null);
+      setWoSource('');
     } catch (error) {
       toast?.(getErrorMessage(error, `Could not save ${schema.singular.toLowerCase()}.`), 'danger');
       throw error;
@@ -1132,6 +1230,18 @@ export function GenericList({ kind, view }) {
         }
       );
     }
+    if (kind === 'routes') {
+      items.push({
+        key: 'mapCenter',
+        label: 'Map Center',
+        onSelect: () =>
+          navigate('mapCenter', {
+            provider: row.accountId,
+            account: row.account,
+            route: row.routeNumber,
+          }),
+      });
+    }
     if (canCreateRecords) {
       items.push({
         key: 'delete',
@@ -1157,30 +1267,58 @@ export function GenericList({ kind, view }) {
           <span>
             <span className="mono tabular-nums">{filtered.length}</span> of {rows.length} records
             {isScoped && state.currentUser?.scopeLabel && (
-              <span className="text-ink-faint"> Â· {state.currentUser.scopeLabel}</span>
+              <span className="text-ink-faint"> · {state.currentUser.scopeLabel}</span>
             )}
-            {!canCreateRecords && <span className="text-ink-faint"> Â· View only</span>}
+            {!canCreateRecords && <span className="text-ink-faint"> · View only</span>}
           </span>
         }
         actions={
-          canCreateRecords ? (
-            <div className="flex flex-wrap gap-2">
-              {kind === 'assets' && (
+          <div className="flex flex-wrap gap-2">
+            {kind === 'workOrders' && canCreateRecords && (
+              <Button variant="secondary" onClick={() => navigate('bulkImport', { object: 'Work Orders' })}>
+                <Icon name="download" size={16} /> WOIT Import
+              </Button>
+            )}
+            {kind === 'assets' && canCreateRecords && (
+              <>
+                <RowActionMenu
+                  label="Import"
+                  items={[
+                    {
+                      key: 'standard',
+                      label: 'Asset Import (Standard)',
+                      onSelect: () => navigate('bulkImport', { object: 'Assets', mode: 'standard' }),
+                    },
+                    {
+                      key: 'legacy',
+                      label: 'Legacy Asset Import',
+                      onSelect: () => navigate('bulkImport', { object: 'Assets', mode: 'legacy' }),
+                    },
+                  ]}
+                />
                 <Button variant="secondary" onClick={() => setAssignOpen(true)}>
                   <Icon name="plus" size={16} /> Assign New Asset
                 </Button>
-              )}
+              </>
+            )}
+            {kind === 'routes' && (
+              <Button variant="secondary" onClick={() => navigate('mapCenter')}>
+                <Icon name="map" size={16} /> Map Center
+              </Button>
+            )}
+            {canCreateRecords && (
               <Button
                 variant="primary"
                 onClick={() => {
                   setEditing(null);
-                  setFormOpen(true);
+                  if (kind === 'workOrders') setWoSourceOpen(true);
+                  else setFormOpen(true);
                 }}
               >
                 <Icon name="plus" size={16} /> {schema.newLabel}
               </Button>
-            </div>
-          ) : null
+            )}
+          </div>
         }
       />
 
@@ -1190,13 +1328,85 @@ export function GenericList({ kind, view }) {
         onRetry={() => recordsQuery.refetch()}
       >
         <Panel>
+          {schema.banner && (
+            <div className="flex items-start gap-2 border-b border-line px-4 py-3 text-sm text-ink-muted sm:px-5">
+              <Icon name="info" size={14} className="mt-0.5 shrink-0 text-ink-faint" />
+              <p>{schema.banner}</p>
+            </div>
+          )}
+          {schema.variants?.length > 0 && (
+            <div className="flex flex-wrap gap-2 border-b border-line px-4 py-2.5 sm:px-5">
+              {schema.variants.map((variant) => (
+                <Button
+                  key={variant.key}
+                  type="button"
+                  variant={variant.kind === kind ? 'primary' : 'secondary'}
+                  className="!px-3 !py-1.5 text-xs"
+                  onClick={() => {
+                    if (variant.kind !== kind) navigate(variant.kind);
+                  }}
+                >
+                  {variant.label}
+                </Button>
+              ))}
+            </div>
+          )}
+          {schema.recordTypes?.length > 0 && (
+            <div className="flex flex-wrap gap-2 border-b border-line px-4 py-2.5 sm:px-5">
+              {schema.recordTypes.map((type) => (
+                <Button
+                  key={type}
+                  type="button"
+                  variant={recordType === type ? 'primary' : 'secondary'}
+                  className="!px-3 !py-1.5 text-xs"
+                  onClick={() => setRecordType(type)}
+                >
+                  {type}
+                </Button>
+              ))}
+            </div>
+          )}
           <Toolbar>
             <SearchField
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              placeholder={`Search ${schema.title.toLowerCase()}â€¦`}
+              placeholder={`Search this list`}
               label={`Search ${schema.title.toLowerCase()}`}
             />
+            {persona === 'rehrig' && scopedAccounts.length > 1 && (
+              <Select
+                aria-label="Service provider scope"
+                className="max-w-[200px]"
+                value={accountScope}
+                onChange={(e) => setAccountScope(e.target.value)}
+                options={[
+                  { value: 'All', label: 'All service providers' },
+                  ...scopedAccounts.map((account) => ({ value: account.name, label: account.name })),
+                ]}
+              />
+            )}
+            <Select
+              aria-label="Filter by column"
+              className="max-w-[170px]"
+              value={filterCol}
+              onChange={(e) => {
+                setFilterCol(e.target.value);
+                if (!e.target.value) setFilterVal('');
+              }}
+              options={[
+                { value: '', label: 'Column filter' },
+                ...schema.listColumns.map((c) => ({ value: c.key, label: c.label })),
+              ]}
+            />
+            {filterCol && (
+              <SearchField
+                value={filterVal}
+                onChange={(e) => setFilterVal(e.target.value)}
+                placeholder={`Filter ${schema.listColumns.find((c) => c.key === filterCol)?.label || ''}`}
+                label="Column filter value"
+                className="max-w-[180px]"
+              />
+            )}
             {statuses.length > 0 && (
               <Select
                 aria-label="Filter by status"
@@ -1206,31 +1416,15 @@ export function GenericList({ kind, view }) {
                 options={['All', ...statuses]}
               />
             )}
-            {kind === 'individualTips' && (
-              <Select
-                aria-label="Filter by tip type"
-                className="max-w-[160px]"
-                value={tipFilter}
-                onChange={(e) => setTipFilter(e.target.value)}
-                options={[
-                  { value: 'All', label: 'All events' },
-                  { value: 'Tip', label: 'Tip' },
-                  { value: 'Non-Tip', label: 'Non-Tip' },
-                ]}
-              />
-            )}
-            {kind === 'dispatches' && (
-              <Select
-                aria-label="Filter by dispatch type"
-                className="max-w-[160px]"
-                value={dispatchTypeFilter}
-                onChange={(e) => setDispatchTypeFilter(e.target.value)}
-                options={[
-                  { value: 'All', label: 'All types' },
-                  { value: 'Collection', label: 'Collection' },
-                  { value: 'Maintenance', label: 'Maintenance' },
-                ]}
-              />
+            {schema.hotTicketFilter && (
+              <Button
+                type="button"
+                variant={hotOnly ? 'primary' : 'secondary'}
+                className="!px-3 !py-1.5 text-xs"
+                onClick={() => setHotOnly((v) => !v)}
+              >
+                Hot tickets
+              </Button>
             )}
             <Select
               aria-label="Sort by column"
@@ -1254,12 +1448,22 @@ export function GenericList({ kind, view }) {
                 ]}
               />
             )}
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => {
+                exportCsv(`${kind}.csv`, schema.listColumns, filtered);
+                toast?.(`Exported ${filtered.length} ${schema.title.toLowerCase()}`);
+              }}
+            >
+              <Icon name="download" size={14} /> Export
+            </Button>
           </Toolbar>
           {filtered.length === 0 ? (
             <EmptyState
-              title={filtersActive ? 'No data for the selected filters' : 'No rows'}
+              title={q.trim() ? `No records match "${q.trim()}"` : filtersActive ? 'No data for the selected filters' : 'No rows'}
               description={
-                filtersActive
+                q.trim() || filtersActive
                   ? 'Try adjusting or clearing the filters above.'
                   : `No ${schema.title.toLowerCase()} in your scope yet.`
               }
@@ -1279,7 +1483,12 @@ export function GenericList({ kind, view }) {
                             setFormOpen(true);
                           }}
                         >
-                          {String(row[c.key] ?? 'â€”')}
+                          {kind === 'workOrders' && isHotTicket(row) && (
+                            <span className="mr-1 text-danger" aria-label="Hot ticket">
+                              HOT
+                            </span>
+                          )}
+                          {String(row[c.key] ?? '—')}
                         </button>
                       ) : c.key === 'status' ? (
                         <Badge color={recordStatusColor(row[c.key])}>{row[c.key]}</Badge>
@@ -1372,11 +1581,26 @@ export function GenericList({ kind, view }) {
             onClose={() => setAssetInfo(null)}
           />
         )}
+        {woSourceOpen && (
+          <WorkOrderSourcePicker
+            onClose={() => setWoSourceOpen(false)}
+            onSelect={(source) => {
+              setWoSourceOpen(false);
+              if (source === 'woit') {
+                navigate('bulkImport', { object: 'Work Orders' });
+                return;
+              }
+              setWoSource(source);
+              setEditing(null);
+              setFormOpen(true);
+            }}
+          />
+        )}
       </AsyncState>
     </Page>
   );
 }
 
 function Analytics({ view }) {
-  return <ReportsStudio view={view} />;
+  return <ReportsStudio />;
 }

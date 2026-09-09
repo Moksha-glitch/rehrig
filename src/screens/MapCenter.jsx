@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Icon from '../components/Icon.jsx';
-import { Badge, Page, PageHeader, Panel, Checkbox, Select } from '../components/UI.jsx';
+import { Badge, Page, PageHeader, Panel, Checkbox, SearchField, Select } from '../components/UI.jsx';
 import { useStore } from '../state/AppStore.jsx';
 import { useAccounts } from '../hooks/useAccounts.js';
 import { useRecords } from '../hooks/useRecords.js';
@@ -60,6 +60,8 @@ export default function MapCenter() {
   const assetsQuery = useRecords('assets');
   const dispatchesQuery = useRecords('dispatches');
   const workOrdersQuery = useRecords('workOrders');
+  const locationsQuery = useRecords('locations');
+  const routesQuery = useRecords('routes');
 
   const [provider, setProvider] = useState(navParams.provider || 'All');
   const [selected, setSelected] = useState(null);
@@ -71,6 +73,9 @@ export default function MapCenter() {
     workOrders: true,
   });
   const [focusAssetId, setFocusAssetId] = useState(navParams.assetId || null);
+  const [addressQ, setAddressQ] = useState(navParams.customer || '');
+  const [lassoOn, setLassoOn] = useState(false);
+  const [lassoIds, setLassoIds] = useState([]);
 
   useEffect(() => {
     if (navParams.provider) setProvider(navParams.provider);
@@ -84,6 +89,8 @@ export default function MapCenter() {
   const assets = assetsQuery.data?.data || [];
   const allDispatches = dispatchesQuery.data?.data || [];
   const allWorkOrders = workOrdersQuery.data?.data || [];
+  const locations = locationsQuery.data?.data || [];
+  const routes = routesQuery.data?.data || [];
   const density = DENSITY_MODES.find((mode) => mode.value === densityMode) || DENSITY_MODES[1];
 
   const providerPins = useMemo(
@@ -97,7 +104,7 @@ export default function MapCenter() {
           y: point.y,
           account,
           label: account.name,
-          meta: `${account.billing?.city || 'â€”'}, ${account.billing?.state || 'â€”'}`,
+          meta: `${account.billing?.city || '—'}, ${account.billing?.state || '—'}`,
         };
       }),
     [accounts, density]
@@ -136,7 +143,7 @@ export default function MapCenter() {
             y: point.y,
             asset,
             label: asset.name || asset.serial || 'Asset',
-            meta: [asset.status, asset.location].filter(Boolean).join(' Â· '),
+            meta: [asset.status, asset.location].filter(Boolean).join(' · '),
             accountId: asset.accountId || providerByName[asset.account]?.id,
           };
         }),
@@ -160,7 +167,7 @@ export default function MapCenter() {
             y: point.y,
             dispatch,
             label: dispatch.number || dispatch.id,
-            meta: [dispatch.status, dispatch.truck].filter(Boolean).join(' Â· '),
+            meta: [dispatch.status, dispatch.truck].filter(Boolean).join(' · '),
             accountId: dispatch.accountId || providerByName[dispatch.account]?.id,
           };
         }),
@@ -184,7 +191,7 @@ export default function MapCenter() {
             y: point.y,
             workOrder,
             label: workOrder.number || workOrder.id,
-            meta: [workOrder.requestType, workOrder.status].filter(Boolean).join(' Â· '),
+            meta: [workOrder.requestType, workOrder.status].filter(Boolean).join(' · '),
             accountId: workOrder.accountId || providerByName[workOrder.account]?.id,
           };
         }),
@@ -195,12 +202,26 @@ export default function MapCenter() {
     (pin) => provider === 'All' || pin.account.id === provider
   );
 
+  const addressHits = useMemo(() => {
+    const term = addressQ.trim().toLowerCase();
+    if (!term) return [];
+    return locations.filter((location) =>
+      [location.address, location.name, location.city, location.street, location.number].some((value) =>
+        String(value || '').toLowerCase().includes(term)
+      )
+    );
+  }, [addressQ, locations]);
+
   const mapPins = [
     ...(layers.providers ? visibleProviderPins : []),
     ...(layers.assets ? assetPins : []),
     ...(layers.dispatches ? dispatchPins : []),
     ...(layers.workOrders ? workOrderPins : []),
-  ];
+  ].filter((pin) => {
+    if (!addressQ.trim()) return true;
+    const hay = `${pin.label || ''} ${pin.meta || ''} ${pin.asset?.location || ''} ${pin.workOrder?.location || ''}`.toLowerCase();
+    return hay.includes(addressQ.trim().toLowerCase()) || addressHits.some((loc) => hay.includes(String(loc.name || '').toLowerCase()));
+  });
 
   useEffect(() => {
     if (!focusAssetId) return;
@@ -243,7 +264,7 @@ export default function MapCenter() {
     if (selected.layer === 'providers') {
       return {
         title: selected.account.name,
-        subtitle: `${selected.account.billing?.city || 'â€”'}, ${selected.account.billing?.state || 'â€”'}`,
+        subtitle: `${selected.account.billing?.city || '—'}, ${selected.account.billing?.state || '—'}`,
         action: {
           label: 'Open provider',
           onClick: () =>
@@ -298,6 +319,13 @@ export default function MapCenter() {
               <p className="mt-1 font-display text-title-sm text-ink">Service areas</p>
             </div>
             <div className="flex flex-wrap items-center gap-2">
+              <SearchField
+                value={addressQ}
+                onChange={(e) => setAddressQ(e.target.value)}
+                placeholder="Search address or location"
+                label="Address search"
+                className="min-w-[14rem] max-w-[220px]"
+              />
               <label className="sr-only" htmlFor="map-provider-filter">
                 Filter by provider
               </label>
@@ -334,6 +362,14 @@ export default function MapCenter() {
 
           <fieldset className="mb-4 flex flex-wrap gap-5 rounded-panel border border-line px-4 py-2.5">
             <legend className="sr-only">Map layers</legend>
+            <Checkbox
+              label="Grid / lasso select"
+              checked={lassoOn}
+              onChange={(e) => {
+                setLassoOn(e.target.checked);
+                if (!e.target.checked) setLassoIds([]);
+              }}
+            />
             {LAYERS.map((layer) => (
               <Checkbox
                 key={layer.key}
@@ -367,10 +403,17 @@ export default function MapCenter() {
                 role="listitem"
                 className="absolute -translate-x-1/2 -translate-y-1/2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
                 style={{ left: `${pin.x}%`, top: `${pin.y}%` }}
-                title={`${pin.label}${pin.meta ? ` Â· ${pin.meta}` : ''}`}
+                title={`${pin.label}${pin.meta ? ` · ${pin.meta}` : ''}`}
                 aria-label={`${LAYERS.find((layer) => layer.key === pin.layer)?.label || 'Pin'}: ${pin.label}`}
                 aria-pressed={selected?.id === pin.id && selected?.layer === pin.layer}
-                onClick={() => setSelected(pin)}
+                onClick={() => {
+                  setSelected(pin);
+                  if (lassoOn) {
+                    setLassoIds((current) =>
+                      current.includes(pin.id) ? current.filter((id) => id !== pin.id) : [...current, pin.id]
+                    );
+                  }
+                }}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
@@ -378,7 +421,11 @@ export default function MapCenter() {
                   }
                 }}
               >
-                <span className={`block h-3 w-3 rounded-full ring-4 transition ${pinClass(pin)}`} />
+                <span
+                  className={`block h-3 w-3 rounded-full ring-4 transition ${pinClass(pin)} ${
+                    lassoIds.includes(pin.id) ? 'scale-150 ring-brand' : ''
+                  }`}
+                />
                 {(pin.layer === 'providers' ||
                   (pin.layer === 'assets' &&
                     focusAssetId &&
@@ -408,6 +455,37 @@ export default function MapCenter() {
 
         <div className="space-y-6 lg:col-span-4">
           <Panel padded>
+            <p className="type-overline">Route progress</p>
+            <p className="mt-1 font-display text-title-sm text-ink">Collection / maintenance</p>
+            <ul className="mt-4 divide-y divide-line border-y border-line">
+              {routes
+                .filter((route) => matchesProviderFilter(route.accountId, route.account))
+                .map((route) => {
+                  const dispatch = dispatches.find((row) => row.number === route.dispatch || row.routeNumber === route.routeNumber);
+                  const pct =
+                    dispatch?.status === 'Complete' ? 100 : dispatch?.status === 'In Route' || dispatch?.status === 'In Progress' ? 62 : 18;
+                  return (
+                    <li key={route.id || route.routeNumber} className="py-3">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="font-medium text-ink">{route.routeNumber}</span>
+                        <Badge color="cyan">{route.status || 'Planned'}</Badge>
+                      </div>
+                      <div className="mt-0.5 text-xs text-ink-muted">
+                        {route.recordType || 'Collection'} · {route.truck || 'Unassigned'} · {route.driver || '—'}
+                      </div>
+                      <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-elevated">
+                        <div className="h-full bg-brand" style={{ width: `${pct}%` }} />
+                      </div>
+                    </li>
+                  );
+                })}
+              {!routes.filter((route) => matchesProviderFilter(route.accountId, route.account)).length && (
+                <li className="py-6 text-center text-sm text-ink-muted">No routes in this scope.</li>
+              )}
+            </ul>
+          </Panel>
+
+          <Panel padded>
             <p className="type-overline">Queue</p>
             <p className="mt-1 font-display text-title-sm text-ink">Active dispatches</p>
             <ul className="mt-4 divide-y divide-line border-y border-line">
@@ -418,7 +496,7 @@ export default function MapCenter() {
                     <Badge color="cyan">{dispatch.status}</Badge>
                   </div>
                   <div className="mt-0.5 text-xs text-ink-muted">
-                    {dispatch.account || 'Unassigned provider'} Â· {dispatch.truck || 'Unassigned truck'}
+                    {dispatch.account || 'Unassigned provider'} · {dispatch.truck || 'Unassigned truck'}
                   </div>
                 </li>
               ))}

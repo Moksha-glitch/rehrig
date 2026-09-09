@@ -1,6 +1,7 @@
 /**
  * Shared persona-aware AI assistant content and intent matching.
- * Used by VisionChat (sidebar companion).
+ * Used by VisionChat for persona chips and fallback intents when a playbook
+ * question is not matched. Service Provider collections answers live in assistantPlaybook.js.
  */
 
 export const PERSONA_CONTENT = {
@@ -68,20 +69,14 @@ export const PERSONA_CONTENT = {
         action: { label: 'View providers', module: 'accounts' },
       },
       {
-        terms: ['qalert', 'sarasota'],
+        terms: ['device', 'truck', 'tag scheme', 'integration'],
         reply:
-          'QAlert lists citizen requests synced for Sarasota County and the last successful pull.',
-        action: { label: 'Open QAlert', module: 'qalert' },
-      },
-      {
-        terms: ['holiday', 'login history', 'audit'],
-        reply:
-          'Holiday schedule and Login History live under Configure for Rehrig administrators.',
-        action: { label: 'Open holiday schedule', module: 'holidays' },
+          'Rehrig configuration includes Product, Device, Truck, Tag Scheme, and API Integrations.',
+        action: { label: 'Open Device registry', module: 'device' },
       },
     ],
     fallback:
-      'I can help with service providers, onboarding, contacts, contracts, QAlert, holidays, and Workspace. Try one of the suggested prompts.',
+      'I can help with service providers, onboarding, contacts, contracts, and configuration. Try one of the suggested prompts.',
   },
   sp: {
     eyebrow: 'Operations AI',
@@ -131,9 +126,8 @@ export const PERSONA_CONTENT = {
       },
       {
         terms: ['route', 'map'],
-        reply:
-          'Use Map Center for geographic activity, or open your provider Routes for collection schedules.',
-        action: { label: 'Open Map Center', module: 'mapCenter' },
+        reply: 'Open Routes for collection schedules, or Dispatches for work currently in route.',
+        action: { label: 'Open routes', module: 'account', params: { tab: 'routes' } },
       },
       {
         terms: ['truck', 'fleet', 'maintenance'],
@@ -149,8 +143,8 @@ export const PERSONA_CONTENT = {
       {
         terms: ['analytics', 'report', 'dashboard'],
         reply:
-          'Analytics contains operational reports and dashboards for trends, service levels, and performance.',
-        action: { label: 'Open analytics', module: 'analytics', params: { view: 'dashboards' } },
+          'Dashboards show live operational canvases. Reports is a separate builder for filters, grouping, and charts.',
+        action: { label: 'Open dashboards', module: 'dashboards' },
       },
       {
         terms: ['woit', 'bulk import', 'import'],
@@ -160,13 +154,12 @@ export const PERSONA_CONTENT = {
       },
       {
         terms: ['chatter', 'approval', 'sharing', 'insight'],
-        reply:
-          'Collaboration has Chatter, Record Sharing, and Customer Insights. Approvals sit under Operations.',
-        action: { label: 'Open Chatter', module: 'chatter' },
+        reply: 'Activity shows the feed of recent operational updates for your service provider.',
+        action: { label: 'Open Activity', module: 'activity' },
       },
     ],
     fallback:
-      'I can help with work orders, dispatches, routes, trucks, maps, WOIT, Chatter, and analytics. Try one of the suggested prompts.',
+      'I can help with work orders, dispatches, routes, trucks, WOIT, Activity, and analytics. Try one of the suggested prompts.',
   },
   customer: {
     eyebrow: 'Service AI',

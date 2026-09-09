@@ -50,7 +50,7 @@ import {
   blankReportSpec,
 } from '../data/reportStudio.js';
 
-const CHART_COLORS = ['#0b5f49', '#1E5A8F', '#c27803', '#b42318', '#0f7b55', '#8b969f', '#4A9BD8'];
+const CHART_COLORS = ['#1E2761', '#3457D5', '#0f7b55', '#995b00', '#b42318', '#767C9B', '#CADCFC'];
 
 const REPORT_FOLDERS = [
   'My Reports',
@@ -297,7 +297,7 @@ function ReportConfigDrawer({ draft, baseline, onChange, onClose, onSave, busy, 
             value={draft.subGroupBy || ''}
             onChange={(e) => onChange({ ...draft, subGroupBy: e.target.value })}
             disabled={!canEdit}
-            placeholder="â€” none â€”"
+            placeholder="— none —"
           />
         </Field>
       </FieldSection>
@@ -396,7 +396,7 @@ function ReportConfigDrawer({ draft, baseline, onChange, onClose, onSave, busy, 
   );
 }
 
-export default function ReportsStudio({ view = 'reports' }) {
+export default function ReportsStudio() {
   const { state, toast, canCreateRecords, canAccessModule } = useStore();
   const canEdit = canCreateRecords && canAccessModule('analytics');
   const specsQuery = useReportSpecs();
@@ -522,19 +522,15 @@ export default function ReportsStudio({ view = 'reports' }) {
     }
   };
 
-  const isDashboards = view === 'dashboards';
-
   return (
     <Page wide>
       <PageHeader
-        overline="Insights"
-        title={isDashboards ? 'Dashboards' : 'Reports Studio'}
+        overline="Analytics"
+        title="Reports"
         description={
           <span>
-            {isDashboards
-              ? 'Saved dashboard widgets Â· configure via Reports Studio filters'
-              : 'Point-and-click builder Â· filters, grouping, and chart types'}
-            {!canEdit && <span className="text-ink-faint"> Â· View only</span>}
+            Point-and-click builder · filters, grouping, and chart types
+            {!canEdit && <span className="text-ink-faint"> · View only</span>}
           </span>
         }
         actions={
@@ -557,7 +553,7 @@ export default function ReportsStudio({ view = 'reports' }) {
               <SearchField
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
-                placeholder="Search widgets, reports, dashboardsâ€¦"
+                placeholder="Search reports…"
                 className="max-w-none"
               />
             </div>
@@ -600,7 +596,7 @@ export default function ReportsStudio({ view = 'reports' }) {
                           <span className="min-w-0 flex-1">
                             <span className="block truncate text-sm font-medium text-ink">{spec.name}</span>
                             <span className="mt-0.5 block truncate text-[11px] text-ink-muted">
-                              {spec.owner} Â· {REPORT_DATA_SOURCES[spec.source]?.label || spec.source}
+                              {spec.owner} · {REPORT_DATA_SOURCES[spec.source]?.label || spec.source}
                             </span>
                             <span className="mt-1 block text-[10px] text-ink-faint">
                               {spec.visibility === 'public'
@@ -609,7 +605,7 @@ export default function ReportsStudio({ view = 'reports' }) {
                                   ? 'Shared'
                                   : 'Private'}
                               {spec.lastViewed
-                                ? ` Â· Viewed ${new Date(spec.lastViewed).toLocaleDateString()}`
+                                ? ` · Viewed ${new Date(spec.lastViewed).toLocaleDateString()}`
                                 : ''}
                             </span>
                           </span>
@@ -713,7 +709,7 @@ export default function ReportsStudio({ view = 'reports' }) {
               </div>
               <div className="mt-4 font-display text-title-sm text-ink">{spec.name}</div>
               <div className="mt-1 text-xs text-ink-muted">
-                {REPORT_CHART_TYPES.find((c) => c.k === spec.chart)?.l || spec.chart} Â·{' '}
+                {REPORT_CHART_TYPES.find((c) => c.k === spec.chart)?.l || spec.chart} ·{' '}
                 {REPORT_DATA_SOURCES[spec.source]?.label || spec.source}
               </div>
             </button>
@@ -744,7 +740,7 @@ export default function ReportsStudio({ view = 'reports' }) {
       {deletePending && (
         <ConfirmDialog
           title="Delete report?"
-          description={`Delete â€œ${deletePending.name}â€?`}
+          description={`Delete “${deletePending.name}”?`}
           confirmLabel="Delete"
           onConfirm={confirmDelete}
           onCancel={() => setDeletePending(null)}

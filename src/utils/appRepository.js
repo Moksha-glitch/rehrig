@@ -152,6 +152,7 @@ export function createSeedState() {
       productTypes: clone(CONFIG_PRODUCT_TYPES),
       device: clone(CONFIG_DEVICES),
       truck: clone(CONFIG_TRUCKS),
+      tagScheme: [],
     },
     reportSpecs: clone(SEED_REPORT_SPECS),
     reportSubscriptions: clone(SEED_REPORT_SUBSCRIPTIONS),

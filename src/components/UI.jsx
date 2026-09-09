@@ -15,26 +15,41 @@ export function Page({ children, wide = false, className = '' }) {
 
 export function PageHeader({ overline, title, description, actions, meta, titleExtra }) {
   return (
-    <header className="mb-6 sm:mb-8">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div className="min-w-0 max-w-2xl">
-          {overline && <p className="type-overline mb-2">{overline}</p>}
+    <header className="mb-6 sm:mb-7">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="min-w-0">
           <div className="flex min-w-0 flex-wrap items-center gap-2.5">
-            <h1 className="min-w-0 break-words font-display text-display-md text-ink sm:text-[2rem]">{title}</h1>
+            <h1 className="min-w-0 break-words text-[1.35rem] font-bold leading-tight tracking-tight text-ink">
+              {title}
+            </h1>
             {titleExtra}
           </div>
-          {description && (
-            <div className="mt-2 max-w-xl text-sm leading-relaxed text-ink-muted">{description}</div>
-          )}
-          {meta && <div className="mt-1.5 text-sm text-ink-muted">{meta}</div>}
+          <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
+            {overline && (
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-ink-faint">
+                {overline}
+              </p>
+            )}
+            {overline && meta && (
+              <span className="text-[11px] text-ink-faint">·</span>
+            )}
+            {meta && (
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-ink-faint">
+                {meta}
+              </p>
+            )}
+            {description && (
+              <p className="mt-0.5 w-full text-xs leading-relaxed text-ink-muted">{description}</p>
+            )}
+          </div>
         </div>
         {actions && (
-          <div className="ml-auto flex max-w-full flex-wrap items-center justify-end gap-2 sm:shrink-0">
+          <div className="flex flex-wrap items-center gap-2">
             {actions}
           </div>
         )}
       </div>
-      <div className="hairline-rule mt-6 animate-rule-draw" />
+      <div className="hairline-rule mt-4 animate-rule-draw" />
     </header>
   );
 }
@@ -49,37 +64,53 @@ export function Panel({ children, className = '', padded = false, hover = false 
   );
 }
 
+const STAT_COLORS = [
+  ['#1E2761', '#3457D5'],
+  ['#0F7A52', '#34B882'],
+  ['#B4530A', '#E5831E'],
+  ['#7C3AED', '#A78BFA'],
+];
+
 /** Compact KPI strip used on home / registry dashboards */
 export function StatStrip({ items, compact = false }) {
   return (
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-      {items.map((k, i) => (
-        <div
-          key={k.label}
-          className={`surface-panel surface-panel-hover animate-fade-up ${
-            compact ? 'bg-elevated/55 p-3.5' : 'p-5'
-          }`}
-          style={{ animationDelay: `${i * 45}ms` }}
-        >
-          <p className="type-overline">{k.label}</p>
-          <p
-            className={`font-display font-semibold tracking-tight text-ink tabular-nums leading-none ${
-              compact ? 'mt-2 text-[1.3rem]' : 'mt-3 text-[1.85rem]'
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {items.map((k, i) => {
+        const [c1, c2] = STAT_COLORS[i % STAT_COLORS.length];
+        return (
+          <div
+            key={k.label}
+            className={`surface-panel surface-panel-hover animate-fade-up relative overflow-hidden ${
+              compact ? 'p-4' : 'p-5 pt-6'
             }`}
+            style={{ animationDelay: `${i * 55}ms` }}
           >
-            {k.value}
-          </p>
-          {k.hint && (
+            {/* Accent bar */}
+            <div
+              className="absolute top-0 left-0 right-0 h-[3px]"
+              style={{ background: c1 }}
+            />
+            <p className="type-overline">{k.label}</p>
             <p
-              className={`leading-relaxed text-ink-muted ${
-                compact ? 'mt-1 text-[11px]' : 'mt-2 text-xs'
+              className={`font-display font-bold tracking-tight tabular-nums leading-none ${
+                compact ? 'mt-2 text-[1.3rem]' : 'mt-3 text-[2rem]'
               }`}
+              style={{ color: c1 }}
             >
-              {k.hint}
+              {k.value}
             </p>
-          )}
-        </div>
-      ))}
+            {k.hint && (
+              <p
+                className={`leading-relaxed text-ink-muted ${
+                  compact ? 'mt-1 text-[11px]' : 'mt-2 text-xs'
+                }`}
+              >
+                {k.hint}
+              </p>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -87,8 +118,8 @@ export function StatStrip({ items, compact = false }) {
 export function Toolbar({ children, className = '', sticky = true }) {
   return (
     <div
-      className={`toolbar flex flex-wrap items-center gap-3 px-4 py-3 sm:flex-nowrap sm:px-5 ${
-        sticky ? 'sticky-toolbar' : 'border-b border-line bg-elevated/40'
+      className={`toolbar flex flex-wrap items-center gap-3 px-4 py-2.5 sm:flex-nowrap sm:px-5 ${
+        sticky ? 'sticky-toolbar' : 'border-b border-line bg-surface/80'
       } ${className}`}
     >
       {children}
@@ -111,16 +142,105 @@ export function SearchField({
       <label htmlFor={inputId} className="sr-only">
         {accessibleName}
       </label>
-      <span className="pointer-events-none absolute left-0 top-1/2 -translate-y-1/2 text-ink-faint" aria-hidden="true">
-        <Icon name="search" size={15} />
+      <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-faint" aria-hidden="true">
+        <Icon name="search" size={14} />
       </span>
       <input
         id={inputId}
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="min-w-0 w-full border-0 border-b border-line bg-transparent py-2 pl-7 pr-2 text-sm text-ink placeholder:text-ink-faint focus:border-ink focus:outline-none focus:ring-0"
+        className="min-w-0 w-full rounded-control border border-line bg-canvas py-2 pl-8 pr-3 text-sm text-ink placeholder:text-ink-faint transition-colors hover:border-line-strong focus:border-accent focus:bg-surface focus:outline-none focus:ring-0"
       />
+    </div>
+  );
+}
+
+/**
+ * TableToolbar — standardized toolbar row matching the reference design:
+ * left: optional search slot; right: Columns, Export, Rows-per-page, Pagination.
+ */
+export function TableToolbar({
+  search,
+  rowsPerPage = 25,
+  onRowsPerPageChange,
+  page = 1,
+  totalPages = 1,
+  onPageChange,
+  onColumnsClick,
+  onExportClick,
+  extra,
+  className = '',
+}) {
+  return (
+    <div
+      className={`sticky-toolbar flex flex-wrap items-center justify-between gap-3 px-4 py-2.5 sm:px-5 ${className}`}
+    >
+      <div className="flex min-w-0 flex-1 items-center gap-3">
+        {search}
+      </div>
+      <div className="flex items-center gap-2">
+        {extra}
+        {onColumnsClick && (
+          <button
+            type="button"
+            onClick={onColumnsClick}
+            className="inline-flex items-center gap-1.5 rounded-control border border-line bg-surface px-3 py-1.5 text-xs font-medium text-ink-soft interactive hover:bg-elevated hover:text-ink"
+          >
+            <Icon name="grid" size={13} />
+            Columns
+          </button>
+        )}
+        {onExportClick && (
+          <button
+            type="button"
+            onClick={onExportClick}
+            className="inline-flex items-center gap-1.5 rounded-control border border-line bg-surface px-3 py-1.5 text-xs font-medium text-ink-soft interactive hover:bg-elevated hover:text-ink"
+          >
+            <Icon name="download" size={13} />
+            Export
+          </button>
+        )}
+        {onRowsPerPageChange && (
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs text-ink-muted">Rows</span>
+            <select
+              value={rowsPerPage}
+              onChange={(e) => onRowsPerPageChange(Number(e.target.value))}
+              className="rounded-control border border-line bg-surface py-1 pl-2 pr-6 text-xs text-ink-soft focus:border-accent focus:outline-none"
+            >
+              {[10, 25, 50, 100].map((n) => (
+                <option key={n} value={n}>{n}</option>
+              ))}
+            </select>
+          </div>
+        )}
+        {totalPages > 1 && (
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={() => onPageChange?.(Math.max(1, page - 1))}
+              disabled={page <= 1}
+              className="flex h-7 w-7 items-center justify-center rounded-control border border-line bg-surface text-ink-muted interactive hover:bg-elevated hover:text-ink disabled:opacity-40"
+              aria-label="Previous page"
+            >
+              <Icon name="chevronLeft" size={13} />
+            </button>
+            <span className="min-w-[3.5rem] text-center text-xs text-ink-muted">
+              {page} / {totalPages}
+            </span>
+            <button
+              type="button"
+              onClick={() => onPageChange?.(Math.min(totalPages, page + 1))}
+              disabled={page >= totalPages}
+              className="flex h-7 w-7 items-center justify-center rounded-control border border-line bg-surface text-ink-muted interactive hover:bg-elevated hover:text-ink disabled:opacity-40"
+              aria-label="Next page"
+            >
+              <Icon name="chevronRight" size={13} />
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -136,13 +256,41 @@ export function Badge({ children, color = 'slate', className = '' }) {
     sky: 'bg-brand-soft text-brand-ink border-line',
     green: 'bg-success-soft text-success border-line',
     blue: 'bg-brand-soft text-brand-ink border-line',
+    // Status-specific solid pill variants (matches reference design)
+    active: 'bg-success text-white border-success',
+    inactive: 'bg-transparent text-ink-muted border-line-strong',
+    violet: 'bg-elevated text-ink-soft border-line',
   };
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-control border px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${colors[color]} ${className}`}
+      className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[10.5px] font-semibold uppercase tracking-wide ${colors[color] ?? colors.slate} ${className}`}
     >
       {children}
     </span>
+  );
+}
+
+/** Convenience component for ACTIVE / INACTIVE status cells in tables. */
+export function StatusBadge({ status, className = '' }) {
+  const norm = (status || '').toLowerCase();
+  if (norm === 'active') {
+    return (
+      <Badge color="active" className={className}>
+        Active
+      </Badge>
+    );
+  }
+  if (norm === 'inactive') {
+    return (
+      <Badge color="inactive" className={className}>
+        Inactive
+      </Badge>
+    );
+  }
+  return (
+    <Badge color="slate" className={className}>
+      {status}
+    </Badge>
   );
 }
 
@@ -201,6 +349,11 @@ export function Button({ variant = 'secondary', size, children, className = '', 
       'inline-flex items-center justify-center gap-1.5 rounded-control px-3.5 py-2 text-sm font-medium text-ink-muted interactive hover:bg-elevated hover:text-ink',
     danger:
       'inline-flex items-center justify-center gap-1.5 rounded-control bg-danger px-3.5 py-2 text-sm font-semibold text-white interactive hover:brightness-90 disabled:opacity-50',
+    // Outlined variant — brand border + text, no fill (matches reference "Filter" button)
+    outline:
+      'inline-flex items-center justify-center gap-1.5 rounded-control border border-brand px-3.5 py-2 text-sm font-semibold text-brand interactive hover:bg-brand-soft disabled:opacity-50',
+    filter:
+      'inline-flex items-center justify-center gap-1.5 rounded-control border border-brand px-3.5 py-2 text-sm font-semibold text-brand interactive hover:bg-brand-soft disabled:opacity-50',
   };
   const sizes = {
     xs: '!px-2 !py-1 !text-[11px]',
@@ -431,7 +584,7 @@ export function Table({ columns, children, className = '', caption, label }) {
       >
         {caption && <caption className="sr-only">{caption}</caption>}
         <thead>
-          <tr className="border-b border-line bg-elevated/50">
+          <tr className="border-b border-line bg-[#F8F9FC]">
             {columns.map((c, i) => {
               const text = typeof c === 'object' ? c.label : c;
               const extra = typeof c === 'object' ? c.className || '' : '';
@@ -439,7 +592,7 @@ export function Table({ columns, children, className = '', caption, label }) {
                 <th
                   key={typeof c === 'object' ? c.key || c.label || i : `${c}-${i}`}
                   scope="col"
-                  className={`type-overline px-4 py-3 font-semibold sm:px-5 ${extra}`}
+                  className={`px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-ink-faint sm:px-5 ${extra}`}
                 >
                   {text}
                 </th>
@@ -447,7 +600,7 @@ export function Table({ columns, children, className = '', caption, label }) {
             })}
           </tr>
         </thead>
-        <tbody className="divide-y divide-line">{children}</tbody>
+        <tbody className="divide-y divide-line bg-surface">{children}</tbody>
       </table>
     </div>
   );

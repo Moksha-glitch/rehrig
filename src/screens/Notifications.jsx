@@ -34,7 +34,7 @@ export default function Notifications() {
         title="Notifications"
         description={
           unread
-            ? `${unread} unread Â· ${notices.length} total`
+            ? `${unread} unread · ${notices.length} total`
             : `${notices.length} notification${notices.length === 1 ? '' : 's'}`
         }
         actions={

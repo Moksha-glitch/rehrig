@@ -68,7 +68,7 @@ export default function CustomersDirectory() {
             <SearchField
               value={q}
               onChange={(event) => setQ(event.target.value)}
-              placeholder="Search customersâ€¦"
+              placeholder="Search customers…"
               label="Search customers"
             />
           </Toolbar>
@@ -88,7 +88,7 @@ export default function CustomersDirectory() {
               return (
                 <tr key={customer.id} className="interactive hover:bg-elevated/70">
                   <td className="mono px-4 py-3.5 text-ink-muted sm:px-5">
-                    {customer.customerId || 'â€”'}
+                    {customer.customerId || '—'}
                   </td>
                   <td className="min-w-0 px-4 py-3.5 sm:px-5">
                     <button
@@ -109,17 +109,17 @@ export default function CustomersDirectory() {
                       compact ? 'hidden' : ''
                     }`}
                   >
-                    {customer.email || 'â€”'}
+                    {customer.email || '—'}
                   </td>
                   <td className="max-w-[12rem] truncate px-4 py-3.5 text-ink-muted sm:px-5">
-                    {provider?.name || 'â€”'}
+                    {provider?.name || '—'}
                   </td>
                   <td
                     className={`max-w-[8rem] truncate px-4 py-3.5 text-ink-muted sm:px-5 ${
                       compact ? 'hidden' : ''
                     }`}
                   >
-                    {customer.scopeLabel || 'â€”'}
+                    {customer.scopeLabel || '—'}
                   </td>
                   <td className="px-4 py-3.5 sm:px-5">
                     <Badge color={customer.active === false ? 'slate' : 'green'}>

@@ -338,7 +338,7 @@ export function DemoAppStoreProvider({ children }) {
     const requested = readNavigation();
     const fallback =
       user.role === 'Analyst'
-        ? { module: 'analytics', params: { view: 'dashboards' } }
+        ? { module: 'dashboards', params: {} }
         : { module: homeModuleFor(user), params: {} };
     const nav = requested.module === 'home' ? fallback : requested;
     dispatch({ type: 'LOGIN', user, nav });
@@ -780,11 +780,8 @@ export function DemoAppStoreProvider({ children }) {
             id: candidate.id,
             title: candidate.name,
             meta: [candidate.email, candidate.scopeLabel].filter(Boolean).join(' · '),
-            module: persona === 'rehrig' ? 'accountDetail' : 'account',
-            params:
-              persona === 'rehrig'
-                ? { accountId: candidate.accountIds?.[0], tab: 'customers' }
-                : { tab: 'customers' },
+            module: persona === 'sp' ? 'manageAccount' : 'customers',
+            params: {},
           });
         });
 
@@ -894,8 +891,8 @@ export function DemoAppStoreProvider({ children }) {
           id: spec.id,
           title: spec.name,
           meta: [spec.desc || spec.source, spec.chart].filter(Boolean).join(' · '),
-          module: 'analytics',
-          params: { view: 'reports' },
+          module: 'reports',
+          params: {},
         });
       });
 
@@ -910,8 +907,8 @@ export function DemoAppStoreProvider({ children }) {
                 .map((spec) => spec.name)
                 .join(', ')}`
             : `${specs.length} saved widgets`,
-          module: 'analytics',
-          params: { view: 'dashboards' },
+          module: 'dashboards',
+          params: {},
         });
       }
 
@@ -936,7 +933,7 @@ export function DemoAppStoreProvider({ children }) {
             id: `${truck.id}-${key}`,
             title: String(value),
             meta: `${label} · ${truck.name || truck.number || ''}`.trim(),
-            module: 'devices',
+            module: 'trucks',
             params: {},
           });
         });

@@ -1,0 +1,2248 @@
+{
+  "VISION_SCREEN_MODULES_V2": [
+    {
+      "module": "Service Provider",
+      "screens": [
+        {
+          "id": "accounts",
+          "name": "Accounts",
+          "fields": [
+            "Account Name",
+            "Account Type",
+            "Service Provider UID",
+            "Industry",
+            "Owner",
+            "Phone",
+            "City",
+            "Automation Work Order",
+            "Hard Ticket Work Order",
+            "Move On Out Card",
+            "Service Notification Detail",
+            "Is Active",
+            "Number of Weeks"
+          ]
+        },
+        {
+          "id": "contacts",
+          "name": "Contacts",
+          "fields": [
+            "First Name",
+            "Last Name",
+            "Email",
+            "Phone",
+            "Role Title",
+            "Profile",
+            "Segment",
+            "Status",
+            "Enabled as Customer User"
+          ]
+        },
+        {
+          "id": "customers",
+          "name": "Customers",
+          "fields": [
+            "Customer Account Number",
+            "Customer Name",
+            "Phone",
+            "Email",
+            "Segment",
+            "Custom 1",
+            "Custom 2",
+            "Custom 3",
+            "Custom 4",
+            "Custom 5",
+            "Custom 6",
+            "Notes"
+          ]
+        },
+        {
+          "id": "locations",
+          "name": "Locations",
+          "fields": [
+            "House Number",
+            "Street Name",
+            "Unit Number",
+            "City",
+            "State/Province",
+            "Postal Code",
+            "County",
+            "Zone",
+            "Site ID",
+            "Parcel ID",
+            "Latitude",
+            "Longitude",
+            "Location Type",
+            "Warehouse"
+          ]
+        },
+        {
+          "id": "manageAccount",
+          "name": "Manage Customers",
+          "fields": []
+        },
+        {
+          "id": "routes",
+          "name": "Routes",
+          "fields": [
+            "Route Name",
+            "Route Number",
+            "Collection Day(s)",
+            "Frequency",
+            "Collection Type",
+            "Stop Interval",
+            "Truck Assignment",
+            "Driver Assignment",
+            "Average Tips",
+            "Service Provider",
+            "Segment"
+          ]
+        },
+        {
+          "id": "segments",
+          "name": "Service Provider Segments",
+          "fields": [
+            "Segment Name",
+            "Type",
+            "Parent Segment",
+            "Service Provider"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "Assets & Products",
+      "screens": [
+        {
+          "id": "assets",
+          "name": "Assets",
+          "fields": [
+            "Asset Name / Serial Number",
+            "Product",
+            "Status",
+            "Account",
+            "Home Location",
+            "Customer Location",
+            "Warehouse",
+            "Install Date"
+          ]
+        },
+        {
+          "id": "masterProducts",
+          "name": "Master Product Catalog",
+          "fields": [
+            "Product Name",
+            "Product Code",
+            "Product Size",
+            "Service Type",
+            "Service Category",
+            "Product Description",
+            "Active",
+            "Product Family",
+            "External ID"
+          ]
+        },
+        {
+          "id": "products",
+          "name": "Service Provider Products",
+          "fields": [
+            "Product (Master)",
+            "Resident-Facing Name",
+            "Product Code",
+            "Service Category",
+            "Status",
+            "Family"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "Operations",
+      "screens": [
+        {
+          "id": "dispatches",
+          "name": "Dispatches",
+          "fields": [
+            "Dispatch Number",
+            "Dispatch Date",
+            "Dispatch ID",
+            "Route ID",
+            "Dispatch Status",
+            "Truck Number",
+            "Driver ID",
+            "Stop Number",
+            "Created By",
+            "Last Modified By"
+          ]
+        },
+        {
+          "id": "mapCenter",
+          "name": "Map Center",
+          "fields": []
+        },
+        {
+          "id": "maintProfiles",
+          "name": "Route Profile Templates",
+          "fields": [
+            "Profile Name",
+            "Start Location",
+            "End Location",
+            "Service Type",
+            "# Trucks",
+            "Start Time",
+            "Duration",
+            "Segment"
+          ]
+        },
+        {
+          "id": "trucks",
+          "name": "Trucks",
+          "fields": [
+            "Truck Name",
+            "Truck #",
+            "Status",
+            "Service Type",
+            "Driver",
+            "Segment",
+            "Service Provider"
+          ]
+        },
+        {
+          "id": "workOrders",
+          "name": "Work Orders",
+          "fields": [
+            "Work Order # (Case)",
+            "LUID (External Order ID)",
+            "Customer",
+            "Request Type",
+            "Subject",
+            "Due Date",
+            "Priority",
+            "Status",
+            "Service Type",
+            "Asset Type",
+            "Asset Size",
+            "Dispatch Number",
+            "Route ID",
+            "Stop Number",
+            "Hot Ticket",
+            "Resolution Code",
+            "Number of Attempts",
+            "Last Attempt Date/Time",
+            "Attempt Lat/Long",
+            "Notification Required",
+            "Notification Sent",
+            "Notification Channel",
+            "Sent Date/Time",
+            "Photo URL 1",
+            "Photo URL 2",
+            "Created Date",
+            "Last Modified By"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "Telematics",
+      "screens": [
+        {
+          "id": "tips",
+          "name": "Tips & Non-Tips",
+          "fields": [
+            "Event Date / Time",
+            "Customer Location",
+            "Collection Route",
+            "Tipped",
+            "Truck #",
+            "RFID Reference",
+            "Distance"
+          ]
+        },
+        {
+          "id": "aggTips",
+          "name": "Trip Data",
+          "fields": [
+            "Date",
+            "Truck #",
+            "# Tips",
+            "Total Distance",
+            "Idle Time (min)",
+            "Speeding Events"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "Analytics",
+      "screens": [
+        {
+          "id": "chatter",
+          "name": "Activity",
+          "fields": []
+        },
+        {
+          "id": "dashboards",
+          "name": "Dashboards",
+          "fields": []
+        },
+        {
+          "id": "reportSubs",
+          "name": "Report Subscriptions",
+          "fields": []
+        },
+        {
+          "id": "reports",
+          "name": "Reports",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Configure",
+      "screens": [
+        {
+          "id": "apiIntegrations",
+          "name": "API Integrations",
+          "fields": []
+        },
+        {
+          "id": "locationTypes",
+          "name": "Location Types",
+          "fields": [
+            "Type Name",
+            "Category",
+            "Active"
+          ]
+        },
+        {
+          "id": "productTypes",
+          "name": "Product Types",
+          "fields": [
+            "Type Name",
+            "Category",
+            "Active"
+          ]
+        },
+        {
+          "id": "serviceTypes",
+          "name": "Service Types",
+          "fields": [
+            "Type Name",
+            "Category",
+            "Active"
+          ]
+        },
+        {
+          "id": "reqCodes",
+          "name": "Request Type & Resolution Codes",
+          "fields": [
+            "RRC #",
+            "Default",
+            "Request Type",
+            "Resolution Code",
+            "Workflow Type",
+            "# of Attempts"
+          ]
+        },
+        {
+          "id": "serviceNotifConfig",
+          "name": "Service Notification Config",
+          "fields": [
+            "Enable Notification Toggle",
+            "Message Limit",
+            "Time Zone",
+            "Phone Call Window",
+            "SMS Window",
+            "Email Window",
+            "Notification Trigger Logic",
+            "Message Templates",
+            "Twilio Credentials",
+            "SendGrid Credentials"
+          ]
+        },
+        {
+          "id": "notifications",
+          "name": "Service Notifications",
+          "fields": [
+            "Notification Name",
+            "Status",
+            "Channel",
+            "Notify Days (Trigger)",
+            "Trigger Event",
+            "From Email",
+            "Email Subject",
+            "Message Body",
+            "Window Start",
+            "Window End"
+          ]
+        },
+        {
+          "id": "setup",
+          "name": "Workspace",
+          "fields": []
+        }
+      ]
+    }
+  ],
+  "VISION_ONBOARD_SCREEN_MODULES_V2": [
+    {
+      "module": "Platform Access & Identity",
+      "screens": [
+        {
+          "name": "Login Page",
+          "fields": []
+        },
+        {
+          "name": "Forgot Password / Reset Password",
+          "fields": []
+        },
+        {
+          "name": "Your Account (personal preferences)",
+          "fields": []
+        },
+        {
+          "name": "Login History / Security Audit",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Home Dashboard",
+      "screens": [
+        {
+          "name": "Home \\u2014 SP Admin View",
+          "fields": []
+        },
+        {
+          "name": "Home \\u2014 SP Segment Admin View",
+          "fields": []
+        },
+        {
+          "name": "Customize Home (slide-over)",
+          "fields": []
+        },
+        {
+          "name": "App Launcher",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Contacts",
+      "screens": [
+        {
+          "name": "Contacts List",
+          "fields": [
+            "First Name",
+            "Last Name",
+            "Email",
+            "Phone",
+            "Role Title",
+            "Profile",
+            "Segment",
+            "Status",
+            "Enabled as Customer User"
+          ]
+        },
+        {
+          "name": "New / Edit Contact",
+          "fields": []
+        },
+        {
+          "name": "Contact Detail (popup)",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Segments",
+      "screens": [
+        {
+          "name": "Service Provider Segments List",
+          "fields": [
+            "Segment Name",
+            "Type",
+            "Parent Segment",
+            "Service Provider"
+          ]
+        },
+        {
+          "name": "New / Edit Segment",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Product Configuration",
+      "screens": [
+        {
+          "name": "Product Master Catalog List",
+          "fields": [
+            "Product Name",
+            "Product Code",
+            "Product Size",
+            "Service Type",
+            "Service Category",
+            "Product Description",
+            "Active",
+            "Product Family",
+            "External ID"
+          ]
+        },
+        {
+          "name": "New / Edit Master Product",
+          "fields": []
+        },
+        {
+          "name": "Service Provider Products List",
+          "fields": [
+            "Product (Master)",
+            "Resident-Facing Name",
+            "Product Code",
+            "Service Category",
+            "Status",
+            "Family"
+          ]
+        },
+        {
+          "name": "New / Edit Service Provider Product",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Request Types & Resolution Codes",
+      "screens": [
+        {
+          "name": "Request Types List",
+          "fields": [
+            "Request Type",
+            "Workflow Type",
+            "Category"
+          ]
+        },
+        {
+          "name": "New / Edit Request Type",
+          "fields": []
+        },
+        {
+          "name": "Resolution Codes List",
+          "fields": [
+            "Resolution Code",
+            "Workflow Type"
+          ]
+        },
+        {
+          "name": "New / Edit Resolution Code",
+          "fields": []
+        },
+        {
+          "name": "Request Type Resolution Codes (RRC) List",
+          "fields": []
+        },
+        {
+          "name": "New / Edit RRC Record",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Rehrig Master Configuration",
+      "screens": [
+        {
+          "name": "Service Types List",
+          "fields": [
+            "Type Name",
+            "Category",
+            "Active"
+          ]
+        },
+        {
+          "name": "New / Edit Service Type",
+          "fields": []
+        },
+        {
+          "name": "Location Types List",
+          "fields": [
+            "Type Name",
+            "Category",
+            "Active"
+          ]
+        },
+        {
+          "name": "New / Edit Location Type",
+          "fields": []
+        },
+        {
+          "name": "Route Profile Templates List",
+          "fields": [
+            "Profile Name",
+            "Start Location",
+            "End Location",
+            "Service Type",
+            "# Trucks",
+            "Start Time",
+            "Duration",
+            "Segment"
+          ]
+        },
+        {
+          "name": "New / Edit Route Profile Template",
+          "fields": []
+        },
+        {
+          "name": "Service Notification Config List",
+          "fields": [
+            "Enable Notification Toggle",
+            "Message Limit",
+            "Time Zone",
+            "Phone Call Window",
+            "SMS Window",
+            "Email Window",
+            "Notification Trigger Logic",
+            "Message Templates",
+            "Twilio Credentials",
+            "SendGrid Credentials"
+          ]
+        },
+        {
+          "name": "New / Edit Service Notification Config",
+          "fields": []
+        },
+        {
+          "name": "Device Master Registry List",
+          "fields": [
+            "Device ID",
+            "Device Name",
+            "Device Type"
+          ]
+        },
+        {
+          "name": "New / Edit Device",
+          "fields": []
+        },
+        {
+          "name": "Truck Master Registry List",
+          "fields": [
+            "Truck ID",
+            "Truck Name",
+            "Truck Type"
+          ]
+        },
+        {
+          "name": "New / Edit Truck (Master Registry)",
+          "fields": []
+        },
+        {
+          "name": "API Integrations List",
+          "fields": [
+            "Name",
+            "Description",
+            "Endpoint",
+            "Status",
+            "Calls / 30 days"
+          ]
+        },
+        {
+          "name": "New / Edit API Integration",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Customers & Manage Account",
+      "screens": [
+        {
+          "name": "Customers List",
+          "fields": [
+            "Customer Account Number",
+            "Customer Name",
+            "Phone",
+            "Email",
+            "Segment",
+            "Custom 1",
+            "Custom 2",
+            "Custom 3",
+            "Custom 4",
+            "Custom 5",
+            "Custom 6",
+            "Notes"
+          ]
+        },
+        {
+          "name": "New / Edit Customer",
+          "fields": []
+        },
+        {
+          "name": "Locations List",
+          "fields": [
+            "House Number",
+            "Street Name",
+            "Unit Number",
+            "City",
+            "State/Province",
+            "Postal Code",
+            "County",
+            "Zone",
+            "Site ID",
+            "Parcel ID",
+            "Latitude",
+            "Longitude",
+            "Location Type",
+            "Warehouse"
+          ]
+        },
+        {
+          "name": "New / Edit Location",
+          "fields": []
+        },
+        {
+          "name": "Manage Customers \\u2014 Search Screen",
+          "fields": []
+        },
+        {
+          "name": "Manage Customers \\u2014 Account Detail View",
+          "fields": []
+        },
+        {
+          "name": "Manage Customers \\u2014 Asset Action Panel",
+          "fields": []
+        },
+        {
+          "name": "Manage Customers \\u2014 Assign New Asset Modal",
+          "fields": []
+        },
+        {
+          "name": "Manage Customers \\u2014 Tip History View",
+          "fields": []
+        },
+        {
+          "name": "Manage Customers \\u2014 Map Asset View",
+          "fields": []
+        },
+        {
+          "name": "Manage Customers \\u2014 Observation History View",
+          "fields": []
+        },
+        {
+          "name": "Mass Upload Customers",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Assets & Trucks",
+      "screens": [
+        {
+          "name": "Assets List",
+          "fields": [
+            "Asset Name / Serial Number",
+            "Product",
+            "Status",
+            "Account",
+            "Home Location",
+            "Customer Location",
+            "Warehouse",
+            "Install Date"
+          ]
+        },
+        {
+          "name": "New / Edit Asset",
+          "fields": []
+        },
+        {
+          "name": "Asset Import \\u2014 Standard",
+          "fields": []
+        },
+        {
+          "name": "Asset Import \\u2014 Legacy / Cart System",
+          "fields": []
+        },
+        {
+          "name": "Trucks List",
+          "fields": [
+            "Truck Name",
+            "Truck #",
+            "Status",
+            "Service Type",
+            "Driver",
+            "Segment",
+            "Service Provider"
+          ]
+        },
+        {
+          "name": "New / Edit Truck",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Work Orders",
+      "screens": [
+        {
+          "name": "Work Orders List",
+          "fields": [
+            "Work Order # (Case)",
+            "LUID (External Order ID)",
+            "Customer",
+            "Request Type",
+            "Subject",
+            "Due Date",
+            "Priority",
+            "Status",
+            "Service Type",
+            "Asset Type",
+            "Asset Size",
+            "Dispatch Number",
+            "Route ID",
+            "Stop Number",
+            "Hot Ticket",
+            "Resolution Code",
+            "Number of Attempts",
+            "Last Attempt Date/Time",
+            "Attempt Lat/Long",
+            "Notification Required",
+            "Notification Sent",
+            "Notification Channel",
+            "Sent Date/Time",
+            "Photo URL 1",
+            "Photo URL 2",
+            "Created Date",
+            "Last Modified By"
+          ]
+        },
+        {
+          "name": "Work Order Source Picker",
+          "fields": []
+        },
+        {
+          "name": "New / Edit Work Order",
+          "fields": []
+        },
+        {
+          "name": "WOIT \\u2014 Stage 1: Upload",
+          "fields": []
+        },
+        {
+          "name": "WOIT \\u2014 Stage 2: Preview Mapping",
+          "fields": []
+        },
+        {
+          "name": "WOIT \\u2014 Stage 3: Validate Sample",
+          "fields": []
+        },
+        {
+          "name": "WOIT \\u2014 Stage 4: Commit",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Routing & Dispatch",
+      "screens": [
+        {
+          "name": "Routes List",
+          "fields": [
+            "Route Name",
+            "Route Number",
+            "Collection Day(s)",
+            "Frequency",
+            "Collection Type",
+            "Stop Interval",
+            "Truck Assignment",
+            "Driver Assignment",
+            "Average Tips",
+            "Service Provider",
+            "Segment"
+          ]
+        },
+        {
+          "name": "New / Edit Route",
+          "fields": []
+        },
+        {
+          "name": "Dispatch \\u2014 Route Table / Grid View",
+          "fields": [
+            "Dispatch Number",
+            "Dispatch Date",
+            "Dispatch ID",
+            "Route ID",
+            "Dispatch Status",
+            "Truck Number",
+            "Driver ID",
+            "Stop Number",
+            "Created By",
+            "Last Modified By"
+          ]
+        },
+        {
+          "name": "Dispatch \\u2014 Lasso Routing View",
+          "fields": []
+        },
+        {
+          "name": "Dispatch \\u2014 Manage Profiles",
+          "fields": []
+        },
+        {
+          "name": "Dispatch \\u2014 Publish Confirmation",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Map Center",
+      "screens": [
+        {
+          "name": "Map Center \\u2014 Main Map View",
+          "fields": []
+        },
+        {
+          "name": "Map Center \\u2014 Address Search Panel",
+          "fields": []
+        },
+        {
+          "name": "Map Center \\u2014 Route Progress View",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Telematics / Tips",
+      "screens": [
+        {
+          "name": "Individual Tips / Non-Tip Events List",
+          "fields": [
+            "Event Date / Time",
+            "Customer Location",
+            "Collection Route",
+            "Tipped",
+            "Truck #",
+            "RFID Reference",
+            "Distance"
+          ]
+        },
+        {
+          "name": "New / Edit Individual Tip",
+          "fields": []
+        },
+        {
+          "name": "Aggregated Truck and Tips List",
+          "fields": [
+            "Date",
+            "Truck #",
+            "# Tips",
+            "Total Distance",
+            "Idle Time (min)",
+            "Speeding Events"
+          ]
+        },
+        {
+          "name": "New / Edit Aggregated Tip Record",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Service Notifications",
+      "screens": [
+        {
+          "name": "Service Notifications List (account-level)",
+          "fields": [
+            "Notification Name",
+            "Status",
+            "Channel",
+            "Notify Days (Trigger)",
+            "Trigger Event",
+            "From Email",
+            "Email Subject",
+            "Message Body",
+            "Window Start",
+            "Window End"
+          ]
+        },
+        {
+          "name": "New / Edit Service Notification",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Notes & Attachments",
+      "screens": [
+        {
+          "name": "Notes & Attachments List",
+          "fields": []
+        },
+        {
+          "name": "New Note",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Driver Mobile App",
+      "screens": [
+        {
+          "name": "Mobile \\u2014 Service Provider Admin View",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Activity Feed",
+      "screens": [
+        {
+          "name": "Activity Feed (Chatter equivalent)",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "module": "Integration & Device Mapping",
+      "screens": [
+        {
+          "name": "WO Service Provider Mapping",
+          "fields": []
+        },
+        {
+          "name": "Truck Device Sync",
+          "fields": []
+        }
+      ]
+    }
+  ],
+  "uA": [],
+  "lA": [],
+  "_oe_snippet": "function _oe({nav:e,store:t,onGoHome:r,onGoGlobal:a,collapsed:n}){let i=g=>e.view===\"global\"&&e.moduleKey===g,s=g=>({key:g,onClick:()=>a(g),active:i(g)}),u=de.getPersona(t),d;u===\"rehrig\"?d=[{label:\"Platform\",key:\"overview\",items:[{key:\"home\",onClick:r,active:e.view===\"home\"}]},{label:\"Service Providers\",key:\"customers\",items:[{key:\"accounts\",onClick:()=>a(\"accounts\"),active:i(\"accounts\")||e.view===\"account\"||e.view===\"record\"&&e.accountId},s(\"contacts\")]},{label:\"Configure\",key:\"configure\",items:[{key:\"profileMgmtNav\",onClick:()=>a(\"setup\",{setupSection:\"profileMgmt\"}),active:i(\"setup\")&&(e.setupSection||\"profileMgmt\")===\"profileMgmt\"},{key:\"userMgmtNav\",onClick:()=>a(\"setup\",{setupSection:\"userMgmt\"}),active:i(\"setup\")&&e.setupSection===\"userMgmt\"},s(\"productTypes\"),s(\"device\"),s(\"truck\"),s(\"tagScheme\"),s(\"apiIntegrations\")]}]:u===\"customer\"?d=[{label:\"My Service\",key:\"overview\",items:[{key:\"home\",onClick:r,active:e.view===\"home\"},s(\"myAccount\"),s(\"myLocations\"),s(\"myNotifications\"),s(\"myWorkOrders\")]}]:d=[{label:\"Overview\",key:\"overview\",items:[{key:\"home\",onClick:r,active:e.view===\"home\"}]},{label:\"Service Provider\",key:\"customers\",items:[{key:\"accounts\",onClick:()=>a(\"accounts\"),active:i(\"accounts\")||e.view===\"account\"||e.view===\"record\"&&e.accountId},s(\"contacts\"),s(\"customers\"),s(\"locations\"),s(\"manageAccount\"),s(\"routes\"),s(\"segments\")]},{label:\"Assets & Products\",key:\"assets\",items:[s(\"assets\"),s(\"masterProducts\"),s(\"products\")]},{label:\"Operations\",key:\"operations\",items:[s(\"dispatches\"),s(\"mapCenter\"),s(\"maintProfiles\"),s(\"trucks\"),s(\"workOrders\")]},{label:\"Telematics\",key:\"telematics\",items:[s(\"tips\"),s(\"aggTips\")]},{label:\"Analytics\",key:\"analytics\",items:[s(\"chatter\"),s(\"dashboards\"),s(\"reportSubs\"),s(\"reports\")]},{label:\"Configure\",key:\"configure\",items:[s(\"reqCodes\"),s(\"serviceNotifConfig\"),s(\"notifications\"),s(\"setup\")]}];let c=new Set;if(t){for(let g of d)for(let b of g.items)if(b.key!==\"home\"){if(b.key===\"chatter\"){de.canView(t,\"chatter\")||c.add(b.key);continue}if(b.key===\"manageAccount\"){de.canView(t,\"accounts\")||c.add(b.key);continue}if(b.key===\"masterProducts\"){de.canView(t,\"products\")||c.add(b.key);continue}if(b.key===\"bulkImport\"){de.canView(t,\"accounts\")||c.add(b.key);continue}if(b.key===\"reportSubs\"){de.canView(t,\"reports\")||c.add(b.key);continue}if(b.key===\"requestTypes\"||b.key===\"resolutionCodes\"){de.canView(t,\"reqCodes\")||c.add(b.key);continue}if([\"productTypes\",\"apiIntegrations\",\"serviceNotifConfig\",\"device\",\"truck\",\"tagScheme\"].includes(b.key)){de.canView(t,\"setup\")||c.add(b.key);continue}de.canView(t,b.key)||c.add(b.key)}}let f=d.map(g=>({...g,items:g.items.filter(b=>!c.has(b.key))})).filter(g=>g.items.length>0),m=f.find(g=>g.items.some(b=>b.active))?.key,[p,v]=(0,o.useState)(m||\"overview\");(0,o.useEffect)(()=>{m&&m!==p&&v(m)},[m]);let y=g=>v(b=>b===g?null:g);return n?o.default.createElement(\"nav\",{className:\"flex-1 overflow-y-auto scroll-thin py-1\"},f.map((g,b)=>o.default.createElement(o.default.Fragment,{key:g.label},b>0&&o.default.createElement(\"div\",{className:\"mx-3 my-1 border-t hairline\"}),g.items.map(h=>{let x=Qe[h.key],k=x.icon,w=n6[h.key]||x.label;return o.default.createElement(\"button\",{key:h.key,onClick:h.onClick,title:w,className:\"nav-item w-full flex items-center justify-center py-2 rounded-r-lg relative\",style:{color:h.active?l.violet:l.muted,background:h.active?l.violet+\"18\":\"transparent\"}},o.default.createElement(k,{size:16,strokeWidth:h.active?2.4:1.8}),h.active&&o.default.createElement(\"span\",{className:\"absolute left-0 top-1.5 bottom-1.5 w-[2px]\",style:{background:l.violet}}))})))):o.default.createElement(\"nav\",{className:\"flex-1 overflow-y-auto scroll-thin px-2 py-3\"},f.map(g=>{let b=g.items.some(x=>x.active),h=p===g.key;if(g.items.length===1&&g.items[0].key===\"home\"){let x=g.items[0];return o.default.createElement(\"button\",{key:g.label,onClick:x.onClick,className:\"w-full flex items-center gap-2 px-3 py-2 rounded-lg text-[12px] font-semibold uppercase tracking-[0.12em] transition-colors mb-1\",style:{color:x.active?l.violet:l.muted,background:x.active?l.violet+\"12\":\"transparent\"},onMouseEnter:k=>{x.active||(k.currentTarget.style.background=l.surfaceHi)},onMouseLeave:k=>{x.active||(k.currentTarget.style.background=\"transparent\")}},o.default.createElement(br,{size:12,strokeWidth:x.active?2.4:1.8}),o.default.createElement(\"span\",null,\"Home\"))}return o.default.createElement(\"div\",{key:g.label,className:\"mb-1.5\"},o.default.createElement(\"button\",{onClick:()=>y(g.key),className:\"w-full flex items-center gap-1.5 px-3 py-2 rounded transition-colors group\",style:{color:l.muted},onMouseEnter:x=>{x.currentTarget.style.color=l.text},onMouseLeave:x=>{x.currentTarget.style.color=l.muted}},o.default.createElement(nr,{size:11,strokeWidth:2.5,style:{transform:h?\"rotate(90deg)\":\"rotate(0deg)\",transition:\"transform 0.15s ease\"}}),o.default.createElement(\"span\",{className:\"text-[12px] font-semibold uppercase tracking-[0.12em] flex-1 text-left\"},g.label),!h&&b&&o.default.createElement(\"span\",{className:\"w-1.5 h-1.5 rounded-full shrink-0\",style:{background:l.violet},title:\"Active item in this group\"})),h&&o.default.createElement(\"div\",{className:\"mt-1 ml-[14px] pl-2.5 relative\",style:{borderLeft:`1px solid ${l.border}`}},g.items.map(x=>{let k=Qe[x.key],w=k.icon,S=n6[x.key]||k.label,T=x.key===\"setup\",L=T&&x.active,B=[{k:\"userMgmt\",l:\"User Management\",icon:cr},{k:\"profileMgmt\",l:\"Profile Management\",icon:xt}],U=e.setupSection||\"profileMgmt\";return o.default.createElement(o.default.Fragment,{key:x.key},o.default.createElement(\"button\",{onClick:x.onClick,className:\"nav-item w-full flex items-center gap-2.5 px-2.5 py-[7px] rounded-r-lg text-[13px] relative\"+(x.active?\" nav-item-active\":\"\"),style:{color:x.active?l.text:l.muted,fontWeight:x.active?500:400}},x.active&&o.default.createElement(\"span\",{className:\"absolute -left-[11px] top-1.5 bottom-1.5 w-[2px] rounded-full\",style:{background:l.violet}}),o.default.createElement(w,{size:14,strokeWidth:x.active?2.4:1.8}),o.default.createElement(\"span\",{className:\"truncate\"},S),T&&o.default.createElement(gt,{size:11,className:\"ml-auto shrink-0\",style:{color:x.active?l.violet:l.faint,transform:L?\"rotate(0deg)\":\"rotate(-90deg)\",transition:\"transform 0.15s\"}}),!T&&x.active&&o.default.createElement(nr,{size:12,className:\"ml-auto shrink-0\",color:l.violet})),L&&o.default.createElement(\"div\",{className:\"relative pt-0.5 pb-1\"},o.default.createElement(\"div\",{className:\"absolute top-0 bottom-1\",style:{left:17,width:1,background:l.border}}),o.default.createElement(\"div\",{className:\"space-y-[1px]\"},B.map(M=>{let $=M.icon,j=U===M.k;return o.default.createElement(\"button\",{key:M.k,onClick:()=>a(\"setup\",{setupSection:M.k}),className:\"relative w-full flex items-center gap-2 py-[6px] text-[12px] transition-all\",style:{paddingLeft:30,paddingRight:10,color:j?l.violet:l.muted,fontWeight:j?500:400,background:j?l.violet+\"12\":\"transparent\",borderRadius:\"0 6px 6px 0\",outline:\"none\",border:\"none\",cursor:\"pointer\"},onMouseEnter:q=>{j||(q.currentTarget.style.color=l.text,q.currentTarget.style.background=l.surfaceHi)},onMouseLeave:q=>{j||(q.currentTarget.style.color=l.muted,q.currentTarget.style.background=\"transparent\")}},j&&o.default.createElement(\"span\",{className:\"absolute top-1 bottom-1\",style:{left:16,width:2,background:l.violet,borderRadius:1}}),o.default.createElement(\"span\",{className:\"absolute\",style:{left:18,top:\"50%\",width:8,height:1,background:l.border}}),o.default.createElement($,{size:11,strokeWidth:j?2.4:1.7}),o.default.createElement(\"span\",{className:\"truncate\"},M.l))}))))})))}))}function Foe({account:e,store:t,nav:r,onOpenAccount:a,onExitAccount:n,collapsed:i,persona:s,onGoHome:u,onGoGlobal:d}){let c=r.tab||(r.view===\"record\"?r.moduleKey:\"__details\"),f=s===\"sp\",m=r.view===\"home\",p=r.view===\"global\",v=q=>p&&r.moduleKey===q,y=q=>{let z=Qe[q];return z.data?t[z.data].filter(N=>N[z.accountFilter]===e.name).length:0},g=uA.includes(c)||r.moduleKey===\"bulkImport\",b=lA.includes(c)||r.moduleKey===\"setup",
+  "cols_defs": [],
+  "list_configs": [],
+  "empty_states": [],
+  "toolbar_labels": [],
+  "persona_snippets": {
+    "rehrig": [
+      "persona===\"rehrig\"?\"Platform-wide view, all SPs\":p.persona===\"sp\"?\"Single-SP operational shell\":\"Customer portal view\")),y&&o.default.createElement(Te,",
+      "persona===\"rehrig\"",
+      "persona===\"rehrig\",spAccount=isRehrig?null:de.getSPAdminAccount(e),p="
+    ],
+    "sp": [
+      "persona===\"sp\"?\"Single-SP operational shell\":\"Customer portal view\")),y&&o.default.createElement(Te,"
+    ]
+  },
+  "page_titles": {},
+  "module_catalog": [
+    {
+      "k": "name",
+      "label": "Account Name",
+      "icon": null
+    },
+    {
+      "k": "accountType",
+      "label": "Type",
+      "icon": null
+    },
+    {
+      "k": "industry",
+      "label": "Industry",
+      "icon": null
+    },
+    {
+      "k": "owner",
+      "label": "Owner",
+      "icon": null
+    },
+    {
+      "k": "phone",
+      "label": "Phone",
+      "icon": null
+    },
+    {
+      "k": "billingCity",
+      "label": "City",
+      "icon": null
+    },
+    {
+      "k": "productName",
+      "label": "Product",
+      "icon": null
+    },
+    {
+      "k": "productFamily",
+      "label": "Family",
+      "icon": null
+    },
+    {
+      "k": "volume",
+      "label": "Volume",
+      "icon": null
+    },
+    {
+      "k": "serviceType",
+      "label": "Service Type",
+      "icon": null
+    },
+    {
+      "k": "active",
+      "label": "Active",
+      "icon": null
+    },
+    {
+      "k": "productCode",
+      "label": "Product Code",
+      "icon": null
+    },
+    {
+      "k": "serviceCategory",
+      "label": "Service Category",
+      "icon": null
+    },
+    {
+      "k": "lastName",
+      "label": "Contact Name",
+      "icon": null
+    },
+    {
+      "k": "roleTitle",
+      "label": "Role Title",
+      "icon": null
+    },
+    {
+      "k": "email",
+      "label": "Email",
+      "icon": null
+    },
+    {
+      "k": "isUserActive",
+      "label": "Status",
+      "icon": null
+    },
+    {
+      "k": "assetName",
+      "label": "Asset Name",
+      "icon": null
+    },
+    {
+      "k": "serialNumber",
+      "label": "Serial Number",
+      "icon": null
+    },
+    {
+      "k": "assetStatus",
+      "label": "Status",
+      "icon": null
+    },
+    {
+      "k": "customerLocation",
+      "label": "Customer Location",
+      "icon": null
+    },
+    {
+      "k": "product",
+      "label": "Product",
+      "icon": null
+    },
+    {
+      "k": "installDate",
+      "label": "Install Date",
+      "icon": null
+    },
+    {
+      "k": "maintenanceRouteProfileName",
+      "label": "Profile Name",
+      "icon": null
+    },
+    {
+      "k": "numberOfTrucks",
+      "label": "# Trucks",
+      "icon": null
+    },
+    {
+      "k": "startTime",
+      "label": "Start Time",
+      "icon": null
+    },
+    {
+      "k": "duration",
+      "label": "Duration",
+      "icon": null
+    },
+    {
+      "k": "serviceProviderSegment",
+      "label": "Segment",
+      "icon": null
+    },
+    {
+      "k": "locationName",
+      "label": "Location Name",
+      "icon": null
+    },
+    {
+      "k": "__address",
+      "label": "Address",
+      "icon": null
+    },
+    {
+      "k": "locationType",
+      "label": "Type",
+      "icon": null
+    },
+    {
+      "k": "zone",
+      "label": "Zone",
+      "icon": null
+    },
+    {
+      "k": "isValidated",
+      "label": "Validated",
+      "icon": null
+    },
+    {
+      "k": "customerId",
+      "label": "Customer #",
+      "icon": null
+    },
+    {
+      "k": "segment",
+      "label": "Segment",
+      "icon": null
+    },
+    {
+      "k": "dispatchNumber",
+      "label": "Dispatch Number",
+      "icon": null
+    },
+    {
+      "k": "routeDate",
+      "label": "Route Date",
+      "icon": null
+    },
+    {
+      "k": "status",
+      "label": "Status",
+      "icon": null
+    },
+    {
+      "k": "truck",
+      "label": "Truck",
+      "icon": null
+    },
+    {
+      "k": "driver",
+      "label": "Driver",
+      "icon": null
+    },
+    {
+      "k": "subject",
+      "label": "Subject",
+      "icon": null
+    },
+    {
+      "k": "author",
+      "label": "Author",
+      "icon": null
+    },
+    {
+      "k": "created",
+      "label": "Created",
+      "icon": null
+    },
+    {
+      "k": "workOrderNumber",
+      "label": "Work Order",
+      "icon": null
+    },
+    {
+      "k": "account",
+      "label": "Customer",
+      "icon": null
+    },
+    {
+      "k": "requestType",
+      "label": "Request Type",
+      "icon": null
+    },
+    {
+      "k": "dueDate",
+      "label": "Due Date",
+      "icon": null
+    },
+    {
+      "k": "priority",
+      "label": "Priority",
+      "icon": null
+    },
+    {
+      "k": "caseStatus",
+      "label": "Status",
+      "icon": null
+    },
+    {
+      "k": "id",
+      "label": "RRC #",
+      "icon": null
+    },
+    {
+      "k": "isDefault",
+      "label": "Default",
+      "icon": null
+    },
+    {
+      "k": "resolutionCode",
+      "label": "Resolution Code",
+      "icon": null
+    },
+    {
+      "k": "workflowType",
+      "label": "Workflow Type",
+      "icon": null
+    },
+    {
+      "k": "numberOfAttempts",
+      "label": "# of Attempts",
+      "icon": null
+    },
+    {
+      "k": "code",
+      "label": "Code",
+      "icon": null
+    },
+    {
+      "k": "workflow",
+      "label": "Workflow",
+      "icon": null
+    },
+    {
+      "k": "category",
+      "label": "Category",
+      "icon": null
+    },
+    {
+      "k": "description",
+      "label": "Description",
+      "icon": null
+    },
+    {
+      "k": "segmentName",
+      "label": "Segment Name",
+      "icon": null
+    },
+    {
+      "k": "type",
+      "label": "Type",
+      "icon": null
+    },
+    {
+      "k": "parent",
+      "label": "Parent",
+      "icon": null
+    },
+    {
+      "k": "date",
+      "label": "Date",
+      "icon": null
+    },
+    {
+      "k": "truckNumber",
+      "label": "Truck #",
+      "icon": null
+    },
+    {
+      "k": "numTips",
+      "label": "# Tips",
+      "icon": null
+    },
+    {
+      "k": "totalDistance",
+      "label": "Total Distance",
+      "icon": null
+    },
+    {
+      "k": "idleTime",
+      "label": "Idle Time (min)",
+      "icon": null
+    },
+    {
+      "k": "speedingEvents",
+      "label": "Speeding Events",
+      "icon": null
+    },
+    {
+      "k": "truckName",
+      "label": "Truck Name",
+      "icon": null
+    },
+    {
+      "k": "eventStartDateTime",
+      "label": "Event Date / Time",
+      "icon": null
+    },
+    {
+      "k": "collectionRoute",
+      "label": "Collection Route",
+      "icon": null
+    },
+    {
+      "k": "wasTipped",
+      "label": "Tipped",
+      "icon": null
+    },
+    {
+      "k": "sfdcTruckId",
+      "label": "Truck #",
+      "icon": null
+    },
+    {
+      "k": "routeNumber",
+      "label": "Route Number",
+      "icon": null
+    },
+    {
+      "k": "collectionType",
+      "label": "Type",
+      "icon": null
+    },
+    {
+      "k": "collectionDays",
+      "label": "Days",
+      "icon": null
+    },
+    {
+      "k": "serviceNotificationName",
+      "label": "Notification Name",
+      "icon": null
+    },
+    {
+      "k": "enableServiceNotifications",
+      "label": "Status",
+      "icon": null
+    },
+    {
+      "k": "notifyDays",
+      "label": "Notify Days",
+      "icon": null
+    },
+    {
+      "k": "toBeSentBasedOn",
+      "label": "Trigger",
+      "icon": null
+    },
+    {
+      "k": "fromEmail",
+      "label": "From Email",
+      "icon": null
+    },
+    {
+      "k": "emailSubject",
+      "label": "Email Subject",
+      "icon": null
+    },
+    {
+      "k": "analytics",
+      "label": "Analytics",
+      "icon": null
+    },
+    {
+      "k": "accounts",
+      "label": "Accounts",
+      "icon": null
+    },
+    {
+      "k": "assets",
+      "label": "Assets",
+      "icon": null
+    },
+    {
+      "k": "workOrders",
+      "label": "Work Orders",
+      "icon": null
+    },
+    {
+      "k": "contacts",
+      "label": "Contacts",
+      "icon": null
+    },
+    {
+      "k": "customers",
+      "label": "Customers",
+      "icon": null
+    },
+    {
+      "k": "dispatches",
+      "label": "Dispatches",
+      "icon": null
+    },
+    {
+      "k": "wasteStream",
+      "label": "Waste Stream",
+      "icon": null
+    },
+    {
+      "k": "residential",
+      "label": "Residential",
+      "icon": null
+    },
+    {
+      "k": "commercial",
+      "label": "Commercial",
+      "icon": null
+    },
+    {
+      "k": "specialLicense",
+      "label": "Special License",
+      "icon": null
+    },
+    {
+      "k": "publicPortal",
+      "label": "Public Portal",
+      "icon": null
+    },
+    {
+      "k": "requiresSegment",
+      "label": "Needs Segment",
+      "icon": null
+    },
+    {
+      "k": "sortOrder",
+      "label": "Sort",
+      "icon": null
+    },
+    {
+      "k": "size",
+      "label": "Size",
+      "icon": null
+    },
+    {
+      "k": "family",
+      "label": "Family",
+      "icon": null
+    },
+    {
+      "k": "endpoint",
+      "label": "Endpoint",
+      "icon": null
+    },
+    {
+      "k": "callsLast30d",
+      "label": "Calls / 30d",
+      "icon": null
+    },
+    {
+      "k": "event",
+      "label": "Event",
+      "icon": null
+    },
+    {
+      "k": "channel",
+      "label": "Channel",
+      "icon": null
+    },
+    {
+      "k": "deviceId",
+      "label": "Device ID",
+      "icon": null
+    },
+    {
+      "k": "deviceType",
+      "label": "Device Type",
+      "icon": null
+    },
+    {
+      "k": "application",
+      "label": "Application",
+      "icon": null
+    },
+    {
+      "k": "serviceProviderName",
+      "label": "Service Provider Name",
+      "icon": null
+    },
+    {
+      "k": "truckId",
+      "label": "Truck Number",
+      "icon": null
+    },
+    {
+      "k": "truckType",
+      "label": "Truck Type",
+      "icon": null
+    },
+    {
+      "k": "warehouseLocation",
+      "label": "Warehouse Location",
+      "icon": null
+    },
+    {
+      "k": "schemeLength",
+      "label": "Tag Scheme Length",
+      "icon": null
+    },
+    {
+      "k": "headerFormat",
+      "label": "Header Format",
+      "icon": null
+    },
+    {
+      "k": "headerLength",
+      "label": "Header Length",
+      "icon": null
+    },
+    {
+      "k": "serialFormat",
+      "label": "Serial Number Format",
+      "icon": null
+    },
+    {
+      "k": "upload",
+      "label": "Upload",
+      "icon": null
+    },
+    {
+      "k": "preview",
+      "label": "Preview mapping",
+      "icon": null
+    },
+    {
+      "k": "validate",
+      "label": "Validate sample",
+      "icon": null
+    },
+    {
+      "k": "commit",
+      "label": "Commit",
+      "icon": null
+    }
+  ],
+  "form_sections": [
+    "Associate/Disassociate Device",
+    "Attribute Details (optional)",
+    "Availability",
+    "Behaviour",
+    "Create Tag Scheme",
+    "Device Details",
+    "Header (Type: Fixed)",
+    "Identity",
+    "Observation Details (optional)",
+    "Operations",
+    "Physical Specification",
+    "Product Information",
+    "Serial Number (Type: sequence)",
+    "Service Classification",
+    "Truck Information",
+    "kpi",
+    "panel"
+  ],
+  "form_field_labels": [
+    "API User",
+    "Account #",
+    "Asset Serial Number",
+    "Asset Size To Remove",
+    "Asset Size to Deliver",
+    "Asset Status",
+    "Asset To Remove",
+    "Asset Type To Remove",
+    "Asset Type to Deliver",
+    "Billing Exempt",
+    "CIS - Zone",
+    "Cart Sharing",
+    "City",
+    "Contact Info",
+    "County",
+    "Customer Name",
+    "Description",
+    "Division",
+    "Due Date",
+    "EPCOR Acct",
+    "Email",
+    "First Name",
+    "House Number",
+    "Last Name",
+    "Latitude",
+    "Location Name",
+    "Location Type",
+    "Longitude",
+    "Nbr of Units",
+    "Organic Route",
+    "Parcel Id",
+    "Parent Account",
+    "Phone",
+    "PickUp Type",
+    "Pickup Size",
+    "Postal Code",
+    "Profile",
+    "Profile Name",
+    "Rate Category",
+    "Recycle Route",
+    "Requested Date",
+    "Select Request Type",
+    "Select Service Type",
+    "Send Notifications?",
+    "Service Provider WO #",
+    "Service Type",
+    "Site Id",
+    "State/Province",
+    "Status",
+    "Street Name",
+    "Trash Route",
+    "Unit #",
+    "Work Order Notes",
+    "Yard Waste Route",
+    "Zone"
+  ],
+  "term_locations": {
+    "uA=[": 800808,
+    "lA=[": 800938,
+    "function _oe(": 944244,
+    "Qe=[": -1,
+    "cols:[{k:": 789502,
+    "emptyTitle:": -1,
+    "emptyText:": -1,
+    "getPersona": 786342,
+    "persona===\"rehrig\"": 967942,
+    "persona===\"sp\"": 967993,
+    "persona===\"customer\"": -1
+  },
+  "snippet_uA": "uA=[\"assets\",\"customers\",\"dispatches\",\"locations\",\"manageAccount\",\"notes\",\"routes\",\"notifications\",\"tips\",\"workOrders\"],m6=uA;var lA=[\"requestTypes\",\"resolutionCodes\",\"reqCodes\",\"maintProfiles\",\"serviceNotifConfig\",\"products\",\"segments\",\"trucks\",\"setup\"],C=(e,t,r=\"text\",a={})=>({name:e,label:t,type:r,...a}),p6={accounts:{title:\"Account\",sections:[{title:\"Account Information\",cols:2,fields:[C(\"name\",\"Account Name\",\"text\",{required:!0,col:1}),C(\"owner\",\"Account Owner\",\"text\",{col:2,default:\"Ravindra Medam\"}),C(\"type\",\"Type\",\"select\",{col:1,options:Le.accountType}),C(\"parentAccount\",\"Parent Account\",\"lookup\",{col:2,source:\"accounts\",displayField:\"name\"}),C(\"website\",\"Website\",\"text\",{col:1}),C(\"phone\",\"Phone\",\"text\",{col:2}),C(\"description\",\"Description\",\"textarea\",{col:1}),C(\"industry\",\"Industry\",\"select\",{col:2,options:Le.industry}),C(\"serviceProviderUID\",\"Service Provider UID\",\"text\",{required:!0,col:1}),C(\"employees\",\"Employees\",\"number\",{col:2}),C(\"jdEdwardsId\",\"JDEdwardsId\",\"text\",{col:1}),C(\"numberOfWeeks\",\"Number Of Weeks\",\"number\",{col:2}),C(\"serviceTypes\",\"Service Types\",\"multiselect\",{required:!0,col:2,options:Le.serviceType,span:2}),C(\"inactive\",\"InActive\",\"checkbox\",{col:1}),C(\"trackObservations\",\"Track Observations\",\"checkbox\",{col:2}),C(\"supportEmail\",\"Support Email\",\"text\",{col:1}),C(\"trackSafetyEvents\",\"Track Safety Events\",\"checkbox\",{col:2}),C(\"isTableauCloud\",\"Is Tableau Cloud?\",\"checkbox\",{col:1}),C(\"serviceModules\",\"Service Modules\",\"text\",{col:2}),C(\"hardwareType\",\"Hardware Type\",\"text\",{col:2})]},{title:\"Automated Work Orders\",cols:2,fields:[C(\"enableAutoWO\",\"Enable Auto WO\",\"checkbox\")]},{title:\"Hot Ticket Conversion\",cols:2,fields:[C(\"enableAutoHotTicket\",\"Enable Auto Hot Ticket\",\"checkbox\",{col:1}),C(\"autoHotTicketDays\",\"Auto Hot Ticket Days\",\"number\",{col:2,hint:\"Days before auto conversion\"})]},{title:\"Move Burnt Carts\",cols:2,fields:[C(\"enableAutoMoveBurntCarts\",\"Enable Auto Move Burnt Carts to Yard\",\"checkbox\")]},{title:\"Service Notifications Detail\",cols:2,fields:[C(\"enableServiceNotificationTab\",\"Enable Service Notification Tab\",\"checkbox\",{col:1}),C(\"smsFailed\",\"SMS Failed\",\"checkbox\",{col:2}),C(\"sendServiceNotifications\",\"Send Service Notifications\",\"checkbox\",{col:1}),C(\"phoneFailed\",\"Phone Failed\",\"checkbox\",{col:2}),C(\"messageLimit\",\"Message Limit\",\"number\",{col:1}),C(\"sendGridServiceFailed\",\"SendGrid Service Failed\",\"checkbox\",{col:2}),C(\"timeZone\",\"Time Zone\",\"select\",{col:1,options:Le.timezone}),C(\"startTime\",\"Start Time\",\"time\",{col:1}),C(\"endTime\",\"End Time\",\"time\",{col:1}),C(\"emailSendTime\",\"Email Send Time\",\"time\",{col:1}),C(\"smsSendTime\",\"SMS Send Time\",\"time\",{col:1})]},{title:\"Address Information\",cols:2,fields:[C(\"__billingHeader\",\"Billing Address\",\"sublabel\",{col:1}),C(\"__shippingHeader\",\"Shipping Address\",\"sublabel\",{col:2}),C(\"billingAddressSearch\",\"Billing Address Search\",\"text\",{col:1,placeholder:\"Search Address\"}),C(\"shippingAddressSearch\",\"Shipping Address Search\",\"text\",{col:2,placeholder:\"Search Address\"}),C(\"billingCountry\",\"Billing Country\",\"select\",{col:1,options:Le.country}),C(\"shippingCountry\",\"Shipping Country\",\"select\",{col:2,options:Le.country}),C(\"billingStreet\",\"Billing Street\",\"textarea\",{col:1}),C(\"shippingStreet\",\"Shipping Street\",\"textarea\",{col:2}),C(\"billingCity\",\"Billing City\",\"text\",{col:1}),C(\"shippingCity\",\"Shipping City\",\"text\",{col:2}),C(\"billingState\",\"Billing State/Province\",\"select\",{col:1,options:Le.province}),C(\"shippingState\",\"Shipping State/Province\",\"select\",{col:2,options:Le.province}),C(\"billingZip\",\"Billing Zip/Postal Code\",\"text\",{col:1}),C(\"shippingZip\",\"Shipping Zip/Postal Code\",\"text\",{col:2}),C(\"isShippingAddressUpdated\",\"IsShippingAddressUpdated\",\"checkbox\",{col:2})]}]},contacts:{title:\"Contact\",sections:[{title:\"Contact Information\",cols:2,fields:[C(\"salutation\",\"Salutation\",\"select\",{col:1,options:Le.salutation}),C(\"email\",\"Email\",\"text\",{col:2}),C(\"firstName\",\"First Name\",\"text\",{required:!0,col:1}),C(\"phone\",\"Phone\",\"text\",{col:2}",
+  "snippet_lA": "lA=[\"requestTypes\",\"resolutionCodes\",\"reqCodes\",\"maintProfiles\",\"serviceNotifConfig\",\"products\",\"segments\",\"trucks\",\"setup\"],C=(e,t,r=\"text\",a={})=>({name:e,label:t,type:r,...a}),p6={accounts:{title:\"Account\",sections:[{title:\"Account Information\",cols:2,fields:[C(\"name\",\"Account Name\",\"text\",{required:!0,col:1}),C(\"owner\",\"Account Owner\",\"text\",{col:2,default:\"Ravindra Medam\"}),C(\"type\",\"Type\",\"select\",{col:1,options:Le.accountType}),C(\"parentAccount\",\"Parent Account\",\"lookup\",{col:2,source:\"accounts\",displayField:\"name\"}),C(\"website\",\"Website\",\"text\",{col:1}),C(\"phone\",\"Phone\",\"text\",{col:2}),C(\"description\",\"Description\",\"textarea\",{col:1}),C(\"industry\",\"Industry\",\"select\",{col:2,options:Le.industry}),C(\"serviceProviderUID\",\"Service Provider UID\",\"text\",{required:!0,col:1}),C(\"employees\",\"Employees\",\"number\",{col:2}),C(\"jdEdwardsId\",\"JDEdwardsId\",\"text\",{col:1}),C(\"numberOfWeeks\",\"Number Of Weeks\",\"number\",{col:2}),C(\"serviceTypes\",\"Service Types\",\"multiselect\",{required:!0,col:2,options:Le.serviceType,span:2}),C(\"inactive\",\"InActive\",\"checkbox\",{col:1}),C(\"trackObservations\",\"Track Observations\",\"checkbox\",{col:2}),C(\"supportEmail\",\"Support Email\",\"text\",{col:1}),C(\"trackSafetyEvents\",\"Track Safety Events\",\"checkbox\",{col:2}),C(\"isTableauCloud\",\"Is Tableau Cloud?\",\"checkbox\",{col:1}),C(\"serviceModules\",\"Service Modules\",\"text\",{col:2}),C(\"hardwareType\",\"Hardware Type\",\"text\",{col:2})]},{title:\"Automated Work Orders\",cols:2,fields:[C(\"enableAutoWO\",\"Enable Auto WO\",\"checkbox\")]},{title:\"Hot Ticket Conversion\",cols:2,fields:[C(\"enableAutoHotTicket\",\"Enable Auto Hot Ticket\",\"checkbox\",{col:1}),C(\"autoHotTicketDays\",\"Auto Hot Ticket Days\",\"number\",{col:2,hint:\"Days before auto conversion\"})]},{title:\"Move Burnt Carts\",cols:2,fields:[C(\"enableAutoMoveBurntCarts\",\"Enable Auto Move Burnt Carts to Yard\",\"checkbox\")]},{title:\"Service Notifications Detail\",cols:2,fields:[C(\"enableServiceNotificationTab\",\"Enable Service Notification Tab\",\"checkbox\",{col:1}),C(\"smsFailed\",\"SMS Failed\",\"checkbox\",{col:2}),C(\"sendServiceNotifications\",\"Send Service Notifications\",\"checkbox\",{col:1}),C(\"phoneFailed\",\"Phone Failed\",\"checkbox\",{col:2}),C(\"messageLimit\",\"Message Limit\",\"number\",{col:1}),C(\"sendGridServiceFailed\",\"SendGrid Service Failed\",\"checkbox\",{col:2}),C(\"timeZone\",\"Time Zone\",\"select\",{col:1,options:Le.timezone}),C(\"startTime\",\"Start Time\",\"time\",{col:1}),C(\"endTime\",\"End Time\",\"time\",{col:1}),C(\"emailSendTime\",\"Email Send Time\",\"time\",{col:1}),C(\"smsSendTime\",\"SMS Send Time\",\"time\",{col:1})]},{title:\"Address Information\",cols:2,fields:[C(\"__billingHeader\",\"Billing Address\",\"sublabel\",{col:1}),C(\"__shippingHeader\",\"Shipping Address\",\"sublabel\",{col:2}),C(\"billingAddressSearch\",\"Billing Address Search\",\"text\",{col:1,placeholder:\"Search Address\"}),C(\"shippingAddressSearch\",\"Shipping Address Search\",\"text\",{col:2,placeholder:\"Search Address\"}),C(\"billingCountry\",\"Billing Country\",\"select\",{col:1,options:Le.country}),C(\"shippingCountry\",\"Shipping Country\",\"select\",{col:2,options:Le.country}),C(\"billingStreet\",\"Billing Street\",\"textarea\",{col:1}),C(\"shippingStreet\",\"Shipping Street\",\"textarea\",{col:2}),C(\"billingCity\",\"Billing City\",\"text\",{col:1}),C(\"shippingCity\",\"Shipping City\",\"text\",{col:2}),C(\"billingState\",\"Billing State/Province\",\"select\",{col:1,options:Le.province}),C(\"shippingState\",\"Shipping State/Province\",\"select\",{col:2,options:Le.province}),C(\"billingZip\",\"Billing Zip/Postal Code\",\"text\",{col:1}),C(\"shippingZip\",\"Shipping Zip/Postal Code\",\"text\",{col:2}),C(\"isShippingAddressUpdated\",\"IsShippingAddressUpdated\",\"checkbox\",{col:2})]}]},contacts:{title:\"Contact\",sections:[{title:\"Contact Information\",cols:2,fields:[C(\"salutation\",\"Salutation\",\"select\",{col:1,options:Le.salutation}),C(\"email\",\"Email\",\"text\",{col:2}),C(\"firstName\",\"First Name\",\"text\",{required:!0,col:1}),C(\"phone\",\"Phone\",\"text\",{col:2}),C(\"lastName\",\"Last Name\",\"text\",{required:!0,col:1}),C(\"homePhone\",\"Home Phone\",\"text\",{col:2}),C(\"account\",\"Service Provider\",\"",
+  "snippet_function _oe": "function _oe({nav:e,store:t,onGoHome:r,onGoGlobal:a,collapsed:n}){let i=g=>e.view===\"global\"&&e.moduleKey===g,s=g=>({key:g,onClick:()=>a(g),active:i(g)}),u=de.getPersona(t),d;u===\"rehrig\"?d=[{label:\"Platform\",key:\"overview\",items:[{key:\"home\",onClick:r,active:e.view===\"home\"}]},{label:\"Service Providers\",key:\"customers\",items:[{key:\"accounts\",onClick:()=>a(\"accounts\"),active:i(\"accounts\")||e.view===\"account\"||e.view===\"record\"&&e.accountId},s(\"contacts\")]},{label:\"Configure\",key:\"configure\",items:[{key:\"profileMgmtNav\",onClick:()=>a(\"setup\",{setupSection:\"profileMgmt\"}),active:i(\"setup\")&&(e.setupSection||\"profileMgmt\")===\"profileMgmt\"},{key:\"userMgmtNav\",onClick:()=>a(\"setup\",{setupSection:\"userMgmt\"}),active:i(\"setup\")&&e.setupSection===\"userMgmt\"},s(\"productTypes\"),s(\"device\"),s(\"truck\"),s(\"tagScheme\"),s(\"apiIntegrations\")]}]:u===\"customer\"?d=[{label:\"My Service\",key:\"overview\",items:[{key:\"home\",onClick:r,active:e.view===\"home\"},s(\"myAccount\"),s(\"myLocations\"),s(\"myNotifications\"),s(\"myWorkOrders\")]}]:d=[{label:\"Overview\",key:\"overview\",items:[{key:\"home\",onClick:r,active:e.view===\"home\"}]},{label:\"Service Provider\",key:\"customers\",items:[{key:\"accounts\",onClick:()=>a(\"accounts\"),active:i(\"accounts\")||e.view===\"account\"||e.view===\"record\"&&e.accountId},s(\"contacts\"),s(\"customers\"),s(\"locations\"),s(\"manageAccount\"),s(\"routes\"),s(\"segments\")]},{label:\"Assets & Products\",key:\"assets\",items:[s(\"assets\"),s(\"masterProducts\"),s(\"products\")]},{label:\"Operations\",key:\"operations\",items:[s(\"dispatches\"),s(\"mapCenter\"),s(\"maintProfiles\"),s(\"trucks\"),s(\"workOrders\")]},{label:\"Telematics\",key:\"telematics\",items:[s(\"tips\"),s(\"aggTips\")]},{label:\"Analytics\",key:\"analytics\",items:[s(\"chatter\"),s(\"dashboards\"),s(\"reportSubs\"),s(\"reports\")]},{label:\"Configure\",key:\"configure\",items:[s(\"reqCodes\"),s(\"serviceNotifConfig\"),s(\"notifications\"),s(\"setup\")]}];let c=new Set;if(t){for(let g of d)for(let b of g.items)if(b.key!==\"home\"){if(b.key===\"chatter\"){de.canView(t,\"chatter\")||c.add(b.key);continue}if(b.key===\"manageAccount\"){de.canView(t,\"accounts\")||c.add(b.key);continue}if(b.key===\"masterProducts\"){de.canView(t,\"products\")||c.add(b.key);continue}if(b.key===\"bulkImport\"){de.canView(t,\"accounts\")||c.add(b.key);continue}if(b.key===\"reportSubs\"){de.canView(t,\"reports\")||c.add(b.key);continue}if(b.key===\"requestTypes\"||b.key===\"resolutionCodes\"){de.canView(t,\"reqCodes\")||c.add(b.key);continue}if([\"productTypes\",\"apiIntegrations\",\"serviceNotifConfig\",\"device\",\"truck\",\"tagScheme\"].includes(b.key)){de.canView(t,\"setup\")||c.add(b.key);continue}de.canView(t,b.key)||c.add(b.key)}}let f=d.map(g=>({...g,items:g.items.filter(b=>!c.has(b.key))})).filter(g=>g.items.length>0),m=f.find(g=>g.items.some(b=>b.active))?.key,[p,v]=(0,o.useState)(m||\"overview\");(0,o.useEffect)(()=>{m&&m!==p&&v(m)},[m]);let y=g=>v(b=>b===g?null:g);return n?o.default.createElement(\"nav\",{className:\"flex-1 overflow-y-auto scroll-thin py-1\"},f.map((g,b)=>o.default.createElement(o.default.Fragment,{key:g.label},b>0&&o.default.createElement(\"div\",{className:\"mx-3 my-1 border-t hairline\"}),g.items.map(h=>{let x=Qe[h.key],k=x.icon,w=n6[h.key]||x.label;return o.default.createElement(\"button\",{key:h.key,onClick:h.onClick,title:w,className:\"nav-item w-full flex items-center justify-center py-2 rounded-r-lg relative\",style:{color:h.active?l.violet:l.muted,background:h.active?l.violet+\"18\":\"transparent\"}},o.default.createElement(k,{size:16,strokeWidth:h.active?2.4:1.8}),h.active&&o.default.createElement(\"span\",{className:\"absolute left-0 top-1.5 bottom-1.5 w-[2px]\",style:{background:l.violet}}))})))):o.default.createElement(\"nav\",{className:\"flex-1 overflow-y-auto scroll-thin px-2 py-3\"},f.map(g=>{let b=g.items.some(x=>x.active),h=p===g.key;if(g.items.length===1&&g.items[0].key===\"home\"){let x=g.items[0];return o.default.createElement(\"button\",{key:g.label,onClick:x.onClick,className:\"w-full flex items-center gap-2 px-3 py-2 rounded-lg text-[12px] font-semibold uppercase tracking-[0.12em] transi",
+  "snippet_cols:{k:": "cols:[{k:\"name\",label:\"Account Name\"},{k:\"accountType\",label:\"Type\"},{k:\"industry\",label:\"Industry\"},{k:\"owner\",label:\"Owner\"},{k:\"phone\",label:\"Phone\"},{k:\"billingCity\",label:\"City\"}]},masterProducts:{label:\"Master Product Catalog\",icon:Zn,kind:\"list\",data:\"masterProducts\",global:!0,singular:\"Master Product\",cols:[{k:\"productName\",label:\"Product\"},{k:\"productFamily\",label:\"Family\"},{k:\"volume\",label:\"Volume\"},{k:\"serviceType\",label:\"Service Type\"},{k:\"active\",label:\"Active\",format:e=>e.active?\"\\u2713\":\"\"}]},bulkImport:{label:\"WOIT Import\",icon:fa,kind:\"bulkImport\",global:!0},reports:{label:\"Reports\",icon:Uo,kind:\"reports\",global:!0},dashboards:{label:\"Dashboards\",icon:Ma,kind:\"dashboards\",global:!0},mapCenter:{label:\"Map Center\",icon:cn,kind:\"mapCenter\",global:!0},reportSubs:{label:\"Report Subscriptions\",icon:co,kind:\"reportSubs\",global:!0},setup:{label:\"Workspace\",icon:Ts,kind:\"setup\",global:!0},serviceTypes:{label:\"Service Types\",icon:br,kind:\"configure\",configKey:\"serviceTypes\",global:!0},locationTypes:{label:\"Location Types\",icon:Ft,kind:\"configure\",configKey:\"locationTypes\",global:!0},assetTypes:{label:\"Asset Types\",icon:Zn,kind:\"configure\",configKey:\"assetTypes\",global:!0,deprecated:!0},productTypes:{label:\"Product\",icon:ca,kind:\"configure\",configKey:\"productTypes\",global:!0},apiIntegrations:{label:\"API Integrations\",icon:po,kind:\"configure\",configKey:\"apiIntegrations\",global:!0},serviceNotifConfig:{label:\"Service Notification Config\",icon:co,kind:\"configure\",configKey:\"serviceNotifConfig\",global:!0},device:{label:\"Device\",icon:Zn,kind:\"configure\",configKey:\"device\",global:!0},truck:{label:\"Truck\",icon:ir,kind:\"configure\",configKey:\"truck\",global:!0},tagScheme:{label:\"Tag Scheme\",icon:Is,kind:\"configure\",configKey:\"tagScheme\",global:!0},profileMgmtNav:{label:\"Profile Management\",icon:xt},userMgmtNav:{label:\"User Management\",icon:cr},myLocations:{label:\"My Locations\",icon:Ft,kind:\"customerPortal\",global:!0},myWorkOrders:{label:\"My Work Orders\",icon:ir,kind:\"customerPortal\",global:!0},myNotifications:{label:\"Notifications\",icon:co,kind:\"customerPortal\",global:!0},myAccount:{label:\"My Account\",icon:Mt,kind:\"customerPortal\",global:!0},mindmap:{label:\"Mindmap\",icon:Ps,kind:\"special\"},products:{label:\"Service Provider Products\",icon:ca,kind:\"list\",data:\"products\",accountFilter:\"account\",singular:\"Product\",settingsOnly:!0,cols:[{k:\"productName\",label:\"Product\"},{k:\"productCode\",label:\"Product Code\"},{k:\"serviceCategory\",label:\"Service Category\",format:e=>({Residential:\"\\u{1F535} Residential\",Commercial:\"\\u{1F7E1} Commercial\",Industrial:\"\\u26AB Industrial\"})[e.serviceCategory]||e.serviceCategory||\"\"},{k:\"active\",label:\"Status\",format:e=>e.active!==!1?\"\\u{1F7E2} Active\":\"\\u26AB Inactive\"},{k:\"productFamily\",label:\"Family\"}]},contacts:{label:\"Contacts\",icon:cr,kind:\"list\",data:\"contacts\",accountFilter:\"account\",singular:\"Contact\",cols:[{k:\"lastName\",label:\"Contact Name\",format:e=>`${e.salutation||\"\"} ${e.firstName} ${e.lastName}`.trim()},{k:\"roleTitle\",label:\"Role Title\"},{k:\"email\",label:\"Email\"},{k:\"phone\",label:\"Phone\"},{k:\"isUserActive\",label:\"Status\",format:e=>e.isUserActive?\"\\u{1F7E2} Active\":\"\\u26AB Inactive\"}]},assets:{label:\"Assets / Trucks\",icon:Zn,kind:\"list\",data:\"assets\",accountFilter:\"account\",singular:\"Asset\",defaultRecordType:\"Asset\",recordTypeField:\"assetRecordType\",recordTypeToggle:[\"Asset\",\"Truck\"],cols:[{k:\"assetName\",label:\"Asset Name\"},{k:\"serialNumber\",label:\"Serial Number\"},{k:\"assetStatus\",label:\"Status\",format:e=>({Available:\"\\u{1F7E2}\",\"In Service\":\"\\u{1F535}\",\"Awaiting Repair\":\"\\u{1F7E1}\",\"Out of Service\":\"\\u{1F534}\",Scrapped:\"\\u26AB\"}[e.assetStatus]||\"\")+\" \"+(e.assetStatus||\"\")},{k:\"customerLocation\",label:\"Customer Location\"},{k:\"product\",label:\"Product\"},{k:\"installDate\",label:\"Install Date\"}]},maintProfiles:{label:\"Route Profile Templates\",icon:Ud,kind:\"list\",data:\"maintProfiles\",accountFilter:\"account\",singular:\"Maintenance Route Profile\",settingsOnly:!0,cols:[{k:\"maintenanceRouteProfileName\",labe",
+  "snippet_getPersona": "getPersona(e,t){return de.getUser(e,t)?.personaType||\"sp\"},getSPAdminAccount(e,t){let r=de.getUser(e,t);if(!r)return null;let a=e.accounts||[],n=r.scope?.accountIds?.[0];if(n){let i=a.find(s=>s.id===n);if(i)return i}return a[0]||null},getUser(e,t){let r=t||e.currentUser?.id;return e.users?.find(a=>a.id===r)||e.currentUser},getProfile(e,t){return t&&e.profiles?.find(r=>r.id===t.profileId)||null},can(e,t,r,a){let n=de.getUser(e,a);if(!n||n.status===\"Inactive\")return!1;let i=n.profileId;if(!i)return!1;let s=e.objectPermissions||[],u=s.find(f=>f.profileId===i&&f.object===\"*\");if(u&&u[t]===!0)return!0;let d=s.find(f=>f.profileId===i&&f.object===r);if(d&&d[t]===!0)return!0;let c=n.permSetGroupIds||[];if(c.length>0){let f=(e.permGroups||[]).filter(m=>c.includes(m.id));for(let m of f)for(let p of m.grants||[])if((p.object===r||p.object===\"*\")&&p[t]===!0)return!0}return!1},canView(e,t,r){return de.can(e,\"view\",t,r)},canCreate(e,t,r){return de.can(e,\"create\",t,r)},canEdit(e,t,r){return de.can(e,\"edit\",t,r)},canDelete(e,t,r){return de.can(e,\"delete\",t,r)},effectivePerms(e,t,r){let a=(e.objectPermissions||[]).filter(i=>i.profileId===t&&(i.object===r||i.object===\"*\")),n={view:!1,create:!1,edit:!1,delete:!1};for(let i of a)i.view&&(n.view=!0),i.create&&(n.create=!0),i.edit&&(n.edit=!0),i.delete&&(n.delete=!0);return n},scopeFilter(e,t,r={}){let a=de.getUser(e);if(!a||!a.scope)return t;let{accountIds:n=[],segmentIds:i=[]}=a.scope;if(n.length===0&&i.length===0)return t;let s=r.accountField||\"account\",u=r.segmentField||\"segment\",d={};for(let f of e.accounts||[])d[f.id]=f;let c=new Set(n.map(f=>d[f]?.name).filter(Boolean));return t.filter(f=>!(n.length>0&&f[s]&&!c.has(f[s])||i.length>0&&f[u]&&!i.includes(f[u])))},isScoped(e,t){let r=de.getUser(e,t);if(!r||!r.scope)return!1;let a=r.scope;return(a.accountIds||[]).length>0||(a.segmentIds||[]).length>0},scopeAccounts(e,t){let r=de.getUser(e,t),a=e.accounts||[];if(!r||!r.scope)return a;let{accountIds:n=[]}=r.scope;return n.length===0?a:a.filter(i=>n.includes(i.id))},activeJunctionsForCustomer(e,t){return(e.customerLocations||[]).filter(r=>r.customer===t&&r.isActive)},allJunctionsForCustomer(e,t){return(e.customerLocations||[]).filter(r=>r.customer===t)},locationsForCustomer(e,t){let r=de.activeJunctionsForCustomer(e,t),a=new Set(r.map(n=>n.location));return(e.locations||[]).filter(n=>a.has(n.id))},customersForLocation(e,t){let r=(e.customerLocations||[]).filter(n=>n.location===t&&n.isActive),a=new Set(r.map(n=>n.customer));return(e.customers||[]).filter(n=>a.has(n.id))},getFieldRule(e,t,r,a){let n=de.getUser(e,a);if(!n)return{visible:!1,editable:!1};let s=(e.fieldPermissions||[]).find(u=>u.profileId===n.profileId&&u.object===t&&u.field===r);return s?{visible:s.visible!==!1,editable:s.editable!==!1}:{visible:!0,editable:!0}},canViewField(e,t,r,a){return de.getFieldRule(e,t,r,a).visible},canEditField(e,t,r,a){let n=de.getFieldRule(e,t,r,a);return n.visible&&n.editable}},Qe={home:{label:\"Home\",icon:Ma,kind:\"dashboard\",global:!0},chatter:{label:\"Activity\",icon:po,kind:\"chatter\",global:!0},accounts:{label:\"Accounts\",icon:ft,kind:\"list\",data:\"accounts\",global:!0,singular:\"Account\",cols:[{k:\"name\",label:\"Account Name\"},{k:\"accountType\",label:\"Type\"},{k:\"industry\",label:\"Industry\"},{k:\"owner\",label:\"Owner\"},{k:\"phone\",label:\"Phone\"},{k:\"billingCity\",label:\"City\"}]},masterProducts:{label:\"Master Product Catalog\",icon:Zn,kind:\"list\",data:\"masterProducts\",global:!0,singular:\"Master Product\",cols:[{k:\"productName\",label:\"Product\"},{k:\"productFamily\",label:\"Family\"},{k:\"volume\",label:\"Volume\"},{k:\"serviceType\",label:\"Service Type\"},{k:\"active\",label:\"Active\",format:e=>e.active?\"\\u2713\":\"\"}]},bulkImport:{label:\"WOIT Import\",icon:fa,kind:\"bulkImport\",global:!0},reports:{label:\"Reports\",icon:Uo,kind:\"reports\",global:!0},dashboards:{label:\"Dashboards\",icon:Ma,kind:\"dashboards\",global:!0},mapCenter:{label:\"Map Center\",icon:cn,kind:\"mapCenter\",global:!0},reportSubs:{label:\"Report Subscriptions\",icon:co,kind:\"reportSub",
+  "snippet_personarehrig": "persona===\"rehrig\"?\"Platform-wide view, all SPs\":p.persona===\"sp\"?\"Single-SP operational shell\":\"Customer portal view\")),y&&o.default.createElement(Te,{size:13,color:p.tint}))}),o.default.createElement(\"div\",{className:\"px-3 py-2 text-[10.5px]\",style:{color:l.muted,borderTop:`1px solid ${l.border}`,background:l.canvas}},\"Switching resets home layout to the selected role's defaults.\")))}function qoe({nav:e,currentAccount:t,store:r,onGoHome:a,onGoGlobal:n,onOpenAccount:i,onSearch:s,onOpenAppLauncher:u,onOpenGuidance:d,onOpenHelp:c,onOpenSetupMenu:f,onOpenQuickActions:m,onOpenProfile:p,onOpenFavorites:v,onOpenNotif:y,onCreate:g,onOpenThemePicker:b,themeName:h,onLoginAs:x}){let k=(0,o.useMemo)(()=>{let S=[{label:\"Home\",onClick:a}];return e.view===\"global\"?S.push({label:Qe[e.moduleKey].label}):e.view===\"account\"&&t?(S.push({label:\"Accounts\",onClick:()=>i(t.id,null)}),S.push({label:t.name,onClick:()=>i(t.id,null)}),e.tab&&S.push({label:Qe[e.tab]?.label||e.tab})):e.view===\"record\"&&(e.accountId&&t&&(S.push({label:\"Accounts\",onClick:()=>i(t.id,null)}),S.push({label:t.name,onClick:()=>i(t.id,null)})),S.push({label:Qe[e.moduleKey].label,onClick:()=>e.accountId?i(e.accountId,e.moduleKey):null}),S.push({label:e.recordId})),S},[e,t]),w=\"w-8 h-8 rounded-lg flex items-center justify-center transition-colors relative\";return o.default.createElement(\"header\",{className:\"h-14 shrink-0 flex items-center px-4 gap-2 border-b hairline\",style:{background:l.surface}},o.default.createElement(\"button\",{onClick:u,title:\"App Launcher\",className:w,style:{color:l.muted},onMouseEnter:S=>{S.currentTarget.style.background=l.surfaceHi,S.currentTarget.style.color=l.text},onMouseLeave:S=>{S.currentTarget.style.background=\"transparent\",S.currentTarget.style.color=l.muted}},o.default.createElement(br,{size:16})),o.default.createElement(\"div\",{className:\"flex items-center gap-1.5 text-[12.5px] min-w-0 ml-1\"},k.map((S,T)=>o.default.createElement(o.default.Fragment,{key:T},T>0&&o.default.createElement(nr,{size:13,style:{color:l.faint}}),S.onClick?o.default.createElement(\"button\",{onClick:S.onClick,className:\"truncate max-w-[240px] transition-colors\",style:{color:l.muted},onMouseEnter:L=>L.currentTarget.style.color=l.text,onMouseLeave:L=>L.currentTarget.style.color=l.muted},S.label):o.default.createElement(\"span\",{className:\"truncate max-w-[240px]\",style:{color:l.text}},S.label)))),o.default.createElement(Uoe,{store:r}),o.default.createElement(Hoe,{store:r,onLoginAs:x}),o.default.createElement(\"div\",{className:\"ml-auto flex items-center gap-2\"},o.default.createElement(Voe,{onGoGlobal:n,onOpenAccount:i,store:r})),o.default.createElement(\"div\",{className:\"flex items-center gap-0.5\"},o.default.createElement(\"button\",{onClick:c,title:\"Help & Training\",className:w,style:{color:l.muted},onMouseEnter:S=>{S.currentTarget.style.background=l.surfaceHi,S.currentTarget.style.color=l.text},onMouseLeave:S=>{S.currentTarget.style.background=\"transparent\",S.currentTarget.style.color=l.muted}},o.default.createElement(ul,{size:16})),o.default.createElement(\"button\",{onClick:y,title:\"Notifications\",className:w,style:{color:l.muted},onMouseEnter:S=>{S.currentTarget.style.background=l.surfaceHi,S.currentTarget.style.color=l.text},onMouseLeave:S=>{S.currentTarget.style.background=\"transparent\",S.currentTarget.style.color=l.muted}},o.default.createElement(co,{size:16}),o.default.createElement(\"span\",{className:\"absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full\",style:{background:l.rose}}))),o.default.createElement(\"button\",{onClick:p,className:\"ml-1 w-8 h-8 rounded-full flex items-center justify-center text-[10.5px] font-semibold shrink-0\",style:{background:l.violet,border:`1.5px solid ${l.borderHi}`,color:\"#fff\"},title:r?.currentUser?`${r.currentUser.firstName} ${r.currentUser.lastName||\"\"}`:\"\"},r?.currentUser?.avatarInitials||\"?\"))}var Woe=[\"Accounts\",\"Aggregated Truck and Tips\",\"Assets\",\"Chatter\",\"Contacts\",\"Customer Locations\",\"Customers\",\"Dashboards\",\"Devices\",\"Dispatches\",\"Events\",\"",
+  "snippet_personasp": "persona===\"sp\"?\"Single-SP operational shell\":\"Customer portal view\")),y&&o.default.createElement(Te,{size:13,color:p.tint}))}),o.default.createElement(\"div\",{className:\"px-3 py-2 text-[10.5px]\",style:{color:l.muted,borderTop:`1px solid ${l.border}`,background:l.canvas}},\"Switching resets home layout to the selected role's defaults.\")))}function qoe({nav:e,currentAccount:t,store:r,onGoHome:a,onGoGlobal:n,onOpenAccount:i,onSearch:s,onOpenAppLauncher:u,onOpenGuidance:d,onOpenHelp:c,onOpenSetupMenu:f,onOpenQuickActions:m,onOpenProfile:p,onOpenFavorites:v,onOpenNotif:y,onCreate:g,onOpenThemePicker:b,themeName:h,onLoginAs:x}){let k=(0,o.useMemo)(()=>{let S=[{label:\"Home\",onClick:a}];return e.view===\"global\"?S.push({label:Qe[e.moduleKey].label}):e.view===\"account\"&&t?(S.push({label:\"Accounts\",onClick:()=>i(t.id,null)}),S.push({label:t.name,onClick:()=>i(t.id,null)}),e.tab&&S.push({label:Qe[e.tab]?.label||e.tab})):e.view===\"record\"&&(e.accountId&&t&&(S.push({label:\"Accounts\",onClick:()=>i(t.id,null)}),S.push({label:t.name,onClick:()=>i(t.id,null)})),S.push({label:Qe[e.moduleKey].label,onClick:()=>e.accountId?i(e.accountId,e.moduleKey):null}),S.push({label:e.recordId})),S},[e,t]),w=\"w-8 h-8 rounded-lg flex items-center justify-center transition-colors relative\";return o.default.createElement(\"header\",{className:\"h-14 shrink-0 flex items-center px-4 gap-2 border-b hairline\",style:{background:l.surface}},o.default.createElement(\"button\",{onClick:u,title:\"App Launcher\",className:w,style:{color:l.muted},onMouseEnter:S=>{S.currentTarget.style.background=l.surfaceHi,S.currentTarget.style.color=l.text},onMouseLeave:S=>{S.currentTarget.style.background=\"transparent\",S.currentTarget.style.color=l.muted}},o.default.createElement(br,{size:16})),o.default.createElement(\"div\",{className:\"flex items-center gap-1.5 text-[12.5px] min-w-0 ml-1\"},k.map((S,T)=>o.default.createElement(o.default.Fragment,{key:T},T>0&&o.default.createElement(nr,{size:13,style:{color:l.faint}}),S.onClick?o.default.createElement(\"button\",{onClick:S.onClick,className:\"truncate max-w-[240px] transition-colors\",style:{color:l.muted},onMouseEnter:L=>L.currentTarget.style.color=l.text,onMouseLeave:L=>L.currentTarget.style.color=l.muted},S.label):o.default.createElement(\"span\",{className:\"truncate max-w-[240px]\",style:{color:l.text}},S.label)))),o.default.createElement(Uoe,{store:r}),o.default.createElement(Hoe,{store:r,onLoginAs:x}),o.default.createElement(\"div\",{className:\"ml-auto flex items-center gap-2\"},o.default.createElement(Voe,{onGoGlobal:n,onOpenAccount:i,store:r})),o.default.createElement(\"div\",{className:\"flex items-center gap-0.5\"},o.default.createElement(\"button\",{onClick:c,title:\"Help & Training\",className:w,style:{color:l.muted},onMouseEnter:S=>{S.currentTarget.style.background=l.surfaceHi,S.currentTarget.style.color=l.text},onMouseLeave:S=>{S.currentTarget.style.background=\"transparent\",S.currentTarget.style.color=l.muted}},o.default.createElement(ul,{size:16})),o.default.createElement(\"button\",{onClick:y,title:\"Notifications\",className:w,style:{color:l.muted},onMouseEnter:S=>{S.currentTarget.style.background=l.surfaceHi,S.currentTarget.style.color=l.text},onMouseLeave:S=>{S.currentTarget.style.background=\"transparent\",S.currentTarget.style.color=l.muted}},o.default.createElement(co,{size:16}),o.default.createElement(\"span\",{className:\"absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full\",style:{background:l.rose}}))),o.default.createElement(\"button\",{onClick:p,className:\"ml-1 w-8 h-8 rounded-full flex items-center justify-center text-[10.5px] font-semibold shrink-0\",style:{background:l.violet,border:`1.5px solid ${l.borderHi}`,color:\"#fff\"},title:r?.currentUser?`${r.currentUser.firstName} ${r.currentUser.lastName||\"\"}`:\"\"},r?.currentUser?.avatarInitials||\"?\"))}var Woe=[\"Accounts\",\"Aggregated Truck and Tips\",\"Assets\",\"Chatter\",\"Contacts\",\"Customer Locations\",\"Customers\",\"Dashboards\",\"Devices\",\"Dispatches\",\"Events\",\"Individual Tip / Non-Tip Events\",\"Locations\",\"Maint",
+  "all_cols": [
+    {
+      "context_tail": "abel:\"Home\",icon:Ma,kind:\"dashboard\",global:!0},chatter:{label:\"Activity\",icon:po,kind:\"chatter\",global:!0},accounts:{label:\"Accounts\",icon:ft,kind:\"list\",data:\"accounts\",global:!0,singular:\"Account\",",
+      "cols": [
+        [
+          "name",
+          "Account Name"
+        ],
+        [
+          "accountType",
+          "Type"
+        ],
+        [
+          "industry",
+          "Industry"
+        ],
+        [
+          "owner",
+          "Owner"
+        ],
+        [
+          "phone",
+          "Phone"
+        ],
+        [
+          "billingCity",
+          "City"
+        ]
+      ]
+    },
+    {
+      "context_tail": ",label:\"Owner\"},{k:\"phone\",label:\"Phone\"},{k:\"billingCity\",label:\"City\"}]},masterProducts:{label:\"Master Product Catalog\",icon:Zn,kind:\"list\",data:\"masterProducts\",global:!0,singular:\"Master Product\",",
+      "cols": [
+        [
+          "productName",
+          "Product"
+        ],
+        [
+          "productFamily",
+          "Family"
+        ],
+        [
+          "volume",
+          "Volume"
+        ],
+        [
+          "serviceType",
+          "Service Type"
+        ]
+      ]
+    },
+    {
+      "context_tail": ",global:!0},mindmap:{label:\"Mindmap\",icon:Ps,kind:\"special\"},products:{label:\"Service Provider Products\",icon:ca,kind:\"list\",data:\"products\",accountFilter:\"account\",singular:\"Product\",settingsOnly:!0,",
+      "cols": [
+        [
+          "productName",
+          "Product"
+        ],
+        [
+          "productCode",
+          "Product Code"
+        ]
+      ]
+    },
+    {
+      "context_tail": "t:e=>e.active!==!1?\"\\u{1F7E2} Active\":\"\\u26AB Inactive\"},{k:\"productFamily\",label:\"Family\"}]},contacts:{label:\"Contacts\",icon:cr,kind:\"list\",data:\"contacts\",accountFilter:\"account\",singular:\"Contact\",",
+      "cols": [
+        [
+          "roleTitle",
+          "Role Title"
+        ],
+        [
+          "email",
+          "Email"
+        ],
+        [
+          "phone",
+          "Phone"
+        ]
+      ]
+    },
+    {
+      "context_tail": "sets:{label:\"Assets / Trucks\",icon:Zn,kind:\"list\",data:\"assets\",accountFilter:\"account\",singular:\"Asset\",defaultRecordType:\"Asset\",recordTypeField:\"assetRecordType\",recordTypeToggle:[\"Asset\",\"Truck\"],",
+      "cols": [
+        [
+          "assetName",
+          "Asset Name"
+        ],
+        [
+          "serialNumber",
+          "Serial Number"
+        ]
+      ]
+    },
+    {
+      "context_tail": "stallDate\",label:\"Install Date\"}]},maintProfiles:{label:\"Route Profile Templates\",icon:Ud,kind:\"list\",data:\"maintProfiles\",accountFilter:\"account\",singular:\"Maintenance Route Profile\",settingsOnly:!0,",
+      "cols": [
+        [
+          "maintenanceRouteProfileName",
+          "Profile Name"
+        ],
+        [
+          "serviceType",
+          "Service Type"
+        ],
+        [
+          "numberOfTrucks",
+          "# Trucks"
+        ],
+        [
+          "duration",
+          "Duration"
+        ],
+        [
+          "serviceProviderSegment",
+          "Segment"
+        ]
+      ]
+    },
+    {
+      "context_tail": "tTime||\"\"},{k:\"duration\",label:\"Duration\"},{k:\"serviceProviderSegment\",label:\"Segment\"}]},locations:{label:\"Locations\",icon:Ft,kind:\"list\",data:\"locations\",accountFilter:\"account\",singular:\"Location\",",
+      "cols": [
+        [
+          "locationName",
+          "Location Name"
+        ]
+      ]
+    },
+    {
+      "context_tail": "abel:\"Validated\",format:e=>e.isValidated?\"\\u{1F7E2} Validated\":\"\\u{1F7E1} Unvalidated\"}]},customers:{label:\"Customers\",icon:Mt,kind:\"list\",data:\"customers\",accountFilter:\"account\",singular:\"Customer\",",
+      "cols": [
+        [
+          "customerId",
+          "Customer #"
+        ],
+        [
+          "name",
+          "Name"
+        ],
+        [
+          "segment",
+          "Segment"
+        ],
+        [
+          "email",
+          "Email"
+        ],
+        [
+          "phone",
+          "Phone"
+        ]
+      ]
+    },
+    {
+      "context_tail": "countFilter:\"account\",singular:\"Account\"},dispatches:{label:\"Dispatches\",icon:hl,kind:\"list\",data:\"dispatches\",accountFilter:\"account\",singular:\"Dispatch\",defaultSort:\"routeDate\",defaultSortDir:\"asc\",",
+      "cols": [
+        [
+          "dispatchNumber",
+          "Dispatch Number"
+        ],
+        [
+          "routeDate",
+          "Route Date"
+        ]
+      ]
+    },
+    {
+      "context_tail": "\"truck\",label:\"Truck\"},{k:\"driver\",label:\"Driver\"},{k:\"serviceType\",label:\"Service Type\"}]},notes:{label:\"Notes & Attachments\",icon:Bm,kind:\"list\",data:\"notes\",accountFilter:\"account\",singular:\"Note\",",
+      "cols": [
+        [
+          "subject",
+          "Subject"
+        ],
+        [
+          "author",
+          "Author"
+        ],
+        [
+          "created",
+          "Created"
+        ]
+      ]
+    },
+    {
+      "context_tail": "d\",label:\"Created\"}]},workOrders:{label:\"Work Orders\",icon:ir,kind:\"list\",data:\"workOrders\",accountFilter:\"account\",singular:\"Work Order\",defaultSort:\"dueDate\",defaultSortDir:\"asc\",hotTicketFilter:!0,",
+      "cols": [
+        [
+          "account",
+          "Customer"
+        ],
+        [
+          "requestType",
+          "Request Type"
+        ],
+        [
+          "subject",
+          "Subject"
+        ],
+        [
+          "dueDate",
+          "Due Date"
+        ]
+      ]
+    },
+    {
+      "context_tail": ".caseStatus]||e.caseStatus||\"\"}]},reqCodes:{label:\"Request Type & Resolution Codes\",icon:fl,kind:\"list\",data:\"reqCodes\",accountFilter:\"account\",singular:\"Request Type Resolution Code\",settingsOnly:!0,",
+      "cols": [
+        [
+          "requestType",
+          "Request Type"
+        ],
+        [
+          "resolutionCode",
+          "Resolution Code"
+        ],
+        [
+          "workflowType",
+          "Workflow Type"
+        ]
+      ]
+    },
+    {
+      "context_tail": "s\",label:\"# of Attempts\",format:e=>e.numberOfAttempts||1}]},requestTypes:{label:\"Request Types\",icon:Ds,kind:\"list\",data:\"requestTypes\",accountFilter:\"account\",singular:\"Request Type\",settingsOnly:!0,",
+      "cols": [
+        [
+          "name",
+          "Name"
+        ],
+        [
+          "workflow",
+          "Workflow"
+        ],
+        [
+          "category",
+          "Category"
+        ],
+        [
+          "serviceCategory",
+          "Service Category"
+        ],
+        [
+          "segment",
+          "Segment"
+        ]
+      ]
+    },
+    {
+      "context_tail": "ve!==!1?\"\\u{1F7E2} Active\":\"\\u26AB Inactive\"}]},resolutionCodes:{label:\"Resolution Codes\",icon:Rn,kind:\"list\",data:\"resolutionCodes\",accountFilter:\"account\",singular:\"Resolution Code\",settingsOnly:!0,",
+      "cols": [
+        [
+          "name",
+          "Name"
+        ],
+        [
+          "workflow",
+          "Workflow"
+        ],
+        [
+          "description",
+          "Description"
+        ]
+      ]
+    },
+    {
+      "context_tail": "tive\":\"\\u26AB Inactive\"}]},segments:{label:\"Service Provider Segments\",icon:Pa,kind:\"list\",data:\"segments\",accountFilter:\"account\",singular:\"Service Provider Segment\",settingsOnly:!0,listStyle:\"tree\",",
+      "cols": [
+        [
+          "segmentName",
+          "Segment Name"
+        ]
+      ]
+    },
+    {
+      "context_tail": "t\"}]},aggTips:{label:\"Trip Data\",icon:Uo,kind:\"list\",data:\"aggTips\",accountFilter:\"account\",singular:\"Trip Record\",mergedInto:\"assets\",analyticsTabOf:\"trucks\",defaultSort:\"date\",defaultSortDir:\"desc\",",
+      "cols": [
+        [
+          "date",
+          "Date"
+        ],
+        [
+          "truckNumber",
+          "Truck #"
+        ],
+        [
+          "numTips",
+          "# Tips"
+        ],
+        [
+          "totalDistance",
+          "Total Distance"
+        ],
+        [
+          "idleTime",
+          "Idle Time (min)"
+        ]
+      ]
+    },
+    {
+      "context_tail": ">0?\"\\u{1F534} \"+e.speedingEvents:e.speedingEvents||\"0\"}]},trucks:{label:\"Trucks\",icon:Xr,kind:\"list\",data:\"trucks\",accountFilter:\"account\",singular:\"Truck\",mergedWith:\"assets\",recordTypeValue:\"Truck\",",
+      "cols": [
+        [
+          "truckName",
+          "Truck Name"
+        ],
+        [
+          "truckNumber",
+          "Truck #"
+        ]
+      ]
+    },
+    {
+      "context_tail": "tSortDir:\"desc\",defaultFilter:\"today\",recordTypeToggle:[\"Tip Events\",\"Non-Tip Events\",\"All\"],variants:[{key:\"individual\",label:\"Individual\"},{key:\"aggregated\",label:\"Aggregated\",useModule:\"aggTips\"}],",
+      "cols": [
+        [
+          "eventStartDateTime",
+          "Event Date / Time"
+        ],
+        [
+          "customerLocation",
+          "Customer Location"
+        ],
+        [
+          "collectionRoute",
+          "Collection Route"
+        ],
+        [
+          "sfdcTruckId",
+          "Truck #"
+        ]
+      ]
+    },
+    {
+      "context_tail": "label:\"Truck #\"}]},routes:{label:\"Routes\",icon:yl,kind:\"list\",data:\"routes\",accountFilter:\"account\",singular:\"Route\",recordTypeToggle:[\"Collection\",\"Maintenance\",\"All\"],defaultRecordType:\"Collection\",",
+      "cols": [
+        [
+          "routeNumber",
+          "Route Number"
+        ]
+      ]
+    },
+    {
+      "context_tail": "erviceProviderSegment\",label:\"Segment\"}]},notifications:{label:\"Service Notifications\",icon:co,kind:\"list\",data:\"notifications\",accountFilter:\"account\",singular:\"Service Notification\",settingsOnly:!0,",
+      "cols": [
+        [
+          "serviceNotificationName",
+          "Notification Name"
+        ],
+        [
+          "notifyDays",
+          "Notify Days"
+        ],
+        [
+          "toBeSentBasedOn",
+          "Trigger"
+        ],
+        [
+          "fromEmail",
+          "From Email"
+        ],
+        [
+          "emailSubject",
+          "Email Subject"
+        ]
+      ]
+    }
+  ],
+  "_oe_full": "function _oe({nav:e,store:t,onGoHome:r,onGoGlobal:a,collapsed:n}){let i=g=>e.view===\"global\"&&e.moduleKey===g,s=g=>({key:g,onClick:()=>a(g),active:i(g)}),u=de.getPersona(t),d;u===\"rehrig\"?d=[{label:\"Platform\",key:\"overview\",items:[{key:\"home\",onClick:r,active:e.view===\"home\"}]},{label:\"Service Providers\",key:\"customers\",items:[{key:\"accounts\",onClick:()=>a(\"accounts\"),active:i(\"accounts\")||e.view===\"account\"||e.view===\"record\"&&e.accountId},s(\"contacts\")]},{label:\"Configure\",key:\"configure\",items:[{key:\"profileMgmtNav\",onClick:()=>a(\"setup\",{setupSection:\"profileMgmt\"}),active:i(\"setup\")&&(e.setupSection||\"profileMgmt\")===\"profileMgmt\"},{key:\"userMgmtNav\",onClick:()=>a(\"setup\",{setupSection:\"userMgmt\"}),active:i(\"setup\")&&e.setupSection===\"userMgmt\"},s(\"productTypes\"),s(\"device\"),s(\"truck\"),s(\"tagScheme\"),s(\"apiIntegrations\")]}]:u===\"customer\"?d=[{label:\"My Service\",key:\"overview\",items:[{key:\"home\",onClick:r,active:e.view===\"home\"},s(\"myAccount\"),s(\"myLocations\"),s(\"myNotifications\"),s(\"myWorkOrders\")]}]:d=[{label:\"Overview\",key:\"overview\",items:[{key:\"home\",onClick:r,active:e.view===\"home\"}]},{label:\"Service Provider\",key:\"customers\",items:[{key:\"accounts\",onClick:()=>a(\"accounts\"),active:i(\"accounts\")||e.view===\"account\"||e.view===\"record\"&&e.accountId},s(\"contacts\"),s(\"customers\"),s(\"locations\"),s(\"manageAccount\"),s(\"routes\"),s(\"segments\")]},{label:\"Assets & Products\",key:\"assets\",items:[s(\"assets\"),s(\"masterProducts\"),s(\"products\")]},{label:\"Operations\",key:\"operations\",items:[s(\"dispatches\"),s(\"mapCenter\"),s(\"maintProfiles\"),s(\"trucks\"),s(\"workOrders\")]},{label:\"Telematics\",key:\"telematics\",items:[s(\"tips\"),s(\"aggTips\")]},{label:\"Analytics\",key:\"analytics\",items:[s(\"chatter\"),s(\"dashboards\"),s(\"reportSubs\"),s(\"reports\")]},{label:\"Configure\",key:\"configure\",items:[s(\"reqCodes\"),s(\"serviceNotifConfig\"),s(\"notifications\"),s(\"setup\")]}];let c=new Set;if(t){for(let g of d)for(let b of g.items)if(b.key!==\"home\"){if(b.key===\"chatter\"){de.canView(t,\"chatter\")||c.add(b.key);continue}if(b.key===\"manageAccount\"){de.canView(t,\"accounts\")||c.add(b.key);continue}if(b.key===\"masterProducts\"){de.canView(t,\"products\")||c.add(b.key);continue}if(b.key===\"bulkImport\"){de.canView(t,\"accounts\")||c.add(b.key);continue}if(b.key===\"reportSubs\"){de.canView(t,\"reports\")||c.add(b.key);continue}if(b.key===\"requestTypes\"||b.key===\"resolutionCodes\"){de.canView(t,\"reqCodes\")||c.add(b.key);continue}if([\"productTypes\",\"apiIntegrations\",\"serviceNotifConfig\",\"device\",\"truck\",\"tagScheme\"].includes(b.key)){de.canView(t,\"setup\")||c.add(b.key);continue}de.canView(t,b.key)||c.add(b.key)}}let f=d.map(g=>({...g,items:g.items.filter(b=>!c.has(b.key))})).filter(g=>g.items.length>0),m=f.find(g=>g.items.some(b=>b.active))?.key,[p,v]=(0,o.useState)(m||\"overview\");(0,o.useEffect)(()=>{m&&m!==p&&v(m)},[m]);let y=g=>v(b=>b===g?null:g);return n?o.default.createElement(\"nav\",{className:\"flex-1 overflow-y-auto scroll-thin py-1\"},f.map((g,b)=>o.default.createElement(o.default.Fragment,{key:g.label},b>0&&o.default.createElement(\"div\",{className:\"mx-3 my-1 border-t hairline\"}),g.items.map(h=>{let x=Qe[h.key],k=x.icon,w=n6[h.key]||x.label;return o.default.createElement(\"button\",{key:h.key,onClick:h.onClick,title:w,className:\"nav-item w-full flex items-center justify-center py-2 rounded-r-lg relative\",style:{color:h.active?l.violet:l.muted,background:h.active?l.violet+\"18\":\"transparent\"}},o.default.createElement(k,{size:16,strokeWidth:h.active?2.4:1.8}),h.active&&o.default.createElement(\"span\",{className:\"absolute left-0 top-1.5 bottom-1.5 w-[2px]\",style:{background:l.violet}}))})))):o.default.createElement(\"nav\",{className:\"flex-1 overflow-y-auto scroll-thin px-2 py-3\"},f.map(g=>{let b=g.items.some(x=>x.active),h=p===g.key;if(g.items.length===1&&g.items[0].key===\"home\"){let x=g.items[0];return o.default.createElement(\"button\",{key:g.label,onClick:x.onClick,className:\"w-full flex items-center gap-2 px-3 py-2 rounded-lg text-[12px] font-semibold uppercase tracking-[0.12em] transition-colors mb-1\",style:{color:x.active?l.violet:l.muted,background:x.active?l.violet+\"12\":\"transparent\"},onMouseEnter:k=>{x.active||(k.currentTarget.style.background=l.surfaceHi)},onMouseLeave:k=>{x.active||(k.currentTarget.style.background=\"transparent\")}},o.default.createElement(br,{size:12,strokeWidth:x.active?2.4:1.8}),o.default.createElement(\"span\",null,\"Home\"))}return o.default.createElement(\"div\",{key:g.label,className:\"mb-1.5\"},o.default.createElement(\"button\",{onClick:()=>y(g.key),className:\"w-full flex items-center gap-1.5 px-3 py-2 rounded transition-colors group\",style:{color:l.muted},onMouseEnter:x=>{x.currentTarget.style.color=l.text},onMouseLeave:x=>{x.currentTarget.style.color=l.muted}},o.default.createElement(nr,{size:11,strokeWidth:2.5,style:{transform:h?\"rotate(90deg)\":\"rotate(0deg)\",transition:\"transform 0.15s ease\"}}),o.default.createElement(\"span\",{className:\"text-[12px] font-semibold uppercase tracking-[0.12em] flex-1 text-left\"},g.label),!h&&b&&o.default.createElement(\"span\",{className:\"w-1.5 h-1.5 rounded-full shrink-0\",style:{background:l.violet},title:\"Active item in this group\"})),h&&o.default.createElement(\"div\",{className:\"mt-1 ml-[14px] pl-2.5 relative\",style:{borderLeft:`1px solid ${l.border}`}},g.items.map(x=>{let k=Qe[x.key],w=k.icon,S=n6[x.key]||k.label,T=x.key===\"setup\",L=T&&x.active,B=[{k:\"userMgmt\",l:\"User Management\",icon:cr},{k:\"profileMgmt\",l:\"Profile Management\",icon:xt}],U=e.setupSection||\"profileMgmt\";return o.default.createElement(o.default.Fragment,{key:x.key},o.default.createElement(\"button\",{onClick:x.onClick,className:\"nav-item w-full flex items-center gap-2.5 px-2.5 py-[7px] rounded-r-lg text-[13px] relative\"+(x.active?\" nav-item-active\":\"\"),style:{color:x.active?l.text:l.muted,fontWeight:x.active?500:400}},x.active&&o.default.createElement(\"span\",{className:\"absolute -left-[11px] top-1.5 bottom-1.5 w-[2px] rounded-full\",style:{background:l.violet}}),o.default.createElement(w,{size:14,strokeWidth:x.active?2.4:1.8}),o.default.createElement(\"span\",{className:\"truncate\"},S),T&&o.default.createElement(gt,{size:11,className:\"ml-auto shrink-0\",style:{color:x.active?l.violet:l.faint,transform:L?\"rotate(0deg)\":\"rotate(-90deg)\",transition:\"transform 0.15s\"}}),!T&&x.active&&o.default.createElement(nr,{size:12,className:\"ml-auto shrink-0\",color:l.violet})),L&&o.default.createElement(\"div\",{className:\"relative pt-0.5 pb-1\"},o.default.createElement(\"div\",{className:\"absolute top-0 bottom-1\",style:{left:17,width:1,background:l.border}}),o.default.createElement(\"div\",{className:\"space-y-[1px]\"},B.map(M=>{let $=M.icon,j=U===M.k;return o.default.createElement(\"button\",{key:M.k,onClick:()=>a(\"setup\",{setupSection:M.k}),className:\"relative w-full flex items-center gap-2 py-[6px] text-[12px] transition-all\",style:{paddingLeft:30,paddingRight:10,color:j?l.violet:l.muted,fontWeight:j?500:400,background:j?l.violet+\"12\":\"transparent\",borderRadius:\"0 6px 6px 0\",outline:\"none\",border:\"none\",cursor:\"pointer\"},onMouseEnter:q=>{j||(q.currentTarget.style.color=l.text,q.currentTarget.style.background=l.surfaceHi)},onMouseLeave:q=>{j||(q.currentTarget.style.color=l.muted,q.currentTarget.style.background=\"transparent\")}},j&&o.default.createElement(\"span\",{className:\"absolute top-1 bottom-1\",style:{left:16,width:2,background:l.violet,borderRadius:1}}),o.default.createElement(\"span\",{className:\"absolute\",style:{left:18,top:\"50%\",width:8,height:1,background:l.border}}),o.default.createElement($,{size:11,strokeWidth:j?2.4:1.7}),o.default.createElement(\"span\",{className:\"truncate\"},M.l))}))))})))}))}",
+  "list_pages_by_title": [],
+  "action_strings": [
+    "Export CSV",
+    "Filter",
+    "Filter and manage accounts",
+    "Filter combos",
+    "Filtered",
+    "Filters",
+    "Import Rehrig Assets",
+    "Import Rehrig assets",
+    "Import Work Orders",
+    "Import another file",
+    "Mass Upload Accounts",
+    "Mass Upload Customers",
+    "New / Edit API Integration",
+    "New / Edit Aggregated Tip Record",
+    "New / Edit Asset",
+    "New / Edit Contact",
+    "New / Edit Customer",
+    "New / Edit Device",
+    "New / Edit Individual Tip",
+    "New / Edit Location",
+    "New / Edit Location Type",
+    "New / Edit Master Product",
+    "New / Edit RRC Record",
+    "New / Edit Request Type",
+    "New / Edit Resolution Code",
+    "New / Edit Route",
+    "New / Edit Route Profile Template",
+    "New / Edit Segment",
+    "New / Edit Service Notification",
+    "New / Edit Service Notification Config",
+    "New / Edit Service Provider Product",
+    "New / Edit Service Type",
+    "New / Edit Truck",
+    "New / Edit Truck (Master Registry)",
+    "New / Edit Work Order",
+    "New Asset Type",
+    "New Brunswick",
+    "New Cart Request",
+    "New Customer",
+    "New Device",
+    "New Integration",
+    "New Location Type",
+    "New Note",
+    "New Notification Rule",
+    "New Product",
+    "New Profile",
+    "New Request",
+    "New Resident",
+    "New Service Type",
+    "New Tag Scheme",
+    "New Truck",
+    "New User",
+    "New York",
+    "New cart successfully delivered to resident."
+  ],
+  "form_section_titles": [],
+  "ye_labels": [
+    "API User",
+    "Account #",
+    "Asset Serial Number",
+    "Asset Size To Remove",
+    "Asset Size to Deliver",
+    "Asset Status",
+    "Asset To Remove",
+    "Asset Type To Remove",
+    "Asset Type to Deliver",
+    "Billing Exempt",
+    "CIS - Zone",
+    "Cart Sharing",
+    "City",
+    "Contact Info",
+    "County",
+    "Customer Name",
+    "Description",
+    "Division",
+    "Due Date",
+    "EPCOR Acct",
+    "Email",
+    "First Name",
+    "House Number",
+    "Last Name",
+    "Latitude",
+    "Location Name",
+    "Location Type",
+    "Longitude",
+    "Nbr of Units",
+    "Organic Route",
+    "Parcel Id",
+    "Parent Account",
+    "Phone",
+    "PickUp Type",
+    "Pickup Size",
+    "Postal Code",
+    "Profile",
+    "Profile Name",
+    "Rate Category",
+    "Recycle Route",
+    "Requested Date",
+    "Select Request Type",
+    "Select Service Type",
+    "Send Notifications?",
+    "Service Provider WO #",
+    "Service Type",
+    "Site Id",
+    "State/Province",
+    "Status",
+    "Street Name",
+    "Trash Route",
+    "Unit #",
+    "Work Order Notes",
+    "Yard Waste Route",
+    "Zone"
+  ],
+  "ue_labels": [
+    "Account #",
+    "Action",
+    "Address",
+    "Asset Size",
+    "Asset Type",
+    "Billing Exempt",
+    "CIS - Zone",
+    "Cart Sharing",
+    "City",
+    "Collection Location",
+    "Comments",
+    "Container Number",
+    "County",
+    "Created Date",
+    "Customer Name",
+    "Date Sent",
+    "Days Of Collection Week",
+    "Dispatch",
+    "Distance Moved",
+    "Division",
+    "Due Date",
+    "EPCOR Acct",
+    "Email Address",
+    "Frequency of Collection",
+    "Home Lat/Long",
+    "Hot Ticket",
+    "Item Status",
+    "Last Modified By",
+    "Last Service Details",
+    "Last Tip Details",
+    "Last Tip Location",
+    "Latitude",
+    "Location Type",
+    "Longitude",
+    "Nbr of Units",
+    "Notes",
+    "Notification Requested",
+    "Notification Sent",
+    "Parcel Id",
+    "Phone",
+    "Postal Code",
+    "RFID",
+    "Rate Category",
+    "Request Date",
+    "Request Type",
+    "Serial Number",
+    "Service Type",
+    "Site Id",
+    "Size/Type",
+    "State/Province",
+    "Status",
+    "WO Notes",
+    "Web Phone",
+    "Work Order #",
+    "Zone"
+  ]
+}

@@ -9,7 +9,21 @@ import {
   CartesianGrid,
 } from 'recharts';
 import Icon from '../components/Icon.jsx';
-import { Badge, Button, Page, PageHeader, Panel, Select, StatStrip, AsyncState } from '../components/UI.jsx';
+import {
+  Badge,
+  Button,
+  Checkbox,
+  Field,
+  FieldSection,
+  FormDrawer,
+  Page,
+  PageHeader,
+  Panel,
+  Select,
+  StatStrip,
+  TextInput,
+  AsyncState,
+} from '../components/UI.jsx';
 import { useStore } from '../state/AppStore.jsx';
 import { useRecords } from '../hooks/useRecords.js';
 import { getErrorMessage } from '../lib/errors.js';
@@ -19,10 +33,13 @@ import {
   useWorkspaceSettings,
 } from '../hooks/useConfig.js';
 import {
-  DASHBOARD_WIDGETS,
-  DASHBOARD_WIDGET_BY_ID,
+  ANALYTICS_DASHBOARDS,
+  catalogWithCustomWidgets,
+  customWidgetsFromSettings,
   dashboardPresetFor,
+  removeCustomWidget,
 } from '../data/dashboardWidgets.js';
+import { PlaybookChart, PlaybookTable } from '../components/AssistantAnswer.jsx';
 
 const AGING_COLORS = ['#0f7b55', '#8b969f', '#c27803', '#b42318'];
 
@@ -125,8 +142,17 @@ function RecordList({ rows, empty, render }) {
   );
 }
 
-export default function Dashboard() {
+export default function Dashboard({ variant = 'home' }) {
   const { state, navigate, toast } = useStore();
+  const isAnalytics = variant === 'analytics';
+  const [activeDashboardId, setActiveDashboardId] = useState(ANALYTICS_DASHBOARDS[0].id);
+  const [templateOpen, setTemplateOpen] = useState(false);
+  const [templateName, setTemplateName] = useState('');
+  const [templateDescription, setTemplateDescription] = useState('');
+  const [templateSource, setTemplateSource] = useState('');
+  const [templateWidgets, setTemplateWidgets] = useState([]);
+  const [templateBusy, setTemplateBusy] = useState(false);
+  const [templateError, setTemplateError] = useState('');
   const workOrdersQuery = useRecords('workOrders');
   const dispatchesQuery = useRecords('dispatches');
   const trucksQuery = useRecords('trucks');
@@ -144,12 +170,21 @@ export default function Dashboard() {
   const user = state.currentUser;
   const userKey = user?.id || user?.email || 'anonymous';
   const storedLayout = settingsQuery.data?.dashboardLayouts?.[userKey];
+  const savedTemplates = settingsQuery.data?.dashboardTemplates || [];
+  const customWidgets = customWidgetsFromSettings(settingsQuery.data);
+  const catalog = catalogWithCustomWidgets(customWidgets);
+  const customWidgetById = Object.fromEntries(customWidgets.map((item) => [item.id, item]));
+  const dashboards = [...ANALYTICS_DASHBOARDS, ...savedTemplates];
+  const analyticsDashboard =
+    dashboards.find((item) => item.id === activeDashboardId) || dashboards[0];
+  const isCustomTemplate = savedTemplates.some((item) => item.id === analyticsDashboard?.id);
   const fallbackLayout = dashboardPresetFor(user);
   const initialLayout = Array.isArray(storedLayout)
-    ? storedLayout.filter((id) => DASHBOARD_WIDGET_BY_ID[id])
+    ? storedLayout.filter((id) => catalog.byId[id])
     : fallbackLayout;
   const [layoutState, setLayoutState] = useState({ userKey, ids: initialLayout });
-  const layout = layoutState.userKey === userKey ? layoutState.ids : initialLayout;
+  const homeLayout = layoutState.userKey === userKey ? layoutState.ids : initialLayout;
+  const layout = isAnalytics ? analyticsDashboard?.widgets || [] : homeLayout;
   const [draggedId, setDraggedId] = useState(null);
 
   useEffect(() => {
@@ -159,6 +194,14 @@ export default function Dashboard() {
   const persistLayout = async (next) => {
     setLayoutState({ userKey, ids: next });
     try {
+      if (isAnalytics && isCustomTemplate) {
+        await updateWorkspace.mutateAsync({
+          dashboardTemplates: savedTemplates.map((item) =>
+            item.id === analyticsDashboard.id ? { ...item, widgets: next } : item
+          ),
+        });
+        return;
+      }
       await updateWorkspace.mutateAsync({
         dashboardLayouts: {
           ...(settingsQuery.data?.dashboardLayouts || {}),
@@ -167,6 +210,87 @@ export default function Dashboard() {
       });
     } catch (error) {
       toast(getErrorMessage(error, 'Unable to save dashboard layout.'), 'danger');
+    }
+  };
+
+  const openTemplateDrawer = () => {
+    setTemplateName('');
+    setTemplateDescription('');
+    setTemplateSource('');
+    setTemplateWidgets(analyticsDashboard?.widgets ? [...analyticsDashboard.widgets] : []);
+    setTemplateError('');
+    setTemplateOpen(true);
+  };
+
+  const applyTemplateSource = (sourceId) => {
+    setTemplateSource(sourceId);
+    if (!sourceId) return;
+    const source = [...ANALYTICS_DASHBOARDS, ...savedTemplates].find((item) => item.id === sourceId);
+    if (source?.widgets) setTemplateWidgets([...source.widgets]);
+  };
+
+  const saveTemplate = async (event) => {
+    event.preventDefault();
+    if (!templateName.trim()) {
+      setTemplateError('Template name is required.');
+      return;
+    }
+    if (!templateWidgets.length) {
+      setTemplateError('Select at least one widget for this template.');
+      return;
+    }
+    setTemplateBusy(true);
+    setTemplateError('');
+    const template = {
+      id: `dash-${Date.now()}`,
+      name: templateName.trim(),
+      description: templateDescription.trim() || 'Custom dashboard template.',
+      widgets: templateWidgets.filter((id) => catalog.byId[id]),
+    };
+    try {
+      await updateWorkspace.mutateAsync({
+        dashboardTemplates: [...savedTemplates, template],
+      });
+      setActiveDashboardId(template.id);
+      setTemplateOpen(false);
+      toast('Dashboard template created');
+    } catch (error) {
+      setTemplateError(getErrorMessage(error, 'Unable to save dashboard template.'));
+    } finally {
+      setTemplateBusy(false);
+    }
+  };
+
+  const handleRemoveWidget = async (widgetId) => {
+    if (customWidgetById[widgetId]) {
+      const next = removeCustomWidget(settingsQuery.data || {}, widgetId, userKey);
+      setLayoutState({
+        userKey,
+        ids: Array.isArray(next.dashboardLayouts?.[userKey])
+          ? next.dashboardLayouts[userKey]
+          : layout.filter((id) => id !== widgetId),
+      });
+      try {
+        await updateWorkspace.mutateAsync(next);
+        toast('Widget deleted');
+      } catch (error) {
+        toast(getErrorMessage(error, 'Unable to delete widget.'), 'danger');
+      }
+      return;
+    }
+    persistLayout(layout.filter((item) => item !== widgetId));
+  };
+
+  const deleteTemplate = async () => {
+    if (!isCustomTemplate) return;
+    try {
+      await updateWorkspace.mutateAsync({
+        dashboardTemplates: savedTemplates.filter((item) => item.id !== analyticsDashboard.id),
+      });
+      setActiveDashboardId(ANALYTICS_DASHBOARDS[0].id);
+      toast('Dashboard template deleted');
+    } catch (error) {
+      toast(getErrorMessage(error, 'Unable to delete dashboard template.'), 'danger');
     }
   };
 
@@ -315,6 +439,16 @@ export default function Dashboard() {
   ];
 
   const renderWidget = (id) => {
+    const custom = customWidgetById[id];
+    if (custom) {
+      return (
+        <div>
+          {custom.description ? <p className="mb-3 text-xs text-ink-muted">{custom.description}</p> : null}
+          {custom.kind === 'chart' && custom.chart ? <PlaybookChart chart={custom.chart} /> : null}
+          {custom.kind === 'table' && custom.table ? <PlaybookTable table={custom.table} /> : null}
+        </div>
+      );
+    }
     if (id === 'kpi-tiles') {
       return <StatStrip compact items={[
         { label: 'Active dispatches', value: activeDispatches.length, hint: 'In route or in progress' },
@@ -417,41 +551,104 @@ export default function Dashboard() {
     return <RecordList rows={rows} empty={isDispatch ? 'No active dispatches.' : 'No matching work orders.'} render={(row) => (
       <li key={row.id || row.number} className="py-3">
         <div className="flex items-center justify-between gap-2 text-sm"><span className="truncate font-medium">{row.subject || row.number || row.id}</span><Badge color={isDispatch ? 'cyan' : 'amber'}>{row.status || row.priority}</Badge></div>
-        <p className="mt-0.5 truncate text-xs text-ink-muted">{row.account || 'Unassigned'}{row.owner ? ` Â· ${row.owner}` : ''}</p>
+        <p className="mt-0.5 truncate text-xs text-ink-muted">{row.account || 'Unassigned'}{row.owner ? ` · ${row.owner}` : ''}</p>
       </li>
     )} />;
   };
 
   const first = user?.firstName || 'there';
-  const available = DASHBOARD_WIDGETS.filter((widget) => !layout.includes(widget.id));
+  const available = catalog.widgets.filter((widget) => !layout.includes(widget.id));
   const loading = workOrdersQuery.isLoading || dispatchesQuery.isLoading || trucksQuery.isLoading || assetsQuery.isLoading || tipsQuery.isLoading || accountsQuery.isLoading || settingsQuery.isLoading;
 
   return (
     <Page wide>
       <PageHeader
-        overline={`Home Â· ${now.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}`}
-        title={`Welcome, ${first}.`}
-        description={`${openWorkOrders.length} open work orders Â· ${activeDispatches.length} active dispatches`}
-        actions={available.length ? (
-          <Select
-            value=""
-            placeholder="Add widgetâ€¦"
-            aria-label="Add dashboard widget"
-            options={available.map((widget) => ({ value: widget.id, label: widget.title }))}
-            onChange={(event) => event.target.value && persistLayout([...layout, event.target.value])}
-          />
-        ) : null}
+        overline={
+          isAnalytics
+            ? 'Analytics'
+            : `Home · ${now.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}`
+        }
+        title={isAnalytics ? 'Dashboards' : `Welcome, ${first}.`}
+        description={
+          isAnalytics
+            ? analyticsDashboard?.description
+            : `${openWorkOrders.length} open work orders · ${activeDispatches.length} active dispatches`
+        }
+        actions={
+          <div className="flex flex-wrap items-center gap-2">
+            {isAnalytics && (
+              <Button variant="primary" onClick={openTemplateDrawer}>
+                <Icon name="plus" size={16} /> New dashboard
+              </Button>
+            )}
+            {isAnalytics && isCustomTemplate && (
+              <Button variant="secondary" onClick={deleteTemplate}>
+                Delete template
+              </Button>
+            )}
+            {(!isAnalytics || isCustomTemplate) && available.length ? (
+              <Select
+                value=""
+                placeholder="Add widget…"
+                aria-label="Add dashboard widget"
+                options={available.map((widget) => ({ value: widget.id, label: widget.title }))}
+                onChange={(event) => event.target.value && persistLayout([...layout, event.target.value])}
+              />
+            ) : null}
+          </div>
+        }
       />
+      {isAnalytics && (
+        <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          {dashboards.map((item) => {
+            const active = item.id === analyticsDashboard.id;
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setActiveDashboardId(item.id)}
+                className={`rounded-2xl border px-4 py-3 text-left transition-colors ${
+                  active
+                    ? 'border-brand bg-brand-soft shadow-hairline'
+                    : 'border-line bg-surface hover:border-line-strong hover:bg-elevated'
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <Icon name="grid" size={15} className={active ? 'text-brand' : 'text-ink-faint'} />
+                  <span className={`text-sm font-semibold ${active ? 'text-brand' : 'text-ink'}`}>
+                    {item.name}
+                  </span>
+                </div>
+                <p className="mt-1.5 text-[12px] leading-snug text-ink-muted">{item.description}</p>
+                {savedTemplates.some((template) => template.id === item.id) && (
+                  <p className="mt-2 text-[11px] font-semibold uppercase tracking-wider text-ink-faint">
+                    Template
+                  </p>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      )}
       <AsyncState loading={loading} error={workOrdersQuery.isError ? getErrorMessage(workOrdersQuery.error) : null} onRetry={() => {
         workOrdersQuery.refetch(); dispatchesQuery.refetch(); trucksQuery.refetch(); assetsQuery.refetch(); tipsQuery.refetch(); accountsQuery.refetch(); settingsQuery.refetch();
       }}>
         {layout.length ? (
-          <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-12">
+          <div className={`${isAnalytics ? '' : 'mt-6 '}grid grid-cols-1 gap-6 lg:grid-cols-12`}>
             {layout.map((id, index) => {
-              const widget = DASHBOARD_WIDGET_BY_ID[id];
+              const widget = catalog.byId[id];
               if (!widget) return null;
+              if (isAnalytics && !isCustomTemplate) {
+                return (
+                  <Panel key={id} className={{ 4: 'lg:col-span-4', 6: 'lg:col-span-6', 8: 'lg:col-span-8', 12: 'lg:col-span-12' }[widget.span] || 'lg:col-span-4'} padded>
+                    <p className="type-overline">{widget.category}</p>
+                    <h2 className="mt-1 mb-4 font-display text-title-sm text-ink">{widget.title}</h2>
+                    {renderWidget(id)}
+                  </Panel>
+                );
+              }
               return <WidgetShell key={id} widget={widget} index={index} count={layout.length} onMove={moveWidget}
-                onRemove={(widgetId) => persistLayout(layout.filter((item) => item !== widgetId))}
+                onRemove={handleRemoveWidget}
                 onDragStart={(event, widgetId) => { setDraggedId(widgetId); event.dataTransfer.effectAllowed = 'move'; }}
                 onDrop={dropWidget}>{renderWidget(id)}</WidgetShell>;
             })}
@@ -460,6 +657,65 @@ export default function Dashboard() {
           <Panel padded className="mt-6 text-center"><p className="text-sm text-ink-muted">Add a widget to build your dashboard.</p></Panel>
         )}
       </AsyncState>
+      {templateOpen && (
+        <FormDrawer
+          onClose={() => setTemplateOpen(false)}
+          onSubmit={saveTemplate}
+          title="New dashboard template"
+          description="Name the canvas, pick a starting layout, and choose the widgets this template should include."
+          wide
+          dirty={!!templateName || !!templateDescription || templateWidgets.length > 0}
+          busy={templateBusy}
+          error={templateError}
+          submitLabel="Create template"
+        >
+          <FieldSection title="Template">
+            <Field label="Dashboard name" required>
+              <TextInput
+                value={templateName}
+                onChange={(event) => setTemplateName(event.target.value)}
+                placeholder="e.g. Night dispatch"
+                autoFocus
+              />
+            </Field>
+            <Field label="Start from">
+              <Select
+                value={templateSource}
+                onChange={(event) => applyTemplateSource(event.target.value)}
+                options={[
+                  { value: '', label: 'Blank / current selection' },
+                  ...dashboards.map((item) => ({ value: item.id, label: item.name })),
+                ]}
+              />
+            </Field>
+            <Field label="Description" span2>
+              <TextInput
+                value={templateDescription}
+                onChange={(event) => setTemplateDescription(event.target.value)}
+                placeholder="What this dashboard is for"
+              />
+            </Field>
+          </FieldSection>
+          <FieldSection title="Widgets" className="border-t border-line pt-5">
+            <div className="grid grid-cols-1 gap-2 sm:col-span-2 sm:grid-cols-2">
+              {catalog.widgets.map((widget) => (
+                <Checkbox
+                  key={widget.id}
+                  label={widget.title}
+                  checked={templateWidgets.includes(widget.id)}
+                  onChange={(event) =>
+                    setTemplateWidgets((current) =>
+                      event.target.checked
+                        ? [...current, widget.id]
+                        : current.filter((id) => id !== widget.id)
+                    )
+                  }
+                />
+              ))}
+            </div>
+          </FieldSection>
+        </FormDrawer>
+      )}
     </Page>
   );
 }

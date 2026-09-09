@@ -12,6 +12,7 @@ import RegistryHome from './screens/RegistryHome.jsx';
 import AccountsList from './screens/AccountsList.jsx';
 import NoAccess from './screens/NoAccess.jsx';
 import Dashboard from './screens/Dashboard.jsx';
+import ReportsStudio from './screens/ReportsStudio.jsx';
 import CustomerHome from './screens/CustomerHome.jsx';
 import AccountDetail from './screens/AccountDetail.jsx';
 import Wizard from './screens/wizard/Wizard.jsx';
@@ -20,17 +21,15 @@ import Setup from './screens/Setup.jsx';
 import ProfileManagement from './screens/ProfileManagement.jsx';
 import { GenericList } from './screens/RecordScreens.jsx';
 import ContactsDirectory from './screens/ContactsDirectory.jsx';
-import CustomersDirectory from './screens/CustomersDirectory.jsx';
+import ManageCustomers from './screens/ManageCustomers.jsx';
 import SegmentsDirectory from './screens/SegmentsDirectory.jsx';
 import MapCenter from './screens/MapCenter.jsx';
 import BulkImport from './screens/BulkImport.jsx';
 import ContractOnboarding from './screens/ContractOnboarding.jsx';
 import Activity from './screens/Activity.jsx';
 import Notifications from './screens/Notifications.jsx';
-import Devices from './screens/Devices.jsx';
 import ReportSubscriptions from './screens/ReportSubscriptions.jsx';
 import UserAccount from './screens/UserAccount.jsx';
-import V13Workstreams from './screens/V13Workstreams.jsx';
 import { getErrorMessage } from './lib/errors.js';
 import { SearchModal } from './components/SearchModal.jsx';
 import { onboardingNavParams, parseOnboardingReturn } from './utils/appNavigation.js';
@@ -58,6 +57,14 @@ function Router({ onOnboard }) {
     account: 'account',
     contacts: 'contacts',
     customers: 'customers',
+    manageAccount: 'manageAccount',
+    routes: 'routes',
+    serviceNotifications: 'serviceNotifications',
+    products: 'products',
+    masterProducts: 'masterProducts',
+    requestTypes: 'requestTypes',
+    resolutionCodes: 'resolutionCodes',
+    reqCodes: 'reqCodes',
     segments: 'segments',
     serviceTypes: 'serviceTypes',
     locationTypes: 'locationTypes',
@@ -65,6 +72,7 @@ function Router({ onOnboard }) {
     productTypes: 'productTypes',
     device: 'device',
     truck: 'truck',
+    tagScheme: 'tagScheme',
     apiIntegrations: 'apiIntegrations',
     notificationConfig: 'notificationConfig',
     onboarding: 'onboarding',
@@ -82,24 +90,17 @@ function Router({ onOnboard }) {
     individualTips: 'individualTips',
     mapCenter: 'mapCenter',
     bulkImport: 'bulkImport',
-    devices: 'devices',
     activity: 'activity',
     notifications: 'notifications',
     reportSubscriptions: 'reportSubscriptions',
     analytics: 'analytics',
+    dashboards: 'dashboards',
+    reports: 'reports',
     myLocations: 'myLocations',
     myWorkOrders: 'myWorkOrders',
     myNotifications: 'myNotifications',
     myAccount: 'userAccount',
     userAccount: 'userAccount',
-    chatter: 'chatter',
-    approvals: 'approvals',
-    qalert: 'qalert',
-    customerInsights: 'customerInsights',
-    recordSharing: 'recordSharing',
-    holidays: 'holidays',
-    automationCenter: 'automationCenter',
-    loginHistory: 'loginHistory',
   };
 
   const gateKey = GATE[module];
@@ -124,7 +125,9 @@ function Router({ onOnboard }) {
     case 'contacts':
       return <ContactsDirectory />;
     case 'customers':
-      return <CustomersDirectory />;
+      return <GenericList kind="customers" />;
+    case 'manageAccount':
+      return <ManageCustomers />;
     case 'segments':
       return <SegmentsDirectory />;
     case 'serviceTypes':
@@ -139,6 +142,8 @@ function Router({ onOnboard }) {
       return <MasterConfig configKey="device" />;
     case 'truck':
       return <MasterConfig configKey="truck" />;
+    case 'tagScheme':
+      return <MasterConfig configKey="tagScheme" />;
     case 'apiIntegrations':
       return <MasterConfig configKey="apiIntegrations" />;
     case 'notificationConfig':
@@ -153,16 +158,28 @@ function Router({ onOnboard }) {
     case 'locations':
     case 'maintenanceRouteProfiles':
     case 'notesAttachments':
-    case 'requestTypeResolutions':
+    case 'requestTypes':
+    case 'resolutionCodes':
+    case 'reqCodes':
+    case 'routes':
+    case 'serviceNotifications':
+    case 'products':
+    case 'masterProducts':
     case 'aggregatedTips':
     case 'individualTips':
       return <GenericList kind={module} />;
+    case 'requestTypeResolutions':
+      return (
+        <GenericList
+          kind={
+            params.tab === 'types' ? 'requestTypes' : params.tab === 'codes' ? 'resolutionCodes' : 'reqCodes'
+          }
+        />
+      );
     case 'mapCenter':
       return <MapCenter />;
     case 'bulkImport':
       return <BulkImport />;
-    case 'devices':
-      return <Devices />;
     case 'activity':
       return <Activity />;
     case 'notifications':
@@ -194,8 +211,16 @@ function Router({ onOnboard }) {
           }}
         />
       );
+    case 'dashboards':
+      return <Dashboard variant="analytics" />;
+    case 'reports':
+      return <ReportsStudio />;
     case 'analytics':
-      return <GenericList kind="analytics" view={params.view} />;
+      return params.view === 'dashboards' ? (
+        <Dashboard variant="analytics" />
+      ) : (
+        <ReportsStudio />
+      );
     case 'myLocations':
     case 'myWorkOrders':
     case 'myNotifications':
@@ -203,15 +228,6 @@ function Router({ onOnboard }) {
     case 'myAccount':
     case 'userAccount':
       return <UserAccount />;
-    case 'chatter':
-    case 'approvals':
-    case 'qalert':
-    case 'customerInsights':
-    case 'recordSharing':
-    case 'holidays':
-    case 'automationCenter':
-    case 'loginHistory':
-      return <V13Workstreams kind={module} />;
     default:
       return <NoAccess />;
   }
@@ -298,7 +314,7 @@ export default function App() {
       {!isOnboarding && assistantOpen && (
         <VisionChat onOnboard={openOnboard} onClose={closeAssistant} />
       )}
-      <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+      <div className={`flex min-h-0 min-w-0 flex-1 flex-col ${assistantOpen && !isOnboarding ? 'max-lg:hidden' : ''}`}>
         <TopBar />
         <main
           id="main-content"

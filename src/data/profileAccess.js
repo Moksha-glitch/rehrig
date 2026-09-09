@@ -113,7 +113,7 @@ export const PROFILE_SCREEN_MODULES = [
       'Home — SP Admin View',
       'Home — SP Segment Admin View',
       'Customize Home (slide-over)',
-      'Vision AI',
+      'App Launcher',
     ],
   },
   {
@@ -147,18 +147,34 @@ export const PROFILE_SCREEN_MODULES = [
   {
     module: 'Product Configuration',
     screens: [
-      'Product Master Catalog List',
+      {
+        name: 'Product Master Catalog List',
+        fields: [
+          'Product Name',
+          'Product Code',
+          'Product Size',
+          'Service Type',
+          'Service Category',
+          'Product Description',
+          'Active',
+          'Product Family',
+          'External ID',
+        ],
+      },
       'New / Edit Master Product',
-      'Service Provider Products List',
+      {
+        name: 'Service Provider Products List',
+        fields: ['Product (Master)', 'Resident-Facing Name', 'Product Code', 'Service Category', 'Status', 'Family'],
+      },
       'New / Edit Service Provider Product',
     ],
   },
   {
     module: 'Request Types & Resolution Codes',
     screens: [
-      'Request Types List',
+      { name: 'Request Types List', fields: ['Request Type', 'Workflow Type', 'Category'] },
       'New / Edit Request Type',
-      'Resolution Codes List',
+      { name: 'Resolution Codes List', fields: ['Resolution Code', 'Workflow Type'] },
       'New / Edit Resolution Code',
       'Request Type Resolution Codes (RRC) List',
       'New / Edit RRC Record',
@@ -167,22 +183,88 @@ export const PROFILE_SCREEN_MODULES = [
   {
     module: 'Rehrig Master Configuration',
     screens: [
-      'Service Types List',
+      { name: 'Service Types List', fields: ['Type Name', 'Category', 'Active'] },
       'New / Edit Service Type',
-      'Location Types List',
+      { name: 'Location Types List', fields: ['Type Name', 'Category', 'Active'] },
       'New / Edit Location Type',
-      'Route Profile Templates List',
+      {
+        name: 'Route Profile Templates List',
+        fields: [
+          'Profile Name',
+          'Start Location',
+          'End Location',
+          'Service Type',
+          '# Trucks',
+          'Start Time',
+          'Duration',
+          'Segment',
+        ],
+      },
       'New / Edit Route Profile Template',
-      'Service Notification Config List',
+      {
+        name: 'Service Notification Config List',
+        fields: [
+          'Enable Notification Toggle',
+          'Message Limit',
+          'Time Zone',
+          'Phone Call Window',
+          'SMS Window',
+          'Email Window',
+          'Notification Trigger Logic',
+          'Message Templates',
+          'Twilio Credentials',
+          'SendGrid Credentials',
+        ],
+      },
       'New / Edit Service Notification Config',
+      { name: 'Device Master Registry List', fields: ['Device ID', 'Device Name', 'Device Type'] },
+      'New / Edit Device',
+      { name: 'Truck Master Registry List', fields: ['Truck ID', 'Truck Name', 'Truck Type'] },
+      'New / Edit Truck (Master Registry)',
+      { name: 'API Integrations List', fields: ['Name', 'Description', 'Endpoint', 'Status', 'Calls / 30 days'] },
+      'New / Edit API Integration',
     ],
   },
   {
     module: 'Customers & Manage Account',
     screens: [
-      'Customers List',
+      {
+        name: 'Customers List',
+        fields: [
+          'Customer Account Number',
+          'Customer Name',
+          'Phone',
+          'Email',
+          'Segment',
+          'Custom 1',
+          'Custom 2',
+          'Custom 3',
+          'Custom 4',
+          'Custom 5',
+          'Custom 6',
+          'Notes',
+        ],
+      },
       'New / Edit Customer',
-      'Locations List',
+      {
+        name: 'Locations List',
+        fields: [
+          'House Number',
+          'Street Name',
+          'Unit Number',
+          'City',
+          'State/Province',
+          'Postal Code',
+          'County',
+          'Zone',
+          'Site ID',
+          'Parcel ID',
+          'Latitude',
+          'Longitude',
+          'Location Type',
+          'Warehouse',
+        ],
+      },
       'New / Edit Location',
       'Manage Customers — Search Screen',
       'Manage Customers — Account Detail View',
@@ -197,18 +279,64 @@ export const PROFILE_SCREEN_MODULES = [
   {
     module: 'Assets & Trucks',
     screens: [
-      'Assets List',
+      {
+        name: 'Assets List',
+        fields: [
+          'Asset Name / Serial Number',
+          'Product',
+          'Status',
+          'Account',
+          'Home Location',
+          'Customer Location',
+          'Warehouse',
+          'Install Date',
+        ],
+      },
       'New / Edit Asset',
       'Asset Import — Standard',
       'Asset Import — Legacy / Cart System',
-      'Trucks List',
+      {
+        name: 'Trucks List',
+        fields: ['Truck Name', 'Truck #', 'Status', 'Service Type', 'Driver', 'Segment', 'Service Provider'],
+      },
       'New / Edit Truck',
     ],
   },
   {
     module: 'Work Orders',
     screens: [
-      'Work Orders List',
+      {
+        name: 'Work Orders List',
+        fields: [
+          'Work Order # (Case)',
+          'LUID (External Order ID)',
+          'Customer',
+          'Request Type',
+          'Subject',
+          'Due Date',
+          'Priority',
+          'Status',
+          'Service Type',
+          'Asset Type',
+          'Asset Size',
+          'Dispatch Number',
+          'Route ID',
+          'Stop Number',
+          'Hot Ticket',
+          'Resolution Code',
+          'Number of Attempts',
+          'Last Attempt Date/Time',
+          'Attempt Lat/Long',
+          'Notification Required',
+          'Notification Sent',
+          'Notification Channel',
+          'Sent Date/Time',
+          'Photo URL 1',
+          'Photo URL 2',
+          'Created Date',
+          'Last Modified By',
+        ],
+      },
       'Work Order Source Picker',
       'New / Edit Work Order',
       'WOIT — Stage 1: Upload',
@@ -220,9 +348,38 @@ export const PROFILE_SCREEN_MODULES = [
   {
     module: 'Routing & Dispatch',
     screens: [
-      'Routes List',
+      {
+        name: 'Routes List',
+        fields: [
+          'Route Name',
+          'Route Number',
+          'Collection Day(s)',
+          'Frequency',
+          'Collection Type',
+          'Stop Interval',
+          'Truck Assignment',
+          'Driver Assignment',
+          'Average Tips',
+          'Service Provider',
+          'Segment',
+        ],
+      },
       'New / Edit Route',
-      'Dispatch — Route Table / Grid View',
+      {
+        name: 'Dispatch — Route Table / Grid View',
+        fields: [
+          'Dispatch Number',
+          'Dispatch Date',
+          'Dispatch ID',
+          'Route ID',
+          'Dispatch Status',
+          'Truck Number',
+          'Driver ID',
+          'Stop Number',
+          'Created By',
+          'Last Modified By',
+        ],
+      },
       'Dispatch — Lasso Routing View',
       'Dispatch — Manage Profiles',
       'Dispatch — Publish Confirmation',
@@ -239,33 +396,50 @@ export const PROFILE_SCREEN_MODULES = [
   {
     module: 'Telematics / Tips',
     screens: [
-      'Individual Tips / Non-Tip Events List',
+      {
+        name: 'Individual Tips / Non-Tip Events List',
+        fields: [
+          'Event Date / Time',
+          'Customer Location',
+          'Collection Route',
+          'Tipped',
+          'Truck #',
+          'RFID Reference',
+          'Distance',
+        ],
+      },
       'New / Edit Individual Tip',
-      'Aggregated Truck and Tips List',
+      {
+        name: 'Aggregated Truck and Tips List',
+        fields: ['Date', 'Truck #', '# Tips', 'Total Distance', 'Idle Time (min)', 'Speeding Events'],
+      },
       'New / Edit Aggregated Tip Record',
     ],
   },
   {
     module: 'Service Notifications',
-    screens: ['Service Notifications List (account-level)', 'New / Edit Service Notification'],
+    screens: [
+      {
+        name: 'Service Notifications List (account-level)',
+        fields: [
+          'Notification Name',
+          'Status',
+          'Channel',
+          'Notify Days (Trigger)',
+          'Trigger Event',
+          'From Email',
+          'Email Subject',
+          'Message Body',
+          'Window Start',
+          'Window End',
+        ],
+      },
+      'New / Edit Service Notification',
+    ],
   },
   { module: 'Notes & Attachments', screens: ['Notes & Attachments List', 'New Note'] },
   { module: 'Driver Mobile App', screens: ['Mobile — Service Provider Admin View'] },
-  {
-    module: 'Activity Feed',
-    screens: ['Activity Feed (Chatter equivalent)', 'Chatter Posts', 'Mentions'],
-  },
-  {
-    module: 'Governance',
-    screens: [
-      'Approvals Queue',
-      'Record Sharing',
-      'Customer Insights',
-      'Holiday Schedule',
-      'Automation Center',
-      'QAlert (Sarasota Co.)',
-    ],
-  },
+  { module: 'Activity Feed', screens: ['Activity Feed (Chatter equivalent)'] },
   {
     module: 'Integration & Device Mapping',
     screens: ['WO Service Provider Mapping', 'Truck Device Sync'],
@@ -285,7 +459,21 @@ function screenFields(entry) {
   return typeof entry === 'string' ? null : entry.fields || null;
 }
 
-function flagsForPreset(group, entry, index, preset) {
+const PROFILE_FOCUS_MODULES = {
+  'Account Manager': ['Contacts', 'Segments', 'Customers & Manage Account', 'Service Notifications'],
+  'Fleet Manager': ['Assets & Trucks', 'Routing & Dispatch', 'Map Center'],
+  'Asset Manager': ['Assets & Trucks', 'Product Configuration', 'Work Orders'],
+  'Division Manager': [
+    'Contacts',
+    'Segments',
+    'Customers & Manage Account',
+    'Assets & Trucks',
+    'Work Orders',
+    'Routing & Dispatch',
+  ],
+};
+
+function flagsForPreset(group, entry, index, preset, role) {
   if (preset === 'all' || preset === true) {
     return { view: true, edit: true, create: true, delete: true };
   }
@@ -294,8 +482,13 @@ function flagsForPreset(group, entry, index, preset) {
   }
   if (preset === 'view') return { view: true, edit: false, create: false, delete: false };
   if (preset === 'mobile') {
-    const on = group.module === 'Driver Mobile App' || group.module === 'Home Dashboard';
+    const on = group.module === 'Driver Mobile App';
     return { view: on, edit: on, create: false, delete: false };
+  }
+  const focus = PROFILE_FOCUS_MODULES[role];
+  if (focus) {
+    const on = focus.includes(group.module);
+    return { view: on, edit: on, create: on, delete: on };
   }
   const operational = [
     'Home Dashboard',
@@ -305,7 +498,6 @@ function flagsForPreset(group, entry, index, preset) {
     'Work Orders',
     'Routing & Dispatch',
     'Activity Feed',
-    'Governance',
   ];
   if (!operational.includes(group.module)) {
     return { view: false, edit: false, create: false, delete: false };
@@ -326,12 +518,12 @@ function flagsForPreset(group, entry, index, preset) {
   };
 }
 
-export function buildScreenModules(preset = 'all') {
+export function buildScreenModules(preset = 'all', role) {
   return PROFILE_SCREEN_MODULES.map((group) => ({
     module: group.module,
     expanded: false,
     screens: group.screens.map((entry, index) => {
-      const access = flagsForPreset(group, entry, index, preset);
+      const access = flagsForPreset(group, entry, index, preset, role);
       const fields = screenFields(entry);
       return {
         id: `${group.module.slice(0, 3)}-${index}`,

@@ -44,7 +44,7 @@ function hydrateScreens(groups) {
 
 function screensFromProfile(profile) {
   if (profile?.screens?.length) return hydrateScreens(JSON.parse(JSON.stringify(profile.screens)));
-  return buildScreenModules(profile?.preset || (profile?.id ? 'partial' : 'none'));
+  return buildScreenModules(profile?.preset || (profile?.id ? 'partial' : 'none'), profile?.role);
 }
 
 function providersFromProfile(profile, accounts, segments, { blank = false } = {}) {
@@ -608,7 +608,7 @@ export default function ProfileForm({
           event.preventDefault();
           startForm();
         }}
-        title="New Profile"
+        title="Create profile"
         description="Choose how to set up permission access for this profile."
         dirty={false}
         busy={busy}
@@ -752,12 +752,12 @@ export default function ProfileForm({
       <FormDrawer
         onClose={onClose}
         onSubmit={handleSubmit}
-        title={isNew ? 'New Profile' : 'Edit Profile'}
+        title={isNew ? 'Create profile' : 'Edit profile'}
         extraWide
         dirty={dirty}
         busy={busy}
         error={error}
-        submitLabel="Save Profile"
+        submitLabel="Save profile"
         footer={
           <DrawerActions className="justify-between">
             <div>
@@ -772,7 +772,7 @@ export default function ProfileForm({
                 Cancel
               </Button>
               <Button type="submit" variant="primary" disabled={busy || !canSave}>
-                {busy ? 'Saving…' : 'Save Profile'}
+                {busy ? 'Saving…' : 'Save profile'}
               </Button>
             </div>
           </DrawerActions>

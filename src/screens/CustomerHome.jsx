@@ -40,7 +40,7 @@ function locationRoutesSummary(location) {
     location?.yardRoute && `Yard: ${location.yardRoute}`,
   ]
     .filter(Boolean)
-    .join(' Â· ');
+    .join(' · ');
 }
 
 function resolveCustomerLocations({ customerId, customerName, accountId, locations, workOrders }) {
@@ -216,7 +216,7 @@ function ServiceRequestDrawer({ account, user, locations, onClose, onSubmitted }
               set({ notes: e.target.value });
               setError('');
             }}
-            placeholder="Missed pickup, damage, delivery detailsâ€¦"
+            placeholder="Missed pickup, damage, delivery details…"
           />
         </Field>
       </FieldSection>
@@ -332,7 +332,7 @@ export default function CustomerHome({ view }) {
                   <td className="px-4 py-3">
                     <Badge color="cyan">{wo.status}</Badge>
                   </td>
-                  <td className="px-4 py-3 text-ink-muted">{wo.location || 'â€”'}</td>
+                  <td className="px-4 py-3 text-ink-muted">{wo.location || '—'}</td>
                   <td className="mono px-4 py-3 text-ink-muted">{wo.dueDate}</td>
                 </tr>
               ))}
@@ -418,11 +418,11 @@ export default function CustomerHome({ view }) {
             </div>
             <div>
               <dt className="type-overline">Service provider</dt>
-              <dd className="mt-1 text-sm text-ink-muted">{account?.name || 'â€”'}</dd>
+              <dd className="mt-1 text-sm text-ink-muted">{account?.name || '—'}</dd>
             </div>
             <div>
               <dt className="type-overline">Customer ID</dt>
-              <dd className="mono mt-1 text-sm text-ink-muted">{user?.customerId || 'â€”'}</dd>
+              <dd className="mono mt-1 text-sm text-ink-muted">{user?.customerId || '—'}</dd>
             </div>
           </dl>
         </Panel>
@@ -453,19 +453,19 @@ function LocationsContent({ locations, loading, error, onRetry }) {
           {locations.map((location) => (
             <tr key={location.id || location.number || location.name} className="interactive hover:bg-elevated/70">
               <td className="px-4 py-3 font-medium text-ink">
-                {locationLabel(location) || location.name || 'â€”'}
+                {locationLabel(location) || location.name || '—'}
                 {location.type ? (
                   <div className="mt-0.5 text-xs text-ink-faint">{location.type}</div>
                 ) : null}
               </td>
-              <td className="px-4 py-3 text-ink-muted">{location.zone || 'â€”'}</td>
+              <td className="px-4 py-3 text-ink-muted">{location.zone || '—'}</td>
               <td className="px-4 py-3">
                 <Badge color={location.isValidated ? 'green' : 'slate'}>
                   {location.isValidated ? 'Validated' : 'Unvalidated'}
                 </Badge>
               </td>
               <td className="px-4 py-3 text-ink-muted">
-                {locationRoutesSummary(location) || 'â€”'}
+                {locationRoutesSummary(location) || '—'}
               </td>
             </tr>
           ))}

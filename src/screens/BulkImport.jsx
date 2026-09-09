@@ -123,14 +123,24 @@ function schemaFieldKeys(kind) {
   return schema.sections.flatMap((section) => section.fields.map((field) => field.key));
 }
 
+const WOIT_STAGES = [
+  { key: 'upload', label: 'Upload' },
+  { key: 'mapping', label: 'Preview Mapping' },
+  { key: 'validate', label: 'Validate Sample' },
+  { key: 'commit', label: 'Commit' },
+];
+
 export default function BulkImport() {
-  const { toast } = useStore();
+  const { toast, state } = useStore();
+  const navParams = state.nav?.params || {};
   const accountsQuery = useAccounts();
   const bulkImport = useBulkImport();
   const createDispatch = useCreateRecord('dispatches');
   const createNote = useCreateRecord('notesAttachments');
   const createTip = useCreateRecord('individualTips');
-  const [object, setObject] = useState('Work Orders');
+  const [stage, setStage] = useState('upload');
+  const [object, setObject] = useState(navParams.object && OBJECTS[navParams.object] ? navParams.object : 'Work Orders');
+  const [importMode, setImportMode] = useState(navParams.mode || 'standard');
   const [fileName, setFileName] = useState('');
   const [preview, setPreview] = useState([]);
   const [errors, setErrors] = useState([]);
@@ -159,7 +169,13 @@ export default function BulkImport() {
   useEffect(() => {
     setMappingDraft(null);
     setMappingBaseline(null);
+    setStage('upload');
   }, [object]);
+
+  useEffect(() => {
+    if (navParams.object && OBJECTS[navParams.object]) setObject(navParams.object);
+    if (navParams.mode) setImportMode(navParams.mode);
+  }, [navParams.object, navParams.mode]);
 
   const openMapping = () => {
     const next = {
@@ -252,7 +268,7 @@ export default function BulkImport() {
       const known = new Set(schemaFieldKeys(meta.kind));
       columns.forEach((field) => {
         if (known.size && !known.has(field) && field !== 'account') {
-          validation.push(`Column â€œ${field}â€ is not on the ${meta.kind} schema`);
+          validation.push(`Column “${field}” is not on the ${meta.kind} schema`);
         }
       });
     }
@@ -274,7 +290,7 @@ export default function BulkImport() {
     const accountNames = new Set(accounts.map((a) => a.name));
     rows.forEach((row) => {
       if (row.account && !accountNames.has(row.account)) {
-        validation.push(`Row ${row._row}: unknown account â€œ${row.account}â€`);
+        validation.push(`Row ${row._row}: unknown account “${row.account}”`);
       }
       Object.entries(meta.enums || {}).forEach(([field, options]) => {
         const value = row[field];
@@ -283,7 +299,7 @@ export default function BulkImport() {
           option && typeof option === 'object' ? option.value ?? option.label : option
         );
         if (!allowed.includes(value)) {
-          validation.push(`Row ${row._row}: invalid ${field} â€œ${value}â€`);
+          validation.push(`Row ${row._row}: invalid ${field} “${value}”`);
         }
       });
     });
@@ -331,7 +347,7 @@ export default function BulkImport() {
           status: 'Dry run',
           timestamp: new Date().toISOString(),
         });
-        toast(`Dry run Â· ${preview.length} rows would import`, 'success');
+        toast(`Dry run · ${preview.length} rows would import`, 'success');
         return;
       }
 
@@ -354,7 +370,7 @@ export default function BulkImport() {
       });
       toast(
         result.failed
-          ? `${result.imported} imported Â· ${result.failed} failed`
+          ? `${result.imported} imported · ${result.failed} failed`
           : `${result.imported} ${object.toLowerCase()} imported`,
         result.failed ? 'warning' : 'success'
       );
@@ -377,18 +393,42 @@ export default function BulkImport() {
     createTip.isPending ||
     saveMapping.isPending;
 
+  const stageIndex = WOIT_STAGES.findIndex((item) => item.key === stage);
+
   return (
     <Page>
       <PageHeader
         overline="Tools"
-        title="WOIT Import"
-        description="Work Order Import Tool. Upload a CSV to create records for this Service Provider. Portal customers are provisioned in identity systems, not here."
+        title={importMode === 'legacy' ? 'Legacy Asset Import' : 'WOIT Import'}
+        description={
+          importMode === 'legacy'
+            ? 'Four-stage legacy import for non-Rehrig asset migrations.'
+            : 'Work Order Import Tool. Upload, map, validate a sample, then commit. Portal customers are provisioned in identity systems, not here.'
+        }
         actions={
           <Button variant="secondary" onClick={openMapping}>
             <Icon name="sliders" size={14} /> Column mapping
           </Button>
         }
       />
+
+      <div className="mb-5 flex flex-wrap gap-2">
+        {WOIT_STAGES.map((item, index) => (
+          <Button
+            key={item.key}
+            type="button"
+            variant={stage === item.key ? 'primary' : 'secondary'}
+            className="!px-3 !py-1.5 text-xs"
+            onClick={() => {
+              if (index <= stageIndex || (item.key === 'mapping' && fileName) || (item.key === 'validate' && preview.length) || item.key === 'upload') {
+                setStage(item.key);
+              }
+            }}
+          >
+            {index + 1}. {item.label}
+          </Button>
+        ))}
+      </div>
 
       <Panel className="max-w-2xl" padded>
         <Field label="Object">
@@ -417,41 +457,87 @@ export default function BulkImport() {
           {activeMapping.dryRun && <Badge color="amber">Dry run</Badge>}
         </div>
 
-        <div className="mt-5">
-          <p className="type-overline mb-2">File</p>
-          <label className="flex cursor-pointer flex-col items-center justify-center rounded-panel border border-dashed border-line-strong bg-elevated/80 px-4 py-14 interactive hover:border-ink hover:bg-surface hover:shadow-soft">
-            <span className="flex h-11 w-11 items-center justify-center rounded-control border border-line bg-surface text-ink-muted">
-              <Icon name="download" size={18} />
-            </span>
-            <span className="mt-4 text-sm font-medium text-ink">
-              {fileName || 'Drop a CSV here, or click to browse'}
-            </span>
-            <span className="mt-1 text-xs text-ink-faint">Max 10 MB Â· .csv only</span>
-            <input
-              type="file"
-              accept=".csv"
-              className="hidden"
-              onChange={(e) => loadFile(e.target.files?.[0])}
-            />
-          </label>
-        </div>
+        {stage === 'upload' && (
+          <div className="mt-5">
+            <p className="type-overline mb-2">File</p>
+            <label className="flex cursor-pointer flex-col items-center justify-center rounded-panel border border-dashed border-line-strong bg-elevated/80 px-4 py-14 interactive hover:border-ink hover:bg-surface hover:shadow-soft">
+              <span className="flex h-11 w-11 items-center justify-center rounded-control border border-line bg-surface text-ink-muted">
+                <Icon name="download" size={18} />
+              </span>
+              <span className="mt-4 text-sm font-medium text-ink">
+                {fileName || 'Drop a CSV here, or click to browse'}
+              </span>
+              <span className="mt-1 text-xs text-ink-faint">Max 10 MB · .csv only</span>
+              <input
+                type="file"
+                accept=".csv"
+                className="hidden"
+                onChange={(e) => loadFile(e.target.files?.[0])}
+              />
+            </label>
+          </div>
+        )}
+
+        {stage === 'mapping' && (
+          <div className="mt-5 space-y-3">
+            <p className="text-sm text-ink-muted">
+              Preview how CSV headers map to {object} fields. Adjust mapping before validating a sample.
+            </p>
+            <Table columns={['Vision field', 'CSV header']}>
+              {columns.map((field) => (
+                <tr key={field}>
+                  <td className="px-4 py-3 font-medium text-ink">{field}</td>
+                  <td className="mono px-4 py-3 text-ink-muted">{activeMapping.columnMap?.[field] || field}</td>
+                </tr>
+              ))}
+            </Table>
+            <Button variant="secondary" onClick={openMapping}>
+              Edit column mapping
+            </Button>
+          </div>
+        )}
 
         <div className="mt-6 flex items-center justify-end gap-2 border-t border-line pt-5">
           <Button variant="secondary" onClick={downloadTemplate}>
             Download template
           </Button>
-          <Button
-            variant="primary"
-            disabled={!preview.length || errors.length > 0 || importBusy}
-            onClick={importRows}
-          >
-            <Icon name="download" size={15} />{' '}
-            {activeMapping.dryRun ? 'Dry run' : 'Import'} {preview.length || ''} rows
-          </Button>
+          {stage !== 'upload' && (
+            <Button
+              variant="secondary"
+              onClick={() => setStage(WOIT_STAGES[Math.max(0, stageIndex - 1)].key)}
+            >
+              Back
+            </Button>
+          )}
+          {stage === 'upload' && (
+            <Button variant="primary" disabled={!fileName} onClick={() => setStage('mapping')}>
+              Next: Preview mapping
+            </Button>
+          )}
+          {stage === 'mapping' && (
+            <Button variant="primary" disabled={!preview.length} onClick={() => setStage('validate')}>
+              Next: Validate sample
+            </Button>
+          )}
+          {stage === 'validate' && (
+            <Button variant="primary" disabled={!preview.length || errors.length > 0} onClick={() => setStage('commit')}>
+              Next: Commit
+            </Button>
+          )}
+          {stage === 'commit' && (
+            <Button
+              variant="primary"
+              disabled={!preview.length || errors.length > 0 || importBusy}
+              onClick={importRows}
+            >
+              <Icon name="download" size={15} />{' '}
+              {activeMapping.dryRun ? 'Dry run' : 'Commit'} {preview.length || ''} rows
+            </Button>
+          )}
         </div>
       </Panel>
 
-      {(preview.length > 0 || errors.length > 0) && (
+      {(stage === 'validate' || stage === 'commit') && (preview.length > 0 || errors.length > 0) && (
         <Panel className="mt-5">
           <div className="flex items-center justify-between border-b border-line px-5 py-4">
             <div>
@@ -465,7 +551,7 @@ export default function BulkImport() {
           {errors.length > 0 && (
             <ul className="max-h-40 overflow-auto px-5 py-4 text-sm text-danger">
               {errors.slice(0, 20).map((e, i) => (
-                <li key={`${e}-${i}`}>â€¢ {e}</li>
+                <li key={`${e}-${i}`}>• {e}</li>
               ))}
             </ul>
           )}
@@ -475,7 +561,7 @@ export default function BulkImport() {
                 <tr key={row._row}>
                   {columns.slice(0, 4).map((h) => (
                     <td key={h} className="px-4 py-3.5 text-ink-muted">
-                      {row[h] || 'â€”'}
+                      {row[h] || '—'}
                     </td>
                   ))}
                 </tr>
@@ -492,8 +578,8 @@ export default function BulkImport() {
           </p>
           <p className="mt-2 text-sm text-ink-muted">
             {summary.dryRun
-              ? `${summary.previewed} rows validated Â· no records written`
-              : `${summary.imported} imported Â· ${summary.failed} failed Â· ${summary.object}`}
+              ? `${summary.previewed} rows validated · no records written`
+              : `${summary.imported} imported · ${summary.failed} failed · ${summary.object}`}
           </p>
         </Panel>
       )}
@@ -507,7 +593,7 @@ export default function BulkImport() {
           {historyEntries.map((entry) => (
             <tr key={entry.id}>
               <td className="px-4 py-3.5 font-medium text-ink">{entry.object}</td>
-              <td className="mono px-4 py-3.5 text-ink-muted">{entry.rowCount ?? 'â€”'}</td>
+              <td className="mono px-4 py-3.5 text-ink-muted">{entry.rowCount ?? '—'}</td>
               <td className="px-4 py-3.5">
                 <Badge
                   color={
@@ -524,7 +610,7 @@ export default function BulkImport() {
                 </Badge>
               </td>
               <td className="mono px-4 py-3.5 text-ink-muted">
-                {entry.timestamp ? new Date(entry.timestamp).toLocaleString() : 'â€”'}
+                {entry.timestamp ? new Date(entry.timestamp).toLocaleString() : '—'}
               </td>
             </tr>
           ))}
