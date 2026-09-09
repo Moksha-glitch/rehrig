@@ -111,6 +111,16 @@ function timeGreeting() {
   return 'Good evening';
 }
 
+function rollToChild(scroller, child, instant) {
+  if (!scroller || !child) return;
+  const top =
+    scroller.scrollTop +
+    child.getBoundingClientRect().top -
+    scroller.getBoundingClientRect().top -
+    12;
+  scroller.scrollTo({ top: Math.max(0, top), behavior: instant ? 'auto' : 'smooth' });
+}
+
 function chatReplyFor(key) {
   if (key === DAY_METRICS_KEY) {
     return "Here's today's collections — tips so far, trucks reporting, unmatched carts, and route pace.";
@@ -176,9 +186,26 @@ export default function VisionChat({ onOnboard, onClose, children }) {
   }, [turns, busy]);
 
   useEffect(() => {
-    if (viewing.type !== 'playbook' || !currentAnswerRef.current) return;
-    currentAnswerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, [viewing.type, viewing.key, viewing.turnId]);
+    if (viewing.type !== 'playbook' || !viewing.turnId) return undefined;
+    const scroller = agentScrollRef.current;
+    if (!scroller) return undefined;
+
+    let cancelled = false;
+    const roll = () => {
+      if (cancelled) return;
+      const target = document.getElementById(`vision-answer-${viewing.turnId}`);
+      if (!target) return;
+      rollToChild(scroller, target, !!viewing.instant);
+    };
+
+    const frame = window.requestAnimationFrame(roll);
+    const retry = window.setTimeout(roll, 120);
+    return () => {
+      cancelled = true;
+      window.cancelAnimationFrame(frame);
+      window.clearTimeout(retry);
+    };
+  }, [viewing.type, viewing.turnId, viewing.focus, viewing.instant]);
 
   useEffect(() => {
     window.clearTimeout(timerRef.current);
@@ -254,20 +281,41 @@ export default function VisionChat({ onOnboard, onClose, children }) {
     });
   };
 
+  const finishTurnReply = (id, reply) => {
+    setTurns((prev) => {
+      const next = prev.map((item) => (item.id === id ? { ...item, reply } : item));
+      persistCurrent(next);
+      return next;
+    });
+    setBusy(false);
+    window.setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 0);
+  };
+
   const askDayMetrics = (instant = false) => {
     turnId.current += 1;
     const turn = {
       id: turnId.current,
       prompt: DAY_METRICS_PROMPT,
       playbookKey: DAY_METRICS_KEY,
-      reply: chatReplyFor(DAY_METRICS_KEY),
+      reply: instant ? chatReplyFor(DAY_METRICS_KEY) : null,
       action: null,
     };
     const nextTurns = [...turns, turn];
     setTurns(nextTurns);
-    setViewing({ type: 'landing', instant, turnId: turn.id });
-    persistCurrent(nextTurns);
-    window.setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 0);
+    setViewing((prev) => ({
+      type: 'landing',
+      instant,
+      turnId: turn.id,
+      focus: (prev.focus || 0) + 1,
+    }));
+    if (instant) {
+      persistCurrent(nextTurns);
+      window.setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 0);
+      return;
+    }
+    setBusy(true);
+    window.clearTimeout(timerRef.current);
+    timerRef.current = window.setTimeout(() => finishTurnReply(turn.id, chatReplyFor(DAY_METRICS_KEY)), 520);
   };
 
   const askPlaybook = (key, instant = false) => {
@@ -282,7 +330,7 @@ export default function VisionChat({ onOnboard, onClose, children }) {
       id: turnId.current,
       prompt: answer.q,
       playbookKey: key,
-      reply: chatReplyFor(key),
+      reply: instant ? chatReplyFor(key) : null,
       action: null,
     };
     const nextTurns = [...turns, turn];
@@ -290,11 +338,18 @@ export default function VisionChat({ onOnboard, onClose, children }) {
     setViewing((prev) => ({
       type: 'playbook',
       key,
-      instant: instant || prev.type === 'playbook' || prev.type === 'landing',
+      instant,
       turnId: turn.id,
+      focus: (prev.focus || 0) + 1,
     }));
-    persistCurrent(nextTurns);
-    window.setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 0);
+    if (instant) {
+      persistCurrent(nextTurns);
+      window.setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 0);
+      return;
+    }
+    setBusy(true);
+    window.clearTimeout(timerRef.current);
+    timerRef.current = window.setTimeout(() => finishTurnReply(turn.id, chatReplyFor(key)), 520);
   };
 
   const send = (rawPrompt) => {
@@ -390,11 +445,26 @@ export default function VisionChat({ onOnboard, onClose, children }) {
     setTurns(normalized.turns || []);
     const last = (normalized.turns || [])[normalized.turns.length - 1];
     if (last?.playbookKey === DAY_METRICS_KEY) {
-      setViewing({ type: 'landing', instant: true, turnId: last.id });
+      setViewing((prev) => ({
+        type: 'landing',
+        instant: true,
+        turnId: last.id,
+        focus: (prev.focus || 0) + 1,
+      }));
     } else if (last?.playbookKey && PLAYBOOK[last.playbookKey]) {
-      setViewing({ type: 'playbook', key: last.playbookKey, instant: true, turnId: last.id });
+      setViewing((prev) => ({
+        type: 'playbook',
+        key: last.playbookKey,
+        instant: true,
+        turnId: last.id,
+        focus: (prev.focus || 0) + 1,
+      }));
     } else {
-      setViewing({ type: 'landing', turnId: last?.id });
+      setViewing((prev) => ({
+        type: 'landing',
+        turnId: last?.id,
+        focus: (prev.focus || 0) + 1,
+      }));
     }
     setHistoryOpen(false);
     setFavsOpen(false);
@@ -402,11 +472,22 @@ export default function VisionChat({ onOnboard, onClose, children }) {
 
   const reopen = (turn) => {
     if (turn.playbookKey === DAY_METRICS_KEY) {
-      setViewing({ type: 'landing', instant: true, turnId: turn.id });
+      setViewing((prev) => ({
+        type: 'landing',
+        instant: true,
+        turnId: turn.id,
+        focus: (prev.focus || 0) + 1,
+      }));
       return;
     }
     if (turn.playbookKey && PLAYBOOK[turn.playbookKey]) {
-      setViewing({ type: 'playbook', key: turn.playbookKey, instant: true, turnId: turn.id });
+      setViewing((prev) => ({
+        type: 'playbook',
+        key: turn.playbookKey,
+        instant: true,
+        turnId: turn.id,
+        focus: (prev.focus || 0) + 1,
+      }));
     }
   };
 
@@ -511,13 +592,15 @@ export default function VisionChat({ onOnboard, onClose, children }) {
 
   const closeDetail = () => setViewing({ type: 'idle' });
 
+  const playbookTurns = turns.filter(
+    (turn) => turn.playbookKey && turn.playbookKey !== DAY_METRICS_KEY && PLAYBOOK[turn.playbookKey]
+  );
+
   const agentPage = showDetail ? (
-    <section className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-canvas" aria-label="Answer">
+    <section className="flex h-full min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-canvas" aria-label="Answer">
       <div className="flex h-[60px] shrink-0 items-center justify-between gap-2 border-b border-line bg-surface px-3">
         <div className="min-w-0">
-          <p className="text-xs font-semibold text-brand">
-            {viewing.type === 'playbook' ? 'Answer' : "Today's collections"}
-          </p>
+          <p className="text-xs font-semibold text-brand">Today&apos;s collections</p>
           <p className="truncate text-[10px] text-ink-faint">{answerSub}</p>
         </div>
         <button
@@ -528,37 +611,42 @@ export default function VisionChat({ onOnboard, onClose, children }) {
           Back to page
         </button>
       </div>
-      <div ref={agentScrollRef} className="min-h-0 flex-1 overflow-y-auto px-4 py-4 scroll-thin">
+      <div
+        ref={agentScrollRef}
+        className="relative min-h-0 flex-1 overflow-y-auto px-4 py-4 scroll-thin [overflow-anchor:none]"
+      >
         <LandingReport
+          instant={!!viewing.instant}
           onAsk={askPlaybook}
           onExport={handleExport}
           onCreateWidget={openCreateWidget}
           onCreateReport={openCreateReport}
         />
-        {turns
-          .filter((turn) => turn.playbookKey && PLAYBOOK[turn.playbookKey])
-          .map((turn) => (
-            <div
-              key={turn.id}
-              ref={turn.id === viewing.turnId ? currentAnswerRef : undefined}
-              className="mt-6 scroll-mt-4 border-t border-line pt-6"
-            >
-              <StructuredAnswer
-                answer={PLAYBOOK[turn.playbookKey]}
-                instant
-                onAsk={askPlaybook}
-                onExport={handleExport}
-                onCreateWidget={openCreateWidget}
-                onCreateReport={openCreateReport}
-              />
-            </div>
-          ))}
+        {playbookTurns.map((turn) => (
+          <div
+            key={turn.id}
+            id={`vision-answer-${turn.id}`}
+            ref={turn.id === viewing.turnId ? currentAnswerRef : undefined}
+            className={`mt-8 border-t border-line pt-6 ${
+              turn.id === viewing.turnId ? 'min-h-[calc(100vh-8.5rem)]' : ''
+            }`}
+          >
+            <StructuredAnswer
+              answer={PLAYBOOK[turn.playbookKey]}
+              instant={turn.id !== viewing.turnId || !!viewing.instant}
+              onAsk={askPlaybook}
+              onExport={handleExport}
+              onCreateWidget={openCreateWidget}
+              onCreateReport={openCreateReport}
+            />
+          </div>
+        ))}
       </div>
     </section>
   ) : null;
 
   return (
-    <>
+    <div className="flex h-full min-h-0 min-w-0 flex-1 overflow-hidden">
     <aside
       className={`flex h-full min-h-0 shrink-0 flex-col overflow-hidden border-r border-line bg-surface ${
         showDetail ? 'w-[426px]' : 'w-full lg:w-[426px]'
@@ -737,19 +825,19 @@ export default function VisionChat({ onOnboard, onClose, children }) {
                   <button
                     type="button"
                     onClick={() => reopen(turn)}
-                    className={`max-w-[92%] self-end rounded-2xl rounded-br-md px-3 py-2 text-left text-[13px] leading-snug text-white ${
+                    className={`assistant-msg-enter max-w-[92%] self-end rounded-2xl rounded-br-md px-3 py-2 text-left text-[13px] leading-snug text-white ${
                       turn.id === activeTurnId && isReport ? 'bg-brand ring-2 ring-brand/30 ring-offset-2' : 'bg-brand'
                     }`}
                   >
                     {turn.prompt}
                   </button>
                   {waiting ? (
-                    <div className="flex max-w-[92%] items-center gap-2 self-start rounded-2xl rounded-bl-md border border-line bg-surface px-3 py-2 text-[13px] text-ink-muted">
+                    <div className="assistant-msg-enter flex max-w-[92%] items-center gap-2 self-start rounded-2xl rounded-bl-md border border-line bg-surface px-3 py-2 text-[13px] text-ink-muted">
                       <span className="loading-spinner" />
                       Reading your question…
                     </div>
                   ) : turn.reply ? (
-                    <div className="max-w-[92%] self-start rounded-2xl rounded-bl-md border border-line bg-surface px-3 py-2 text-left text-[13px] leading-snug text-ink">
+                    <div className="assistant-msg-enter max-w-[92%] self-start rounded-2xl rounded-bl-md border border-line bg-surface px-3 py-2 text-left text-[13px] leading-snug text-ink">
                       <p>{turn.reply}</p>
                       {isReport && (
                         <button
@@ -885,6 +973,6 @@ export default function VisionChat({ onOnboard, onClose, children }) {
         error={reportError}
       />
     )}
-    </>
+    </div>
   );
 }

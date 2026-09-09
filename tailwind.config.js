@@ -88,11 +88,16 @@ export default {
           '0%': { transform: 'scaleX(0)' },
           '100%': { transform: 'scaleX(1)' },
         },
+        'slide-in': {
+          '0%': { opacity: '0', transform: 'translateX(28px)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
       },
       animation: {
         'fade-up': 'fade-up 480ms cubic-bezier(0.22, 1, 0.36, 1) both',
         'fade-in': 'fade-in 280ms ease-out both',
         'rule-draw': 'rule-draw 520ms cubic-bezier(0.22, 1, 0.36, 1) both',
+        'slide-in': 'slide-in 520ms cubic-bezier(0.22, 1, 0.36, 1) both',
       },
     },
   },

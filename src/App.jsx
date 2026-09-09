@@ -314,7 +314,7 @@ export default function App() {
       {!isOnboarding && assistantOpen ? (
         <VisionChat key={state.currentUser?.id || 'anon'} onOnboard={openOnboard} onClose={closeAssistant}>
           {(agentPage) => (
-            <div className={`flex min-h-0 min-w-0 flex-1 flex-col ${agentPage ? '' : 'max-lg:hidden'}`}>
+            <div className={`flex h-full min-h-0 min-w-0 flex-1 flex-col overflow-hidden ${agentPage ? '' : 'max-lg:hidden'}`}>
               {agentPage || (
                 <>
                   <TopBar />
