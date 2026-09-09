@@ -278,7 +278,7 @@ export function LandingReport({ onAsk, onExport, onCreateWidget, onCreateReport 
   const [tab, setTab] = useState('byRoute');
   const table = tab === 'byRoute' ? PLAYBOOK_LANDING.byRoute : PLAYBOOK_LANDING.byTruck;
   return (
-    <div className="mx-auto max-w-[42rem] space-y-5 animate-fade-up">
+    <div className="mx-auto max-w-[42rem] space-y-4 animate-fade-up">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="mb-1 flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-success">

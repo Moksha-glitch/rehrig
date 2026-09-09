@@ -35,9 +35,13 @@ import {
 const HISTORY_KEY = 'vision.ui.chatHistory';
 const FAVS_KEY = 'vision.ui.chatFavorites';
 
-function readHistory() {
+function storageKey(base, userKey) {
+  return `${base}.${userKey || 'anon'}`;
+}
+
+function readHistory(userKey) {
   try {
-    const raw = window.localStorage.getItem(HISTORY_KEY);
+    const raw = window.localStorage.getItem(storageKey(HISTORY_KEY, userKey));
     const parsed = raw ? JSON.parse(raw) : [];
     return Array.isArray(parsed) ? parsed.map(normalizeThread) : [];
   } catch {
@@ -45,17 +49,17 @@ function readHistory() {
   }
 }
 
-function writeHistory(threads) {
+function writeHistory(userKey, threads) {
   try {
-    window.localStorage.setItem(HISTORY_KEY, JSON.stringify(threads.slice(0, 12)));
+    window.localStorage.setItem(storageKey(HISTORY_KEY, userKey), JSON.stringify(threads.slice(0, 12)));
   } catch {
     /* ignore quota / private-mode failures */
   }
 }
 
-function readFavorites() {
+function readFavorites(userKey) {
   try {
-    const raw = window.localStorage.getItem(FAVS_KEY);
+    const raw = window.localStorage.getItem(storageKey(FAVS_KEY, userKey));
     const parsed = raw ? JSON.parse(raw) : [];
     return Array.isArray(parsed) ? parsed.map(normalizeThread) : [];
   } catch {
@@ -63,9 +67,9 @@ function readFavorites() {
   }
 }
 
-function writeFavorites(threads) {
+function writeFavorites(userKey, threads) {
   try {
-    window.localStorage.setItem(FAVS_KEY, JSON.stringify(threads.slice(0, 12)));
+    window.localStorage.setItem(storageKey(FAVS_KEY, userKey), JSON.stringify(threads.slice(0, 12)));
   } catch {
     /* ignore quota / private-mode failures */
   }
@@ -120,13 +124,15 @@ export default function VisionChat({ onOnboard, onClose }) {
     [persona, canAccessModule, canTab]
   );
   const pageLabel = MODULE_LABELS[state.nav.module] || 'Home';
+  const user = state.currentUser;
+  const userKey = user?.id || user?.email || 'anonymous';
   const isSp = persona === 'sp';
   const [draft, setDraft] = useState('');
   const [turns, setTurns] = useState([]);
-  const [viewing, setViewing] = useState({ type: isSp ? 'landing' : 'empty' });
+  const [viewing, setViewing] = useState({ type: 'landing' });
   const [busy, setBusy] = useState(false);
-  const [history, setHistory] = useState(readHistory);
-  const [favorites, setFavorites] = useState(readFavorites);
+  const [history, setHistory] = useState(() => readHistory(userKey));
+  const [favorites, setFavorites] = useState(() => readFavorites(userKey));
   const [historyOpen, setHistoryOpen] = useState(false);
   const [favsOpen, setFavsOpen] = useState(false);
   const [widgetDraft, setWidgetDraft] = useState(null);
@@ -158,6 +164,20 @@ export default function VisionChat({ onOnboard, onClose }) {
   }, [turns, busy]);
 
   useEffect(() => {
+    window.clearTimeout(timerRef.current);
+    chatIdRef.current = null;
+    turnId.current = 0;
+    setTurns([]);
+    setDraft('');
+    setBusy(false);
+    setViewing({ type: 'landing' });
+    setHistory(readHistory(userKey));
+    setFavorites(readFavorites(userKey));
+    setHistoryOpen(false);
+    setFavsOpen(false);
+  }, [userKey]);
+
+  useEffect(() => {
     if (!historyOpen && !favsOpen) return undefined;
     const closeMenus = () => {
       setHistoryOpen(false);
@@ -178,7 +198,6 @@ export default function VisionChat({ onOnboard, onClose }) {
     };
   }, [historyOpen, favsOpen]);
 
-  const user = state.currentUser;
   const greetName = user?.firstName || user?.name || (isSp ? 'Edmonton AB Admin' : 'there');
   const starters = isSp ? PLAYBOOK_STARTERS : content.chips.map((label) => ({ key: label, label }));
   const searchQuery = useSearch(draft);
@@ -213,7 +232,7 @@ export default function VisionChat({ onOnboard, onClose }) {
     };
     setHistory((prev) => {
       const next = [thread, ...prev.filter((item) => item.id !== thread.id)].slice(0, 12);
-      writeHistory(next);
+      writeHistory(userKey, next);
       return next;
     });
   };
@@ -242,7 +261,6 @@ export default function VisionChat({ onOnboard, onClose }) {
     const playbookKey = PLAYBOOK[prompt] ? prompt : resolvePlaybookKey(prompt);
     if (playbookKey && PLAYBOOK[playbookKey]) {
       setDraft('');
-      if (inputRef.current) inputRef.current.style.height = 'auto';
       askPlaybook(playbookKey);
       return;
     }
@@ -251,7 +269,6 @@ export default function VisionChat({ onOnboard, onClose }) {
     const nextTurns = [...turns, turn];
     setTurns(nextTurns);
     setDraft('');
-    if (inputRef.current) inputRef.current.style.height = 'auto';
     setBusy(true);
     setViewing({ type: 'intent', turnId: turn.id });
     window.clearTimeout(timerRef.current);
@@ -282,7 +299,7 @@ export default function VisionChat({ onOnboard, onClose }) {
       const next = exists
         ? prev.filter((item) => item.title !== thread.title)
         : [{ ...thread, id: thread.id || `fav-${Date.now().toString(36)}` }, ...prev].slice(0, 12);
-      writeFavorites(next);
+      writeFavorites(userKey, next);
       return next;
     });
   };
@@ -290,7 +307,7 @@ export default function VisionChat({ onOnboard, onClose }) {
   const removeHistory = (thread) => {
     setHistory((prev) => {
       const next = prev.filter((item) => item.id !== thread.id && item.title !== thread.title);
-      writeHistory(next);
+      writeHistory(userKey, next);
       return next;
     });
   };
@@ -308,7 +325,7 @@ export default function VisionChat({ onOnboard, onClose }) {
     setTurns([]);
     setBusy(false);
     setDraft('');
-    setViewing({ type: isSp ? 'landing' : 'empty' });
+    setViewing({ type: 'landing' });
     setHistoryOpen(false);
     setFavsOpen(false);
     window.setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 0);
@@ -324,7 +341,7 @@ export default function VisionChat({ onOnboard, onClose }) {
     } else if (last) {
       setViewing({ type: 'intent', turnId: last.id });
     } else {
-      setViewing({ type: isSp ? 'landing' : 'empty' });
+      setViewing({ type: 'landing' });
     }
     setHistoryOpen(false);
     setFavsOpen(false);
@@ -442,10 +459,10 @@ export default function VisionChat({ onOnboard, onClose }) {
 
   return (
     <aside
-      className="flex h-full min-h-0 w-full shrink-0 flex-col border-r border-line bg-surface lg:w-[min(52rem,46vw)]"
+      className="flex h-full min-h-0 w-full shrink-0 flex-col overflow-hidden border-r border-line bg-surface lg:w-[min(52rem,46vw)]"
       aria-label="Vision AI"
     >
-      <div className="flex h-12 shrink-0 items-center justify-between gap-2 border-b border-line bg-surface px-3">
+      <div className="flex h-11 shrink-0 items-center justify-between gap-2 border-b border-line bg-surface px-3">
         <div className="flex min-w-0 items-center gap-2">
           <VisionAiMark size={28} className="shrink-0 rounded-md" />
           <div className="min-w-0">
@@ -601,35 +618,35 @@ export default function VisionChat({ onOnboard, onClose }) {
         </div>
       </div>
 
-      <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
-        <section className="flex min-h-0 min-w-0 flex-col border-b border-line bg-canvas lg:h-auto lg:w-[20rem] lg:shrink-0 lg:border-b-0 lg:border-r" aria-label="Ask">
-          <div className="flex shrink-0 items-center gap-2 border-b border-line bg-surface px-3 py-2.5">
-            <span className="flex h-6 w-6 items-center justify-center rounded-md bg-brand text-[11px] font-bold text-white">?</span>
+      <div className="flex min-h-0 flex-1 overflow-hidden flex-col lg:flex-row">
+        <section className="flex h-[42%] min-h-0 min-w-0 shrink-0 flex-col overflow-hidden border-b border-line bg-canvas lg:h-auto lg:w-[20rem] lg:border-b-0 lg:border-r" aria-label="Ask">
+          <div className="flex shrink-0 items-center gap-2 border-b border-line bg-surface px-3 py-2">
+            <VisionAiMark size={20} className="shrink-0 rounded-md" />
             <div>
               <p className="text-xs font-semibold text-brand">Ask</p>
               <p className="text-[10px] text-ink-faint">Your questions land here</p>
             </div>
           </div>
-          <div ref={logRef} className="min-h-0 flex-1 overflow-y-auto px-3 py-4 scroll-thin">
+          <div ref={logRef} className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-3 py-2.5 scroll-thin">
             {turns.length === 0 ? (
-              <div className="rounded-panel border border-dashed border-line-strong bg-brand-soft px-3 py-3 text-xs leading-relaxed text-ink-muted">
-                <p className="mb-1 text-sm font-semibold text-brand">
+              <div className="rounded-panel border border-dashed border-line-strong bg-brand-soft px-3 py-2 text-xs leading-relaxed text-ink-muted">
+                <p className="mb-0.5 text-sm font-semibold text-brand">
                   {timeGreeting()}, {greetName}
                 </p>
-                No questions in this chat yet. Type one below, or pick a suggestion to start.
+                Type a question below, or pick a suggestion to start.
               </div>
             ) : (
-              <div className="flex flex-col items-end gap-3" role="log" aria-live="polite">
+              <div className="flex flex-col items-end gap-2" role="log" aria-live="polite">
                 {turns.map((turn) => (
                   <button
                     key={turn.id}
                     type="button"
                     onClick={() => reopen(turn)}
-                    className={`max-w-[92%] rounded-2xl rounded-br-md px-3.5 py-2.5 text-left text-[13px] leading-relaxed text-white ${
+                    className={`max-w-[92%] rounded-2xl rounded-br-md px-3 py-2 text-left text-[13px] leading-snug text-white ${
                       turn.id === activeTurnId ? 'bg-brand ring-2 ring-brand/30 ring-offset-2' : 'bg-brand'
                     }`}
                   >
-                    <span className="mb-1 block text-[9px] font-bold uppercase tracking-wider text-white/70">
+                    <span className="mb-0.5 block text-[9px] font-bold uppercase tracking-wider text-white/70">
                       You asked · tap to reopen
                     </span>
                     {turn.prompt}
@@ -638,25 +655,9 @@ export default function VisionChat({ onOnboard, onClose }) {
               </div>
             )}
           </div>
-          <div className="shrink-0 border-t border-line px-3 py-3">
-            <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-ink-faint">Try asking</p>
-            <div className="space-y-1.5">
-              {starters.map((item) => (
-                <button
-                  key={item.key}
-                  type="button"
-                  disabled={busy}
-                  onClick={() => (PLAYBOOK[item.key] ? askPlaybook(item.key) : send(item.label))}
-                  className="block w-full rounded-control border border-line bg-surface px-3 py-2 text-left text-xs font-medium text-brand hover:border-brand hover:bg-brand-soft disabled:opacity-50"
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div className="relative shrink-0 border-t border-line px-3 pb-3 pt-2">
+          <div className="relative shrink-0 overflow-hidden border-t border-line bg-surface px-3 py-2">
             {showSearch && (
-              <div className="absolute inset-x-3 bottom-full z-20 mb-2 max-h-64 overflow-y-auto rounded-panel border border-line bg-surface p-1.5 shadow-float scroll-thin">
+              <div className="absolute inset-x-3 bottom-full z-20 mb-1.5 max-h-56 overflow-y-auto rounded-panel border border-line bg-surface p-1.5 shadow-float scroll-thin">
                 <div className="px-3 pb-1 pt-1.5 type-overline">Jump to</div>
                 {searchResults.slice(0, 8).map((result) => (
                   <button
@@ -666,7 +667,7 @@ export default function VisionChat({ onOnboard, onClose }) {
                       navigate(result.module, result.params);
                       setDraft('');
                     }}
-                    className="block w-full rounded-control px-3 py-2 text-left hover:bg-elevated"
+                    className="block w-full rounded-control px-3 py-1.5 text-left hover:bg-elevated"
                   >
                     <span className="block truncate text-sm font-medium text-ink">{result.label}</span>
                     {(result.meta || result.category) && (
@@ -676,56 +677,62 @@ export default function VisionChat({ onOnboard, onClose }) {
                 ))}
               </div>
             )}
+            <div className="mb-2">
+              <p className="mb-1.5 text-[10px] font-bold uppercase tracking-wider text-ink-faint">Try asking</p>
+              <div className="flex flex-col gap-1">
+                {starters.map((item) => (
+                  <button
+                    key={item.key}
+                    type="button"
+                    disabled={busy}
+                    onClick={() => (PLAYBOOK[item.key] ? askPlaybook(item.key) : send(item.label))}
+                    className="block w-full rounded-control border border-line bg-canvas px-2.5 py-1.5 text-left text-xs font-medium text-brand hover:border-brand hover:bg-brand-soft disabled:opacity-50"
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            </div>
             <form
               onSubmit={(event) => {
                 event.preventDefault();
                 send(draft);
               }}
-              className="flex items-end gap-2"
+              className="flex items-center gap-2"
             >
-              <label className="flex min-h-9 min-w-0 flex-1 items-center rounded-control border border-line bg-elevated px-3">
+              <label className="flex h-9 min-w-0 flex-1 items-center overflow-hidden rounded-control border border-line bg-elevated px-3">
                 <span className="sr-only">Message Vision AI</span>
-                <textarea
+                <input
                   ref={inputRef}
+                  type="text"
                   value={draft}
-                  onChange={(event) => {
-                    setDraft(event.target.value);
-                    const field = event.target;
-                    field.style.height = 'auto';
-                    field.style.height = `${Math.min(field.scrollHeight, 96)}px`;
-                  }}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter' && !event.shiftKey) {
-                      event.preventDefault();
-                      send(draft);
-                    }
-                  }}
+                  onChange={(event) => setDraft(event.target.value)}
                   disabled={busy}
-                  rows={1}
+                  autoComplete="off"
                   placeholder={
                     isSp
-                      ? "Ask about today's collections, routes, trucks, work orders…"
+                      ? "Ask about today's collections, routes, trucks…"
                       : 'How can I help you today?'
                   }
-                  className="max-h-24 min-h-9 w-full resize-none bg-transparent py-2 text-sm leading-5 text-ink placeholder:text-ink-faint focus:outline-none focus-visible:shadow-none"
+                  className="min-w-0 h-full w-full overflow-hidden bg-transparent text-sm leading-5 text-ink placeholder:text-ink-faint focus:outline-none focus-visible:shadow-none"
                 />
               </label>
-              <Button type="submit" variant="primary" disabled={busy || !draft.trim()} className="!px-3">
+              <Button type="submit" variant="primary" disabled={busy || !draft.trim()} className="!h-9 !px-3 !py-0">
                 Ask
               </Button>
             </form>
           </div>
         </section>
 
-        <section className="flex min-h-0 min-w-0 flex-1 flex-col bg-canvas" aria-label="Answer">
-          <div className="flex shrink-0 items-center gap-2 border-b border-line bg-surface px-3 py-2.5">
-            <span className="flex h-6 w-6 items-center justify-center rounded-md bg-success text-[11px] font-bold text-white">✦</span>
+        <section className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-canvas" aria-label="Answer">
+          <div className="flex shrink-0 items-center gap-2 border-b border-line bg-surface px-3 py-2">
+            <span className="flex h-5 w-5 items-center justify-center rounded-md bg-success text-[10px] font-bold text-white">✦</span>
             <div className="min-w-0">
               <p className="text-xs font-semibold text-brand">Answer</p>
               <p className="truncate text-[10px] text-ink-faint">{answerSub}</p>
             </div>
           </div>
-          <div className="min-h-0 flex-1 overflow-y-auto px-4 py-5 scroll-thin">
+          <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3 scroll-thin">
             {viewing.type === 'playbook' && playbookAnswer && (
               <StructuredAnswer
                 key={`${viewing.turnId}-${viewing.instant ? 'i' : 'a'}`}
@@ -747,7 +754,7 @@ export default function VisionChat({ onOnboard, onClose }) {
                 <IntentAnswer text={activeTurn?.reply || content.fallback} action={activeTurn?.action} onAction={runAction} />
               )
             )}
-            {viewing.type === 'landing' && (
+            {viewing.type === 'landing' && isSp && (
               <LandingReport
                 onAsk={askPlaybook}
                 onExport={handleExport}
@@ -755,11 +762,9 @@ export default function VisionChat({ onOnboard, onClose }) {
                 onCreateReport={openCreateReport}
               />
             )}
-            {viewing.type === 'empty' && (
+            {viewing.type === 'landing' && !isSp && (
               <div className="flex h-full flex-col items-center justify-center text-center">
-                <span className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-brand-soft text-brand">
-                  <Icon name="zap" size={18} />
-                </span>
+                <VisionAiMark size={40} className="mb-3 rounded-lg" />
                 <h2 className="font-display text-[1.05rem] font-semibold text-brand">{content.heading}</h2>
                 <p className="mt-2 max-w-[18rem] text-[12.5px] leading-relaxed text-ink-muted">{content.intro}</p>
               </div>

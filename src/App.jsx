@@ -274,7 +274,7 @@ export default function App() {
     prevModuleRef.current = state.nav.module;
 
     if (loggedInNow) {
-      openAssistant();
+      if (state.currentUser?.persona === 'sp') openAssistant();
       return;
     }
     if (previous !== state.nav.module) closeAssistant();
@@ -312,7 +312,7 @@ export default function App() {
       </a>
       {!isOnboarding && <SideNav open={sidebarOpen} onToggle={toggleSidebar} />}
       {!isOnboarding && assistantOpen && (
-        <VisionChat onOnboard={openOnboard} onClose={closeAssistant} />
+        <VisionChat key={state.currentUser?.id || 'anon'} onOnboard={openOnboard} onClose={closeAssistant} />
       )}
       <div className={`flex min-h-0 min-w-0 flex-1 flex-col ${assistantOpen && !isOnboarding ? 'max-lg:hidden' : ''}`}>
         <TopBar />
