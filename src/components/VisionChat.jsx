@@ -111,6 +111,15 @@ function timeGreeting() {
   return 'Good evening';
 }
 
+function chatReplyFor(key) {
+  if (key === DAY_METRICS_KEY) {
+    return "Here's today's collections — tips so far, trucks reporting, unmatched carts, and route pace.";
+  }
+  const answer = PLAYBOOK[key];
+  if (!answer?.summary) return '';
+  return String(answer.summary).replace(/\{\{(c\d+)\}\}/g, (_, id) => answer.claims?.[id]?.v || '');
+}
+
 export default function VisionChat({ onOnboard, onClose, children }) {
   const { state, persona, navigate, canAccessModule, canTab, toast } = useStore();
   const settingsQuery = useWorkspaceSettings();
@@ -148,6 +157,8 @@ export default function VisionChat({ onOnboard, onClose, children }) {
   const chatIdRef = useRef(null);
   const logRef = useRef(null);
   const menusRef = useRef(null);
+  const agentScrollRef = useRef(null);
+  const currentAnswerRef = useRef(null);
 
   useEffect(() => {
     const focusTimer = window.setTimeout(() => {
@@ -163,6 +174,11 @@ export default function VisionChat({ onOnboard, onClose, children }) {
     if (!logRef.current) return;
     logRef.current.scrollTop = logRef.current.scrollHeight;
   }, [turns, busy]);
+
+  useEffect(() => {
+    if (viewing.type !== 'playbook' || !currentAnswerRef.current) return;
+    currentAnswerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [viewing.type, viewing.key, viewing.turnId]);
 
   useEffect(() => {
     window.clearTimeout(timerRef.current);
@@ -244,7 +260,7 @@ export default function VisionChat({ onOnboard, onClose, children }) {
       id: turnId.current,
       prompt: DAY_METRICS_PROMPT,
       playbookKey: DAY_METRICS_KEY,
-      reply: null,
+      reply: chatReplyFor(DAY_METRICS_KEY),
       action: null,
     };
     const nextTurns = [...turns, turn];
@@ -266,12 +282,17 @@ export default function VisionChat({ onOnboard, onClose, children }) {
       id: turnId.current,
       prompt: answer.q,
       playbookKey: key,
-      reply: null,
+      reply: chatReplyFor(key),
       action: null,
     };
     const nextTurns = [...turns, turn];
     setTurns(nextTurns);
-    setViewing({ type: 'playbook', key, instant, turnId: turn.id });
+    setViewing((prev) => ({
+      type: 'playbook',
+      key,
+      instant: instant || prev.type === 'playbook' || prev.type === 'landing',
+      turnId: turn.id,
+    }));
     persistCurrent(nextTurns);
     window.setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 0);
   };
@@ -501,8 +522,8 @@ export default function VisionChat({ onOnboard, onClose, children }) {
           Back to page
         </button>
       </div>
-      <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4 scroll-thin">
-        {(viewing.type === 'landing' || viewing.type === 'playbook') && (
+      <div ref={agentScrollRef} className="min-h-0 flex-1 overflow-y-auto px-4 py-4 scroll-thin">
+        {isSp && (
           <LandingReport
             onAsk={askPlaybook}
             onExport={handleExport}
@@ -510,19 +531,24 @@ export default function VisionChat({ onOnboard, onClose, children }) {
             onCreateReport={openCreateReport}
           />
         )}
-        {viewing.type === 'playbook' && playbookAnswer && (
-          <div className="mt-6 border-t border-line pt-6">
-            <StructuredAnswer
-              key={`${viewing.turnId}-${viewing.instant ? 'i' : 'a'}`}
-              answer={playbookAnswer}
-              instant={!!viewing.instant}
-              onAsk={askPlaybook}
-              onExport={handleExport}
-              onCreateWidget={openCreateWidget}
-              onCreateReport={openCreateReport}
-            />
-          </div>
-        )}
+        {turns
+          .filter((turn) => turn.playbookKey && PLAYBOOK[turn.playbookKey])
+          .map((turn) => (
+            <div
+              key={turn.id}
+              ref={turn.id === viewing.turnId ? currentAnswerRef : undefined}
+              className={isSp ? 'mt-6 scroll-mt-4 border-t border-line pt-6' : 'scroll-mt-4'}
+            >
+              <StructuredAnswer
+                answer={PLAYBOOK[turn.playbookKey]}
+                instant
+                onAsk={askPlaybook}
+                onExport={handleExport}
+                onCreateWidget={openCreateWidget}
+                onCreateReport={openCreateReport}
+              />
+            </div>
+          ))}
       </div>
     </section>
   ) : null;
@@ -699,33 +725,21 @@ export default function VisionChat({ onOnboard, onClose, children }) {
         ) : (
           <div className="flex flex-col gap-2.5" role="log" aria-live="polite">
             {turns.map((turn) => {
-              const isPlaybook =
+              const isReport =
                 turn.playbookKey === DAY_METRICS_KEY || !!(turn.playbookKey && PLAYBOOK[turn.playbookKey]);
-              const waiting = busy && !turn.reply && !isPlaybook && turn.id === turns[turns.length - 1]?.id;
+              const waiting = busy && !turn.reply && turn.id === turns[turns.length - 1]?.id;
               return (
                 <div key={turn.id} className="flex flex-col gap-1.5">
                   <button
                     type="button"
                     onClick={() => reopen(turn)}
                     className={`max-w-[92%] self-end rounded-2xl rounded-br-md px-3 py-2 text-left text-[13px] leading-snug text-white ${
-                      turn.id === activeTurnId && isPlaybook ? 'bg-brand ring-2 ring-brand/30 ring-offset-2' : 'bg-brand'
+                      turn.id === activeTurnId && isReport ? 'bg-brand ring-2 ring-brand/30 ring-offset-2' : 'bg-brand'
                     }`}
                   >
                     {turn.prompt}
                   </button>
-                  {isPlaybook ? (
-                    turn.id === activeTurnId && showDetail ? null : (
-                      <button
-                        type="button"
-                        onClick={() => reopen(turn)}
-                        className="max-w-[92%] self-start rounded-2xl rounded-bl-md border border-line bg-surface px-3 py-2 text-left text-[13px] leading-snug text-ink"
-                      >
-                        {turn.playbookKey === DAY_METRICS_KEY
-                          ? "View today's collections"
-                          : 'View the detailed report'}
-                      </button>
-                    )
-                  ) : waiting ? (
+                  {waiting ? (
                     <div className="flex max-w-[92%] items-center gap-2 self-start rounded-2xl rounded-bl-md border border-line bg-surface px-3 py-2 text-[13px] text-ink-muted">
                       <span className="loading-spinner" />
                       Reading your question…
@@ -733,6 +747,17 @@ export default function VisionChat({ onOnboard, onClose, children }) {
                   ) : turn.reply ? (
                     <div className="max-w-[92%] self-start rounded-2xl rounded-bl-md border border-line bg-surface px-3 py-2 text-left text-[13px] leading-snug text-ink">
                       <p>{turn.reply}</p>
+                      {isReport && (
+                        <button
+                          type="button"
+                          onClick={() => reopen(turn)}
+                          className="mt-2 text-xs font-semibold text-brand hover:underline"
+                        >
+                          {turn.playbookKey === DAY_METRICS_KEY
+                            ? "Jump to today's collections"
+                            : 'Jump to this report'}
+                        </button>
+                      )}
                       {turn.action && (
                         <Button
                           type="button"
