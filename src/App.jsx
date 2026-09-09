@@ -311,23 +311,37 @@ export default function App() {
         Skip to main content
       </a>
       {!isOnboarding && <SideNav open={sidebarOpen} onToggle={toggleSidebar} />}
-      {!isOnboarding && assistantOpen && (
-        <VisionChat key={state.currentUser?.id || 'anon'} onOnboard={openOnboard} onClose={closeAssistant} />
+      {!isOnboarding && assistantOpen ? (
+        <VisionChat key={state.currentUser?.id || 'anon'} onOnboard={openOnboard} onClose={closeAssistant}>
+          {(agentPage) => (
+            <div className={`flex min-h-0 min-w-0 flex-1 flex-col ${agentPage ? '' : 'max-lg:hidden'}`}>
+              {agentPage || (
+                <>
+                  <TopBar />
+                  <main id="main-content" tabIndex={-1} className="min-h-0 flex-1 overflow-y-auto scroll-thin">
+                    <Router onOnboard={openOnboard} />
+                  </main>
+                </>
+              )}
+            </div>
+          )}
+        </VisionChat>
+      ) : (
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+          <TopBar />
+          <main
+            id="main-content"
+            tabIndex={-1}
+            className={
+              isOnboarding
+                ? 'flex min-h-0 flex-1 flex-col overflow-hidden'
+                : 'min-h-0 flex-1 overflow-y-auto scroll-thin'
+            }
+          >
+            <Router onOnboard={openOnboard} />
+          </main>
+        </div>
       )}
-      <div className={`flex min-h-0 min-w-0 flex-1 flex-col ${assistantOpen && !isOnboarding ? 'max-lg:hidden' : ''}`}>
-        <TopBar />
-        <main
-          id="main-content"
-          tabIndex={-1}
-          className={
-            isOnboarding
-              ? 'flex min-h-0 flex-1 flex-col overflow-hidden'
-              : 'min-h-0 flex-1 overflow-y-auto scroll-thin'
-          }
-        >
-          <Router onOnboard={openOnboard} />
-        </main>
-      </div>
       <Toast message={state.toast} />
     </div>
   );

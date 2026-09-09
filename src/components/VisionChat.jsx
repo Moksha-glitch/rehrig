@@ -1,8 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Icon from './Icon.jsx';
-import VisionAiMark from './VisionAiMark.jsx';
 import { Button } from './UI.jsx';
-import { IntentAnswer, LandingReport, StructuredAnswer } from './AssistantAnswer.jsx';
+import { LandingReport, StructuredAnswer } from './AssistantAnswer.jsx';
 import CreateWidgetDrawer from './CreateWidgetDrawer.jsx';
 import CreateReportDrawer from './CreateReportDrawer.jsx';
 import { useStore } from '../state/AppStore.jsx';
@@ -20,6 +19,8 @@ import {
   PLAYBOOK,
   PLAYBOOK_LANDING,
   PLAYBOOK_STARTERS,
+  DAY_METRICS_KEY,
+  DAY_METRICS_PROMPT,
   buildAnswerExportHtml,
   buildLandingExportHtml,
   downloadAssistantExport,
@@ -110,7 +111,7 @@ function timeGreeting() {
   return 'Good evening';
 }
 
-export default function VisionChat({ onOnboard, onClose }) {
+export default function VisionChat({ onOnboard, onClose, children }) {
   const { state, persona, navigate, canAccessModule, canTab, toast } = useStore();
   const settingsQuery = useWorkspaceSettings();
   const { update: updateWorkspace } = useWorkspaceMutations();
@@ -129,7 +130,7 @@ export default function VisionChat({ onOnboard, onClose }) {
   const isSp = persona === 'sp';
   const [draft, setDraft] = useState('');
   const [turns, setTurns] = useState([]);
-  const [viewing, setViewing] = useState({ type: 'landing' });
+  const [viewing, setViewing] = useState({ type: 'idle' });
   const [busy, setBusy] = useState(false);
   const [history, setHistory] = useState(() => readHistory(userKey));
   const [favorites, setFavorites] = useState(() => readFavorites(userKey));
@@ -170,7 +171,7 @@ export default function VisionChat({ onOnboard, onClose }) {
     setTurns([]);
     setDraft('');
     setBusy(false);
-    setViewing({ type: 'landing' });
+    setViewing({ type: 'idle' });
     setHistory(readHistory(userKey));
     setFavorites(readFavorites(userKey));
     setHistoryOpen(false);
@@ -237,7 +238,27 @@ export default function VisionChat({ onOnboard, onClose }) {
     });
   };
 
+  const askDayMetrics = (instant = false) => {
+    turnId.current += 1;
+    const turn = {
+      id: turnId.current,
+      prompt: DAY_METRICS_PROMPT,
+      playbookKey: DAY_METRICS_KEY,
+      reply: null,
+      action: null,
+    };
+    const nextTurns = [...turns, turn];
+    setTurns(nextTurns);
+    setViewing({ type: 'landing', instant, turnId: turn.id });
+    persistCurrent(nextTurns);
+    window.setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 0);
+  };
+
   const askPlaybook = (key, instant = false) => {
+    if (key === DAY_METRICS_KEY) {
+      askDayMetrics(instant);
+      return;
+    }
     const answer = PLAYBOOK[key];
     if (!answer) return;
     turnId.current += 1;
@@ -259,6 +280,14 @@ export default function VisionChat({ onOnboard, onClose }) {
     const prompt = String(rawPrompt || '').trim();
     if (!prompt || busy) return;
     const playbookKey = PLAYBOOK[prompt] ? prompt : resolvePlaybookKey(prompt);
+    if (
+      prompt.toLowerCase() === DAY_METRICS_PROMPT.toLowerCase() ||
+      /today'?s collections|daily collections|metrics of (the |this )?day/.test(prompt.toLowerCase())
+    ) {
+      setDraft('');
+      askDayMetrics();
+      return;
+    }
     if (playbookKey && PLAYBOOK[playbookKey]) {
       setDraft('');
       askPlaybook(playbookKey);
@@ -270,7 +299,7 @@ export default function VisionChat({ onOnboard, onClose }) {
     setTurns(nextTurns);
     setDraft('');
     setBusy(true);
-    setViewing({ type: 'intent', turnId: turn.id });
+    setViewing({ type: 'idle', turnId: turn.id });
     window.clearTimeout(timerRef.current);
     timerRef.current = window.setTimeout(() => {
       const result = resolveIntent(content, prompt);
@@ -287,7 +316,6 @@ export default function VisionChat({ onOnboard, onClose }) {
   const currentTitle = titleFromTurns(turns);
   const currentIsFavorite = turns.length > 0 && favorites.some((item) => item.title === currentTitle);
   const activeTurnId = viewing.turnId;
-  const activeTurn = turns.find((turn) => turn.id === activeTurnId) || turns[turns.length - 1] || null;
   const playbookAnswer = viewing.type === 'playbook' ? PLAYBOOK[viewing.key] : null;
 
   const isFavorite = (thread) => !!thread?.title && favorites.some((item) => item.title === thread.title);
@@ -325,7 +353,7 @@ export default function VisionChat({ onOnboard, onClose }) {
     setTurns([]);
     setBusy(false);
     setDraft('');
-    setViewing({ type: 'landing' });
+    setViewing({ type: 'idle' });
     setHistoryOpen(false);
     setFavsOpen(false);
     window.setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 0);
@@ -336,23 +364,25 @@ export default function VisionChat({ onOnboard, onClose }) {
     chatIdRef.current = normalized.id || null;
     setTurns(normalized.turns || []);
     const last = (normalized.turns || [])[normalized.turns.length - 1];
-    if (last?.playbookKey && PLAYBOOK[last.playbookKey]) {
+    if (last?.playbookKey === DAY_METRICS_KEY) {
+      setViewing({ type: 'landing', instant: true, turnId: last.id });
+    } else if (last?.playbookKey && PLAYBOOK[last.playbookKey]) {
       setViewing({ type: 'playbook', key: last.playbookKey, instant: true, turnId: last.id });
-    } else if (last) {
-      setViewing({ type: 'intent', turnId: last.id });
     } else {
-      setViewing({ type: 'landing' });
+      setViewing({ type: 'idle', turnId: last?.id });
     }
     setHistoryOpen(false);
     setFavsOpen(false);
   };
 
   const reopen = (turn) => {
-    if (turn.playbookKey && PLAYBOOK[turn.playbookKey]) {
-      setViewing({ type: 'playbook', key: turn.playbookKey, instant: true, turnId: turn.id });
+    if (turn.playbookKey === DAY_METRICS_KEY) {
+      setViewing({ type: 'landing', instant: true, turnId: turn.id });
       return;
     }
-    setViewing({ type: 'intent', turnId: turn.id });
+    if (turn.playbookKey && PLAYBOOK[turn.playbookKey]) {
+      setViewing({ type: 'playbook', key: turn.playbookKey, instant: true, turnId: turn.id });
+    }
   };
 
   const handleExport = () => {
@@ -448,21 +478,64 @@ export default function VisionChat({ onOnboard, onClose }) {
     }
   };
 
+  const showDetail = viewing.type === 'playbook' || viewing.type === 'landing';
   const answerSub =
-    viewing.type === 'playbook'
-      ? playbookAnswer?.persona?.scope || 'How I read your question'
-      : viewing.type === 'intent'
-        ? 'A short answer you can act on'
-        : isSp
-          ? "Today's collections until you ask"
-          : 'Ask a question to see an answer';
+    viewing.type === 'landing'
+      ? PLAYBOOK_LANDING.sub
+      : playbookAnswer?.persona?.scope || "Today's collections";
+
+  const closeDetail = () => setViewing({ type: 'idle' });
+
+  const agentPage = showDetail ? (
+    <section className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-canvas" aria-label="Answer">
+      <div className="flex h-[60px] shrink-0 items-center justify-between gap-2 border-b border-line bg-surface px-3">
+        <div className="min-w-0">
+          <p className="text-xs font-semibold text-brand">Answer</p>
+          <p className="truncate text-[10px] text-ink-faint">{answerSub}</p>
+        </div>
+        <button
+          type="button"
+          onClick={closeDetail}
+          className="shrink-0 rounded-lg px-2 py-1.5 text-xs font-medium text-ink-muted hover:bg-elevated hover:text-ink"
+        >
+          Back to page
+        </button>
+      </div>
+      <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4 scroll-thin">
+        {(viewing.type === 'landing' || viewing.type === 'playbook') && (
+          <LandingReport
+            onAsk={askPlaybook}
+            onExport={handleExport}
+            onCreateWidget={openCreateWidget}
+            onCreateReport={openCreateReport}
+          />
+        )}
+        {viewing.type === 'playbook' && playbookAnswer && (
+          <div className="mt-6 border-t border-line pt-6">
+            <StructuredAnswer
+              key={`${viewing.turnId}-${viewing.instant ? 'i' : 'a'}`}
+              answer={playbookAnswer}
+              instant={!!viewing.instant}
+              onAsk={askPlaybook}
+              onExport={handleExport}
+              onCreateWidget={openCreateWidget}
+              onCreateReport={openCreateReport}
+            />
+          </div>
+        )}
+      </div>
+    </section>
+  ) : null;
 
   return (
+    <>
     <aside
-      className="flex h-full min-h-0 w-full shrink-0 flex-col overflow-hidden border-r border-line bg-surface lg:w-[min(52rem,46vw)]"
+      className={`flex h-full min-h-0 shrink-0 flex-col overflow-hidden border-r border-line bg-surface ${
+        showDetail ? 'w-[426px]' : 'w-full lg:w-[426px]'
+      }`}
       aria-label="Vision AI"
     >
-      <div className="flex h-11 shrink-0 items-center justify-between gap-2 border-b border-line bg-surface px-3">
+      <div className="flex h-[60px] shrink-0 items-center justify-between gap-2 border-b border-line bg-surface px-3">
         <div className="min-w-0">
           <div className="truncate font-display text-sm font-semibold text-brand">Vision AI</div>
           <p className="truncate text-[10px] text-ink-faint">
@@ -615,188 +688,174 @@ export default function VisionChat({ onOnboard, onClose }) {
         </div>
       </div>
 
-      <div className="flex min-h-0 flex-1 overflow-hidden flex-col lg:flex-row">
-        <section className="flex h-[42%] min-h-0 min-w-0 shrink-0 flex-col overflow-hidden border-b border-line bg-canvas lg:h-auto lg:w-[20rem] lg:border-b-0 lg:border-r" aria-label="Ask">
-          <div className="shrink-0 border-b border-line bg-surface px-3 py-2">
-            <p className="text-xs font-semibold text-brand">Ask</p>
-            <p className="text-[10px] text-ink-faint">Your questions land here</p>
+      <div ref={logRef} className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden bg-canvas px-3 py-2.5 scroll-thin">
+        {turns.length === 0 ? (
+          <div className="rounded-panel border border-dashed border-line-strong bg-brand-soft px-3 py-2 text-xs leading-relaxed text-ink-muted">
+            <p className="mb-0.5 text-sm font-semibold text-brand">
+              {timeGreeting()}, {greetName}
+            </p>
+            Type a question below, or pick a suggestion to start.
           </div>
-          <div ref={logRef} className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-3 py-2.5 scroll-thin">
-            {turns.length === 0 ? (
-              <div className="rounded-panel border border-dashed border-line-strong bg-brand-soft px-3 py-2 text-xs leading-relaxed text-ink-muted">
-                <p className="mb-0.5 text-sm font-semibold text-brand">
-                  {timeGreeting()}, {greetName}
-                </p>
-                Type a question below, or pick a suggestion to start.
-              </div>
-            ) : (
-              <div className="flex flex-col items-end gap-2" role="log" aria-live="polite">
-                {turns.map((turn) => (
+        ) : (
+          <div className="flex flex-col gap-2.5" role="log" aria-live="polite">
+            {turns.map((turn) => {
+              const isPlaybook =
+                turn.playbookKey === DAY_METRICS_KEY || !!(turn.playbookKey && PLAYBOOK[turn.playbookKey]);
+              const waiting = busy && !turn.reply && !isPlaybook && turn.id === turns[turns.length - 1]?.id;
+              return (
+                <div key={turn.id} className="flex flex-col gap-1.5">
                   <button
-                    key={turn.id}
                     type="button"
                     onClick={() => reopen(turn)}
-                    className={`max-w-[92%] rounded-2xl rounded-br-md px-3 py-2 text-left text-[13px] leading-snug text-white ${
-                      turn.id === activeTurnId ? 'bg-brand ring-2 ring-brand/30 ring-offset-2' : 'bg-brand'
+                    className={`max-w-[92%] self-end rounded-2xl rounded-br-md px-3 py-2 text-left text-[13px] leading-snug text-white ${
+                      turn.id === activeTurnId && isPlaybook ? 'bg-brand ring-2 ring-brand/30 ring-offset-2' : 'bg-brand'
                     }`}
                   >
-                    <span className="mb-0.5 block text-[9px] font-bold uppercase tracking-wider text-white/70">
-                      You asked · tap to reopen
-                    </span>
                     {turn.prompt}
                   </button>
-                ))}
-              </div>
-            )}
-          </div>
-          <div className="relative shrink-0 overflow-hidden border-t border-line bg-surface px-3 py-2">
-            {showSearch && (
-              <div className="absolute inset-x-3 bottom-full z-20 mb-1.5 max-h-56 overflow-y-auto rounded-panel border border-line bg-surface p-1.5 shadow-float scroll-thin">
-                <div className="px-3 pb-1 pt-1.5 type-overline">Jump to</div>
-                {searchResults.slice(0, 8).map((result) => (
-                  <button
-                    key={result.id}
-                    type="button"
-                    onClick={() => {
-                      navigate(result.module, result.params);
-                      setDraft('');
-                    }}
-                    className="block w-full rounded-control px-3 py-1.5 text-left hover:bg-elevated"
-                  >
-                    <span className="block truncate text-sm font-medium text-ink">{result.label}</span>
-                    {(result.meta || result.category) && (
-                      <span className="mt-0.5 block truncate text-xs text-ink-muted">{result.meta || result.category}</span>
-                    )}
-                  </button>
-                ))}
-              </div>
-            )}
-            <div className="mb-2">
-              <p className="mb-1.5 text-[10px] font-bold uppercase tracking-wider text-ink-faint">Try asking</p>
-              <div className="flex flex-col gap-1">
-                {starters.map((item) => (
-                  <button
-                    key={item.key}
-                    type="button"
-                    disabled={busy}
-                    onClick={() => (PLAYBOOK[item.key] ? askPlaybook(item.key) : send(item.label))}
-                    className="block w-full rounded-control border border-line bg-canvas px-2.5 py-1.5 text-left text-xs font-medium text-brand hover:border-brand hover:bg-brand-soft disabled:opacity-50"
-                  >
-                    {item.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <form
-              onSubmit={(event) => {
-                event.preventDefault();
-                send(draft);
-              }}
-              className="flex items-center gap-2"
-            >
-              <label className="flex h-9 min-w-0 flex-1 items-center overflow-hidden rounded-control border border-line bg-elevated px-3">
-                <span className="sr-only">Message Vision AI</span>
-                <input
-                  ref={inputRef}
-                  type="text"
-                  value={draft}
-                  onChange={(event) => setDraft(event.target.value)}
-                  disabled={busy}
-                  autoComplete="off"
-                  placeholder={
-                    isSp
-                      ? "Ask about today's collections, routes, trucks…"
-                      : 'How can I help you today?'
-                  }
-                  className="min-w-0 h-full w-full overflow-hidden bg-transparent text-sm leading-5 text-ink placeholder:text-ink-faint focus:outline-none focus-visible:shadow-none"
-                />
-              </label>
-              <Button type="submit" variant="primary" disabled={busy || !draft.trim()} className="!h-9 !px-3 !py-0">
-                Ask
-              </Button>
-            </form>
-          </div>
-        </section>
-
-        <section className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-canvas" aria-label="Answer">
-          <div className="flex shrink-0 items-center gap-2 border-b border-line bg-surface px-3 py-2">
-            <span className="flex h-5 w-5 items-center justify-center rounded-md bg-success text-[10px] font-bold text-white">✦</span>
-            <div className="min-w-0">
-              <p className="text-xs font-semibold text-brand">Answer</p>
-              <p className="truncate text-[10px] text-ink-faint">{answerSub}</p>
-            </div>
-          </div>
-          <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3 scroll-thin">
-            {viewing.type === 'playbook' && playbookAnswer && (
-              <StructuredAnswer
-                key={`${viewing.turnId}-${viewing.instant ? 'i' : 'a'}`}
-                answer={playbookAnswer}
-                instant={!!viewing.instant}
-                onAsk={askPlaybook}
-                onExport={handleExport}
-                onCreateWidget={openCreateWidget}
-                onCreateReport={openCreateReport}
-              />
-            )}
-            {viewing.type === 'intent' && (
-              busy && activeTurn && !activeTurn.reply ? (
-                <div className="flex items-center gap-2 text-sm text-ink-muted" role="status">
-                  <span className="loading-spinner" />
-                  Reading your question…
+                  {isPlaybook ? (
+                    turn.id === activeTurnId && showDetail ? null : (
+                      <button
+                        type="button"
+                        onClick={() => reopen(turn)}
+                        className="max-w-[92%] self-start rounded-2xl rounded-bl-md border border-line bg-surface px-3 py-2 text-left text-[13px] leading-snug text-ink"
+                      >
+                        {turn.playbookKey === DAY_METRICS_KEY
+                          ? "View today's collections"
+                          : 'View the detailed report'}
+                      </button>
+                    )
+                  ) : waiting ? (
+                    <div className="flex max-w-[92%] items-center gap-2 self-start rounded-2xl rounded-bl-md border border-line bg-surface px-3 py-2 text-[13px] text-ink-muted">
+                      <span className="loading-spinner" />
+                      Reading your question…
+                    </div>
+                  ) : turn.reply ? (
+                    <div className="max-w-[92%] self-start rounded-2xl rounded-bl-md border border-line bg-surface px-3 py-2 text-left text-[13px] leading-snug text-ink">
+                      <p>{turn.reply}</p>
+                      {turn.action && (
+                        <Button
+                          type="button"
+                          variant="primary"
+                          size="sm"
+                          className="mt-2"
+                          onClick={() => runAction(turn.action)}
+                        >
+                          {turn.action.label}
+                        </Button>
+                      )}
+                    </div>
+                  ) : null}
                 </div>
-              ) : (
-                <IntentAnswer text={activeTurn?.reply || content.fallback} action={activeTurn?.action} onAction={runAction} />
-              )
-            )}
-            {viewing.type === 'landing' && isSp && (
-              <LandingReport
-                onAsk={askPlaybook}
-                onExport={handleExport}
-                onCreateWidget={openCreateWidget}
-                onCreateReport={openCreateReport}
-              />
-            )}
-            {viewing.type === 'landing' && !isSp && (
-              <div className="flex h-full flex-col items-center justify-center text-center">
-                <VisionAiMark size={40} className="mb-3 rounded-lg" />
-                <h2 className="font-display text-[1.05rem] font-semibold text-brand">{content.heading}</h2>
-                <p className="mt-2 max-w-[18rem] text-[12.5px] leading-relaxed text-ink-muted">{content.intro}</p>
-              </div>
-            )}
+              );
+            })}
           </div>
-        </section>
+        )}
       </div>
-      {widgetDraft && (
-        <CreateWidgetDrawer
-          draft={widgetDraft}
-          onChange={setWidgetDraft}
-          onClose={() => {
-            if (!widgetBusy) {
-              setWidgetDraft(null);
-              setWidgetError('');
-            }
+      <div className="relative shrink-0 overflow-hidden border-t border-line bg-surface px-3 py-2">
+        {showSearch && (
+          <div className="absolute inset-x-3 bottom-full z-20 mb-1.5 max-h-56 overflow-y-auto rounded-panel border border-line bg-surface p-1.5 shadow-float scroll-thin">
+            <div className="px-3 pb-1 pt-1.5 type-overline">Jump to</div>
+            {searchResults.slice(0, 8).map((result) => (
+              <button
+                key={result.id}
+                type="button"
+                onClick={() => {
+                  navigate(result.module, result.params);
+                  setDraft('');
+                }}
+                className="block w-full rounded-control px-3 py-1.5 text-left hover:bg-elevated"
+              >
+                <span className="block truncate text-sm font-medium text-ink">{result.label}</span>
+                {(result.meta || result.category) && (
+                  <span className="mt-0.5 block truncate text-xs text-ink-muted">{result.meta || result.category}</span>
+                )}
+              </button>
+            ))}
+          </div>
+        )}
+        <div className="mb-2">
+          <p className="mb-1.5 text-[10px] font-bold uppercase tracking-wider text-ink-faint">Try asking</p>
+          <div className="flex flex-col gap-1">
+            {starters.map((item) => (
+              <button
+                key={item.key}
+                type="button"
+                disabled={busy}
+                onClick={() =>
+                  item.key === DAY_METRICS_KEY || PLAYBOOK[item.key]
+                    ? askPlaybook(item.key)
+                    : send(item.label)
+                }
+                className="block w-full rounded-control border border-line bg-canvas px-2.5 py-1.5 text-left text-xs font-medium text-brand hover:border-brand hover:bg-brand-soft disabled:opacity-50"
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+        </div>
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            send(draft);
           }}
-          onSubmit={handleCreateWidget}
-          busy={widgetBusy}
-          error={widgetError}
-          templates={settingsQuery.data?.dashboardTemplates || []}
-        />
-      )}
-      {reportDraft && (
-        <CreateReportDrawer
-          draft={reportDraft}
-          onChange={setReportDraft}
-          onClose={() => {
-            if (!reportBusy) {
-              setReportDraft(null);
-              setReportError('');
-            }
-          }}
-          onSubmit={handleCreateReport}
-          busy={reportBusy}
-          error={reportError}
-        />
-      )}
+          className="flex items-center gap-2"
+        >
+          <label className="flex h-9 min-w-0 flex-1 items-center overflow-hidden rounded-control border border-line bg-elevated px-3">
+            <span className="sr-only">Message Vision AI</span>
+            <input
+              ref={inputRef}
+              type="text"
+              value={draft}
+              onChange={(event) => setDraft(event.target.value)}
+              disabled={busy}
+              autoComplete="off"
+              placeholder={
+                isSp
+                  ? "Ask about today's collections, routes, trucks…"
+                  : 'How can I help you today?'
+              }
+              className="min-w-0 h-full w-full overflow-hidden bg-transparent text-sm leading-5 text-ink placeholder:text-ink-faint focus:outline-none focus-visible:shadow-none"
+            />
+          </label>
+          <Button type="submit" variant="primary" disabled={busy || !draft.trim()} className="!h-9 !px-3 !py-0">
+            Ask
+          </Button>
+        </form>
+      </div>
     </aside>
+    {typeof children === 'function' ? children(agentPage) : children}
+    {widgetDraft && (
+      <CreateWidgetDrawer
+        draft={widgetDraft}
+        onChange={setWidgetDraft}
+        onClose={() => {
+          if (!widgetBusy) {
+            setWidgetDraft(null);
+            setWidgetError('');
+          }
+        }}
+        onSubmit={handleCreateWidget}
+        busy={widgetBusy}
+        error={widgetError}
+        templates={settingsQuery.data?.dashboardTemplates || []}
+      />
+    )}
+    {reportDraft && (
+      <CreateReportDrawer
+        draft={reportDraft}
+        onChange={setReportDraft}
+        onClose={() => {
+          if (!reportBusy) {
+            setReportDraft(null);
+            setReportError('');
+          }
+        }}
+        onSubmit={handleCreateReport}
+        busy={reportBusy}
+        error={reportError}
+      />
+    )}
+    </>
   );
 }
