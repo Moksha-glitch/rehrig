@@ -149,7 +149,7 @@ export function downloadAssistantExport(title, innerHtml) {
   const safeTitle = String(title || 'Vision AI export').replace(/[<>]/g, '');
   const doc =
     `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><title>${safeTitle}</title>` +
-    `<style>body{font-family:system-ui,sans-serif;padding:28px;color:#1a1a2e;line-height:1.5;max-width:880px;margin:0 auto}h1,h2,h3{color:#1E2761}table{border-collapse:collapse;width:100%;margin:12px 0}th,td{border:1px solid #dce2f2;padding:8px 10px;text-align:left}th{background:#f4f6fc}</style></head><body>` +
+    `<style>body{font-family:system-ui,sans-serif;padding:28px;color:#1a1a2e;line-height:1.5;max-width:880px;margin:0 auto}h1,h2,h3{color:#0C4480}table{border-collapse:collapse;width:100%;margin:12px 0}th,td{border:1px solid #dce2f2;padding:8px 10px;text-align:left}th{background:#f4f6fc}</style></head><body>` +
     innerHtml +
     `<p style="color:#6E7396;font-size:12px">Vision Assistant · exported ${new Date().toLocaleDateString()}</p>` +
     `</body></html>`;

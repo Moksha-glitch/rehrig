@@ -117,7 +117,7 @@ export default function Login() {
   return (
     <main
       className="box-border flex min-h-screen w-full flex-col items-center justify-center p-6 lg:p-12 relative overflow-hidden"
-      style={{ background: '#1E2761' }}
+      style={{ background: 'var(--color-brand)' }}
     >
 
       {/* Absolute Logo */}
@@ -165,7 +165,7 @@ export default function Login() {
         >
           <div
             className="px-3 py-2 text-center text-[11px] font-semibold text-white"
-            style={{ background: '#1E2761' }}
+            style={{ background: 'var(--color-brand)' }}
           >
             Vision Operations Platform
           </div>
@@ -174,7 +174,7 @@ export default function Login() {
             <div className="mb-8 flex items-center gap-2.5 text-brand">
               <div
                 className="flex h-7 w-7 items-center justify-center rounded-lg text-white"
-                style={{ background: '#1E2761', boxShadow: '0 2px 8px rgba(30,39,97,0.3)' }}
+                style={{ background: 'var(--color-brand)', boxShadow: '0 2px 8px rgba(12,68,128,0.3)' }}
               >
                 <Icon name="star" size={14} className="fill-current" />
               </div>
@@ -319,8 +319,8 @@ export default function Login() {
                 aria-busy={busy}
                 className="mt-2 flex min-h-[3rem] w-full items-center justify-center gap-2 rounded-xl text-sm font-bold text-white transition-all disabled:opacity-60"
                 style={{
-                  background: '#1E2761',
-                  boxShadow: '0 4px 16px rgba(30,39,97,0.4)',
+                  background: 'var(--color-brand)',
+                  boxShadow: '0 4px 16px rgba(12,68,128,0.4)',
                 }}
               >
                 {busy ? (

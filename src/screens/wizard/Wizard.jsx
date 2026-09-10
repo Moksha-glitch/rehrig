@@ -826,7 +826,7 @@ export default function Wizard({ onClose, draftId = null }) {
                               : 'text-ink-faint'
                       }`}
                     >
-                      {done ? 'âœ“' : String(s.index + 1).padStart(2, '0')}
+                      {done ? '✓' : String(s.index + 1).padStart(2, '0')}
                     </span>
                     <span className="min-w-0 flex-1">
                       <span
@@ -866,7 +866,7 @@ export default function Wizard({ onClose, draftId = null }) {
                   {STEPS.map((item, i) => (
                     <option key={item.title} value={i} >
                       {i + 1}. {item.title}
-                      {item.required ? (stepStatuses[i]?.complete ? ' âœ“' : ' *') : ''}
+                      {item.required ? (stepStatuses[i]?.complete ? ' ✓' : ' *') : ''}
                     </option>
                   ))}
                 </select>

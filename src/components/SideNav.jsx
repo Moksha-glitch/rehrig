@@ -84,7 +84,7 @@ function FolderFlyout({ anchorEl, section, isItemActive, onSelect }) {
       role="menu"
       aria-label={section.label}
       style={{ top: pos.top, left: pos.left }}
-      className="fixed z-[60] min-w-[13.5rem] rounded-2xl border border-white/10 bg-[#2E3A73] p-1.5 shadow-float"
+      className="fixed z-[60] min-w-[13.5rem] rounded-2xl border border-white/10 bg-brand p-1.5 shadow-float"
     >
       {section.children.map((item) => {
         const active = isItemActive(item);
@@ -149,7 +149,7 @@ function FolderButton({ section, collapsed, open, active, onToggle, isItemActive
                 active
                   ? 'bg-white/10 text-white font-semibold'
                   : open
-                    ? 'bg-[#2E3A73] text-white'
+                    ? 'bg-white/15 text-white'
                     : 'text-white/70 hover:bg-white/10 hover:text-white'
               }`
             : `nav-item flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-[13.5px] transition-colors duration-200 ${

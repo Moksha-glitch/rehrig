@@ -613,34 +613,36 @@ export default function VisionChat({ onOnboard, onClose, children }) {
       </div>
       <div
         ref={agentScrollRef}
-        className="relative min-h-0 flex-1 overflow-y-auto px-4 py-4 scroll-thin [overflow-anchor:none]"
+        className="relative min-h-0 flex-1 overflow-y-auto scroll-thin [overflow-anchor:none]"
       >
-        <LandingReport
-          instant={!!viewing.instant}
-          onAsk={askPlaybook}
-          onExport={handleExport}
-          onCreateWidget={openCreateWidget}
-          onCreateReport={openCreateReport}
-        />
-        {playbookTurns.map((turn) => (
-          <div
-            key={turn.id}
-            id={`vision-answer-${turn.id}`}
-            ref={turn.id === viewing.turnId ? currentAnswerRef : undefined}
-            className={`mt-8 border-t border-line pt-6 ${
-              turn.id === viewing.turnId ? 'min-h-[calc(100vh-8.5rem)]' : ''
-            }`}
-          >
-            <StructuredAnswer
-              answer={PLAYBOOK[turn.playbookKey]}
-              instant={turn.id !== viewing.turnId || !!viewing.instant}
-              onAsk={askPlaybook}
-              onExport={handleExport}
-              onCreateWidget={openCreateWidget}
-              onCreateReport={openCreateReport}
-            />
-          </div>
-        ))}
+        <div className="mx-auto w-full max-w-[72rem] px-6 py-5 xl:px-8">
+          <LandingReport
+            instant={!!viewing.instant}
+            onAsk={askPlaybook}
+            onExport={handleExport}
+            onCreateWidget={openCreateWidget}
+            onCreateReport={openCreateReport}
+          />
+          {playbookTurns.map((turn) => (
+            <div
+              key={turn.id}
+              id={`vision-answer-${turn.id}`}
+              ref={turn.id === viewing.turnId ? currentAnswerRef : undefined}
+              className={`mt-8 border-t border-line pt-6 ${
+                turn.id === viewing.turnId ? 'min-h-[calc(100vh-8.5rem)]' : ''
+              }`}
+            >
+              <StructuredAnswer
+                answer={PLAYBOOK[turn.playbookKey]}
+                instant={turn.id !== viewing.turnId || !!viewing.instant}
+                onAsk={askPlaybook}
+                onExport={handleExport}
+                onCreateWidget={openCreateWidget}
+                onCreateReport={openCreateReport}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   ) : null;

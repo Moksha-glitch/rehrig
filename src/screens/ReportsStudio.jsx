@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ResponsiveContainer,
   BarChart,
@@ -50,7 +50,7 @@ import {
   blankReportSpec,
 } from '../data/reportStudio.js';
 
-const CHART_COLORS = ['#1E2761', '#3457D5', '#0f7b55', '#995b00', '#b42318', '#767C9B', '#CADCFC'];
+const CHART_COLORS = ['#0C4480', '#3457D5', '#0f7b55', '#995b00', '#b42318', '#767C9B', '#CADCFC'];
 
 const REPORT_FOLDERS = [
   'My Reports',
@@ -410,6 +410,7 @@ export default function ReportsStudio() {
   const [activeId, setActiveId] = useState(null);
   const [folder, setFolder] = useState('My Reports');
   const [search, setSearch] = useState('');
+  const pickedFolder = useRef(false);
 
   const specs = useMemo(
     () =>
@@ -446,6 +447,16 @@ export default function ReportsStudio() {
         ? String(b.lastViewed).localeCompare(String(a.lastViewed))
         : a.name.localeCompare(b.name)
     );
+
+  useEffect(() => {
+    if (pickedFolder.current || !specs.length) return;
+    const mine = specs.some((spec) => folderMatches(spec, 'My Reports'));
+    if (!mine) {
+      const next = REPORT_FOLDERS.find((name) => specs.some((spec) => folderMatches(spec, name)));
+      if (next) setFolder(next);
+    }
+    pickedFolder.current = true;
+  }, [specs]);
   const active = filteredSpecs.find((s) => s.id === activeId) || filteredSpecs[0] || null;
   const sourceKind = REPORT_DATA_SOURCES[(draft || active)?.source]?.kind || 'workOrders';
   const recordsQuery = useRecords(sourceKind);

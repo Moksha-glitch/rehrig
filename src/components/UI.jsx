@@ -65,7 +65,7 @@ export function Panel({ children, className = '', padded = false, hover = false 
 }
 
 const STAT_COLORS = [
-  ['#1E2761', '#3457D5'],
+  ['#0C4480', '#3457D5'],
   ['#0F7A52', '#34B882'],
   ['#B4530A', '#E5831E'],
   ['#7C3AED', '#A78BFA'],
