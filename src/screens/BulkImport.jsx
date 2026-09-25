@@ -74,6 +74,12 @@ const OBJECTS = {
     required: ['account', 'title'],
     enums: { type: ['Note', 'Attachment'] },
   },
+  Customers: {
+    columns: ['account', 'name', 'customerNumber', 'phone', 'email', 'houseNumber', 'street', 'city', 'zip'],
+    kind: 'customers',
+    mode: 'record',
+    required: ['account', 'name'],
+  },
   Tips: {
     columns: ['account', 'name', 'asset', 'type', 'truck', 'location', 'collectionRoute', 'timestamp'],
     kind: 'individualTips',
@@ -141,6 +147,7 @@ export default function BulkImport({ embedded = false, initialObject, initialMod
   const createDispatch = useCreateRecord('dispatches');
   const createNote = useCreateRecord('notesAttachments');
   const createTip = useCreateRecord('individualTips');
+  const createCustomer = useCreateRecord('customers');
   const [stage, setStage] = useState('upload');
   const [object, setObject] = useState(startObject);
   const [importMode, setImportMode] = useState(initialMode || navParams.mode || 'standard');
@@ -315,6 +322,7 @@ export default function BulkImport({ embedded = false, initialObject, initialMod
       dispatches: createDispatch,
       notesAttachments: createNote,
       individualTips: createTip,
+      customers: createCustomer,
     };
     const createMutation = creators[meta.kind];
     if (!createMutation) throw new Error(`No create path for ${object}.`);

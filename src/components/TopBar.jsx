@@ -10,6 +10,7 @@ import { useAccounts } from '../hooks/useAccounts.js';
 import { useSearch } from '../hooks/useSearch.js';
 import { NAV, filterNavTree, isNavItemActive } from './navConfig.js';
 import { getAvatarProps } from '../utils/theme.js';
+import AppLauncher from './AppLauncher.jsx';
 
 export default function TopBar() {
   const {
@@ -39,6 +40,7 @@ export default function TopBar() {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isAiMode, setIsAiMode] = useState(false);
+  const [launcherOpen, setLauncherOpen] = useState(false);
   const searchResults = useSearch(searchQuery);
   const liveResults = searchResults.data || [];
 
@@ -185,6 +187,14 @@ export default function TopBar() {
       {/* Desktop Header */}
       <header className="relative z-30 hidden h-[60px] border-b border-line bg-surface lg:flex">
         <div className="mx-auto flex h-full w-full max-w-screen-2xl items-center gap-4 px-5 sm:px-7 lg:px-10">
+        <button
+          type="button"
+          className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] border border-line bg-canvas text-ink-muted hover:bg-elevated hover:text-ink"
+          aria-label="App Launcher"
+          onClick={() => setLauncherOpen(true)}
+        >
+          <Icon name="grid" size={16} />
+        </button>
         {/* Left: Search Bar with AI Button */}
         <div ref={searchRef} className="relative flex w-full max-w-[35rem] flex-col">
           <div
@@ -503,6 +513,7 @@ export default function TopBar() {
           </div>
         </>
       )}
+      {launcherOpen && <AppLauncher onClose={() => setLauncherOpen(false)} />}
     </>
   );
 }

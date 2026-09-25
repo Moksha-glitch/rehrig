@@ -65,6 +65,17 @@ const REPORT_FOLDERS = [
   'Templates',
 ];
 
+function reportWhenLabel(spec) {
+  if (spec.lastRun && !/^\d{4}-\d{2}-\d{2}/.test(String(spec.lastRun))) {
+    return `Last run ${spec.lastRun}`;
+  }
+  const value = spec.lastViewed || spec.lastRun;
+  if (!value) return '';
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) return String(value);
+  return `Viewed ${date.toLocaleDateString()}`;
+}
+
 function ReportPreview({ spec, data }) {
   const yDomain = [
     spec.yMin === '' || spec.yMin == null ? 'auto' : Number(spec.yMin),
@@ -399,6 +410,7 @@ function ReportConfigDrawer({ draft, baseline, onChange, onClose, onSave, busy, 
 export default function ReportsStudio() {
   const { state, toast, canCreateRecords, canCreateAccounts, canAccessModule } = useStore();
   const reportCategory = state.nav?.params?.reportCategory || '';
+  const reportId = state.nav?.params?.reportId || '';
   const canEdit =
     (canCreateAccounts || canCreateRecords) &&
     (canAccessModule('reports') || canAccessModule('analytics'));
@@ -459,6 +471,12 @@ export default function ReportsStudio() {
     }
     pickedFolder.current = true;
   }, [specs]);
+
+  useEffect(() => {
+    if (!reportId || !specs.length) return;
+    const match = specs.find((spec) => spec.id === reportId);
+    if (match) setActiveId(match.id);
+  }, [reportId, specs]);
   const active = filteredSpecs.find((s) => s.id === activeId) || filteredSpecs[0] || null;
   const sourceKind = REPORT_DATA_SOURCES[(draft || active)?.source]?.kind || 'workOrders';
   const recordsQuery = useRecords(sourceKind);
@@ -619,9 +637,7 @@ export default function ReportsStudio() {
                                 : (spec.sharedWith || []).length
                                   ? 'Shared'
                                   : 'Private'}
-                              {spec.lastViewed
-                                ? ` · Viewed ${new Date(spec.lastViewed).toLocaleDateString()}`
-                                : ''}
+                              {reportWhenLabel(spec) ? ` · ${reportWhenLabel(spec)}` : ''}
                             </span>
                           </span>
                         </button>
@@ -669,6 +685,15 @@ export default function ReportsStudio() {
                     <Button variant="ghost" onClick={() => toggleFavorite(active)}>
                       <Icon name="star" size={14} className={active.favorite ? 'fill-current text-warn' : ''} />
                       {active.favorite ? 'Favorited' : 'Favorite'}
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      onClick={() => upsert.mutateAsync({ ...active, pinHome: !active.pinHome }).then(
+                        () => toast(active.pinHome ? 'Removed from Home' : 'Pinned to Home'),
+                        (error) => toast(getErrorMessage(error, 'Unable to pin this report.'), 'danger')
+                      )}
+                    >
+                      <Icon name="home" size={14} /> {active.pinHome ? 'Pinned' : 'Pin to Home'}
                     </Button>
                     <Button variant="secondary" onClick={() => openEdit(active)}>
                       <Icon name="sliders" size={14} /> Configure

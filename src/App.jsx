@@ -33,6 +33,7 @@ import ReportSubscriptions from './screens/ReportSubscriptions.jsx';
 import UserAccount from './screens/UserAccount.jsx';
 import Support from './screens/Support.jsx';
 import PicklistManagement from './screens/PicklistManagement.jsx';
+import EntityMindmap from './screens/EntityMindmap.jsx';
 import { getErrorMessage } from './lib/errors.js';
 import { SearchModal } from './components/SearchModal.jsx';
 import { onboardingNavParams, parseOnboardingReturn } from './utils/appNavigation.js';
@@ -94,6 +95,7 @@ function Router({ onOnboard }) {
     aggregatedTips: 'aggregatedTips',
     individualTips: 'individualTips',
     mapCenter: 'mapCenter',
+    mindmap: 'manageAccount',
     bulkImport: 'bulkImport',
     activity: 'activity',
     notifications: 'notifications',
@@ -187,6 +189,8 @@ function Router({ onOnboard }) {
       );
     case 'mapCenter':
       return <MapCenter />;
+    case 'mindmap':
+      return <EntityMindmap />;
     case 'bulkImport':
       return <BulkImport />;
     case 'activity':

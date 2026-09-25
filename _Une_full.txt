@@ -1,0 +1,1 @@
+function Une({account:e,tab:t,store:r,setStore:snS,onOpenTab:a,onOpenRecord:n,onCreate:i,onEdit:s,onStartLegacyImport:u,onStartBulkImport:d,onStartAssetImport:Y,onGoGlobal:c}

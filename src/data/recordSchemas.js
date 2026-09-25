@@ -44,6 +44,7 @@ export const RECORD_SCHEMAS = {
     ],
     banner: 'Use WOIT Import to create or close work orders from a CSV. Hot tickets show a fire prefix.',
     hotTicketFilter: true,
+    pastDueFilter: true,
     sections: [
       {
         title: 'Request Details',
@@ -151,6 +152,23 @@ export const RECORD_SCHEMAS = {
           { key: 'customerLocation', label: 'Customer Location (site)', type: 'text' },
         ],
       },
+      {
+        title: 'QAlert Sync Info',
+        fields: [
+          { key: 'qalertId', label: 'QAlert Id', type: 'text' },
+          { key: 'qalertStatus', label: 'QAlert Status', type: 'text' },
+          { key: 'qalertSyncedAt', label: 'Last Sync', type: 'datetime' },
+        ],
+      },
+      {
+        title: 'Web Information',
+        fields: [
+          { key: 'webRequestId', label: 'Web Request Id', type: 'text' },
+          { key: 'webPhone', label: 'Web Phone', type: 'text', aliases: ['contactPhone'] },
+          { key: 'webEmail', label: 'Web Email', type: 'text', aliases: ['contactEmail'] },
+          { key: 'residentWebsite', label: 'Resident Website', type: 'text' },
+        ],
+      },
     ],
     sample: V63_RECORDS.workOrders,
   },
@@ -168,6 +186,7 @@ export const RECORD_SCHEMAS = {
       { key: 'serviceType', label: 'Service Type' },
     ],
     recordTypes: ['Collection', 'Maintenance', 'All'],
+    landing: 'dispatch',
     sections: [
       {
         title: 'Dispatch',
@@ -531,7 +550,7 @@ export const RECORD_SCHEMAS = {
       { key: 'numTips', label: '# Tips', aliases: ['tips'] },
       { key: 'totalDistance', label: 'Total Distance' },
       { key: 'idleTime', label: 'Idle Time (min)' },
-      { key: 'speedingEvents', label: 'Speeding Events' },
+      { key: 'speedingEvents', label: 'Speeding Events', format: 'speeding' },
     ],
     variants: [
       { key: 'individual', label: 'Individual', kind: 'individualTips' },
@@ -584,6 +603,7 @@ export const RECORD_SCHEMAS = {
       { key: 'sfdcTruckId', label: 'Truck #', aliases: ['truck'] },
     ],
     recordTypes: ['Tip Events', 'Non-Tip Events', 'All'],
+    defaultFilter: 'today',
     variants: [
       { key: 'individual', label: 'Individual', kind: 'individualTips' },
       { key: 'aggregated', label: 'Aggregated', kind: 'aggregatedTips' },
@@ -796,13 +816,15 @@ export const RECORD_SCHEMAS = {
     singular: 'Route',
     listColumns: [
       { key: 'routeNumber', label: 'Route Number' },
-      { key: 'collectionType', label: 'Type' },
+      { key: 'collectionType', label: 'Type', format: 'collectionType' },
+      { key: 'collectionDays', label: 'Days', format: 'collectionDays' },
       { key: 'status', label: 'Status', format: 'status' },
       { key: 'truck', label: 'Truck' },
       { key: 'driver', label: 'Driver' },
       { key: 'serviceProviderSegment', label: 'Segment', aliases: ['segment'] },
     ],
     recordTypes: ['Collection', 'Maintenance', 'All'],
+    defaultRecordType: 'Collection',
     banner: 'Only 4 collection route types: Trash, Recycle, Organic, Bulk.',
     sections: [
       {
@@ -834,6 +856,22 @@ export const RECORD_SCHEMAS = {
         ],
       },
       {
+        title: 'Due Date Computation',
+        fields: [
+          { key: 'dueDateType', label: 'Due Date Type', type: 'select', options: P.dueDateType },
+          { key: 'nextAvailableDay', label: 'Next Available Day', type: 'date' },
+          { key: 'serviceDayOffset', label: 'Service Day Offset', type: 'number' },
+        ],
+      },
+      {
+        title: 'Availability',
+        fields: [
+          { key: 'availableFrom', label: 'Available From', type: 'date' },
+          { key: 'availableTo', label: 'Available To', type: 'date' },
+          { key: 'blackoutDates', label: 'Blackout Dates', type: 'text', span2: true },
+        ],
+      },
+      {
         title: 'System Information',
         fields: [
           { key: 'createdBy', label: 'Created By', type: 'readonly' },
@@ -860,14 +898,17 @@ export const RECORD_SCHEMAS = {
       {
         title: 'Information',
         fields: [
-          { key: 'name', label: 'Notification Name', type: 'text', required: true },
-          { key: 'status', label: 'Status', type: 'select', options: ['Active', 'Inactive'] },
+          { key: 'name', label: 'Notification Name', type: 'text', required: true, aliases: ['serviceNotificationName'] },
+          { key: 'displayName', label: 'Display Name', type: 'text' },
+          { key: 'enableServiceNotifications', label: 'Enable Service Notifications', type: 'checkbox', aliases: ['status'] },
           { key: 'notifyDays', label: 'Notify Days', type: 'number' },
-          { key: 'trigger', label: 'Trigger', type: 'select', options: ['Due Date', 'Hot Ticket', 'Missed Pickup', 'Dispatch Publish'] },
+          { key: 'trigger', label: 'Trigger', type: 'select', options: ['Due Date', 'Hot Ticket', 'Missed Pickup', 'Dispatch Publish'], aliases: ['toBeSentBasedOn'] },
           { key: 'fromEmail', label: 'From Email', type: 'text' },
           { key: 'emailSubject', label: 'Email Subject', type: 'text' },
           { key: 'channel', label: 'Channel', type: 'select', options: ['Email', 'SMS', 'Phone'] },
           { key: 'account', label: 'Service Provider', type: 'lookup', required: true },
+          { key: 'automatedMessage', label: 'Automated Message', type: 'checkbox' },
+          { key: 'emailBody', label: 'Email Body', type: 'textarea', span2: true },
           { key: 'messageBody', label: 'Message Body', type: 'textarea', span2: true },
         ],
       },
@@ -916,7 +957,7 @@ export const RECORD_SCHEMAS = {
       { key: 'productCode', label: 'Product Code', aliases: ['code'] },
       { key: 'productSize', label: 'Product Size', aliases: ['size'] },
       { key: 'productSizeType', label: 'Product Size Type', aliases: ['sizeType'] },
-      { key: 'serviceCategory', label: 'Service Category', aliases: ['category'] },
+      { key: 'serviceCategory', label: 'Service Category', aliases: ['category'], format: 'serviceCategory' },
       { key: 'productFamily', label: 'Family', aliases: ['family'] },
     ],
     sections: [
@@ -938,5 +979,36 @@ export const RECORD_SCHEMAS = {
       },
     ],
     sample: V63_RECORDS.products,
+  },
+
+  bulkImportJobs: {
+    title: 'Bulk Import Jobs',
+    newLabel: 'New Import Job',
+    singular: 'Import Job',
+    listColumns: [
+      { key: 'jobNumber', label: 'Job', aliases: ['number'], mono: true },
+      { key: 'account', label: 'Account' },
+      { key: 'object', label: 'Object' },
+      { key: 'records', label: 'Rows' },
+      { key: 'status', label: 'Status', format: 'status' },
+    ],
+    sections: [
+      {
+        title: 'Job',
+        fields: [
+          { key: 'jobNumber', label: 'Job Number', type: 'text' },
+          { key: 'account', label: 'Account', type: 'lookup' },
+          { key: 'object', label: 'Object', type: 'text' },
+          { key: 'records', label: 'Rows', type: 'number' },
+          { key: 'status', label: 'Status', type: 'select', options: ['Committed', 'Validated', 'Failed'] },
+          { key: 'date', label: 'Date', type: 'date' },
+        ],
+      },
+    ],
+    sample: [
+      { id: 'WOIT-221', jobNumber: 'WOIT-221', account: 'Edmonton AB', object: 'Work Orders', records: 184, status: 'Committed', date: '2026-06-20' },
+      { id: 'WOIT-218', jobNumber: 'WOIT-218', account: 'Edmonton AB', object: 'Assets', records: 62, status: 'Committed', date: '2026-05-11' },
+      { id: 'WOIT-214', jobNumber: 'WOIT-214', account: 'Metro Waste', object: 'Work Orders', records: 97, status: 'Validated', date: '2026-04-28' },
+    ],
   },
 };

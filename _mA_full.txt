@@ -1,0 +1,1 @@
+function mA({moduleKey:e,records:t,totalUnscoped:r,onOpenRecord:a,onCreate:n,title:i,scope:s,breadcrumb:u,sublabel:d,onStartLegacyImport:c,onStartBulkImport:f,onStartAssetImport:Z,store:m,onGoGlobal:p,suppressHeader:v,onLoginAs:LA}

@@ -37,9 +37,16 @@ export default function Support() {
           <div className="border-b border-line px-5 py-3 text-[13px] font-semibold text-ink">
             Support Video Library
           </div>
-          <div className="px-5 py-4 text-sm text-ink-muted">
-            Access Support Help Videos from your service provider workspace. Contact {email} if a
-            recording is missing for your contract.
+          <div className="flex items-center justify-between gap-3 px-5 py-4 text-sm">
+            <span className="text-ink-muted">Access Support Help Videos</span>
+            <a
+              href="https://www.youtube.com/@rehrigvisionsoftwareservic7400"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-brand underline"
+            >
+              Go to Library
+            </a>
           </div>
         </Panel>
       </div>

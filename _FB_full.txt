@@ -1,0 +1,1 @@
+function FB(){var e=pe();(0,Xc.useEffect)(()=>{e(MB())},[e]),cZ(),fZ()}

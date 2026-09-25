@@ -1,0 +1,1 @@
+function Foe({account:e,store:t,nav:r,onOpenAccount:a,onExitAccount:n,collapsed:i,persona:s,onGoHome:u,onGoGlobal:d}

@@ -69,6 +69,12 @@ export const ANALYTICS_DASHBOARDS = [
     description: 'Tons, tip history, and asset mix.',
     widgets: ['tons-collected-today', 'tip-history', 'missed-pickups', 'assets-by-family'],
   },
+  {
+    id: 'my-ops',
+    name: 'My Ops Dashboard',
+    description: 'Personal ops canvas with live dispatches, priority work, and fleet health.',
+    widgets: ['kpi-tiles', 'live-dispatches', 'priority-wos', 'ops-health', 'truck-utilization'],
+  },
 ];
 
 export const WIDGET_CATEGORIES = [

@@ -89,6 +89,11 @@ export const REPORT_DATA_SOURCES = {
     kind: 'accounts',
     fields: ['industry', 'type', 'accountType'],
   },
+  bulkImportJobs: {
+    label: 'Bulk Import Jobs',
+    kind: 'bulkImportJobs',
+    fields: ['account', 'status', 'object'],
+  },
 };
 
 export const REPORT_SORT_BY = [
@@ -125,7 +130,9 @@ export function blankReportSpec(overrides = {}) {
     sharedWith: [],
     visibility: 'private',
     favorite: false,
+    pinHome: false,
     lastViewed: '',
+    lastRun: '',
     category: 'Operations',
     template: false,
     ...overrides,
@@ -191,10 +198,12 @@ const HTML_REPORT_SPECS = V63_SAVED_REPORTS.map((row) =>
     owner: row.owner,
     ownerId: OWNER_IDS[row.owner] || '',
     favorite: !!row.isFavorite,
+    pinHome: !!row.isFavorite,
     visibility: row.isPublic ? 'public' : 'private',
     sharedWith: row.isPublic ? ['*'] : [],
     category: FOLDER_CATEGORY[row.folder] || 'Operations',
     lastViewed: /^\d{4}-\d{2}-\d{2}/.test(String(row.lastRun || '')) ? row.lastRun : '',
+    lastRun: row.lastRun || '',
   })
 );
 

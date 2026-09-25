@@ -44,6 +44,9 @@ import {
 } from '../hooks/useRecords.js';
 import { getErrorMessage } from '../lib/errors.js';
 import ReportsStudio from './ReportsStudio.jsx';
+import DispatchLanding from './DispatchLanding.jsx';
+import DispatchBuilder from './DispatchBuilder.jsx';
+import EntityMindmap from './EntityMindmap.jsx';
 
 function recordStatusColor(status) {
   const s = String(status || '').toLowerCase();
@@ -71,6 +74,57 @@ function readCol(row, column) {
   return row?.[column.key];
 }
 
+const LIST_STATUS_LABELS = {
+  Available: '🟢 Available',
+  'In Service': '🔵 In Service',
+  'Awaiting Repair': '🟡 Awaiting Repair',
+  'Out of Service': '🔴 Out of Service',
+  Scrapped: '⚫ Scrapped',
+  Scheduled: '🔵 Scheduled',
+  'In Route': '🟡 In Route',
+  Complete: '🟢 Complete',
+  Cancelled: '🔴 Cancelled',
+  Active: '🟢 Active',
+  Inactive: '⚫ Inactive',
+  'Being Repaired': '🟡 Being Repaired',
+  New: '🔵 New',
+  Open: '🟢 Open',
+  'In Progress': '🟡 In Progress',
+  Closed: '⚫ Closed',
+  'On Hold': '🔴 On Hold',
+  Draft: '⚫ Draft',
+  Planned: '🔵 Planned',
+  High: '🔴 High',
+  Medium: '🟡 Medium',
+  Low: '⚫ Low',
+  Critical: '🔴 Critical',
+  Top: '🔵 Top',
+  'Market Area': '🔷 Market Area',
+  District: '🟢 District',
+  Division: '🟡 Division',
+};
+
+const SERVICE_CATEGORY_LABELS = {
+  Residential: '🔵 Residential',
+  Commercial: '🟡 Commercial',
+  Industrial: '⚫ Industrial',
+};
+
+const COLLECTION_TYPE_LABELS = {
+  Trash: '🗑 Trash',
+  Recycle: '♻ Recycle',
+  Organics: '🌿 Organics',
+  Organic: '🌿 Organic',
+  'Yard Waste': '🍂 Yard Waste',
+};
+
+function formatCollectionDays(value) {
+  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const text = String(value || '').toLowerCase();
+  if (!text) return '—';
+  return days.map((day) => (text.includes(day.toLowerCase()) ? `●${day}` : `○${day}`)).join(' ');
+}
+
 function formatListValue(row, column) {
   const raw = readCol(row, column);
   if (column.format === 'hotTicket') {
@@ -79,12 +133,55 @@ function formatListValue(row, column) {
   if (column.format === 'address') {
     return raw || [row.houseNumber, row.street, row.city, row.state].filter(Boolean).join(', ');
   }
+  if (column.format === 'contactName') {
+    return [row.salutation, row.firstName, row.lastName].filter(Boolean).join(' ').trim() || raw;
+  }
+  if (column.format === 'collectionDays') {
+    return formatCollectionDays(raw);
+  }
+  if (column.format === 'serviceCategory') {
+    return SERVICE_CATEGORY_LABELS[raw] || raw || '';
+  }
+  if (column.format === 'collectionType') {
+    return COLLECTION_TYPE_LABELS[raw] || raw || '';
+  }
+  if (column.format === 'speeding') {
+    return Number(raw) > 0 ? `🔴 ${raw}` : String(raw ?? 0);
+  }
+  if (column.format === 'status') {
+    return LIST_STATUS_LABELS[raw] || raw || '';
+  }
   if (column.format === 'check') {
     return raw ? '✓' : '';
   }
   if (typeof raw === 'boolean') return raw ? 'Yes' : 'No';
   if (Array.isArray(raw)) return raw.filter(Boolean).join(', ');
   return raw;
+}
+
+function isSameLocalDay(value, date = new Date()) {
+  if (!value) return false;
+  const text = String(value);
+  const key = [date.getFullYear(), date.getMonth() + 1, date.getDate()]
+    .map((part) => String(part).padStart(2, '0'))
+    .join('-');
+  if (text.startsWith(key)) return true;
+  const parsed = new Date(/^\d{4}-\d{2}-\d{2}$/.test(text) ? `${text}T12:00:00` : text);
+  if (!Number.isFinite(parsed.getTime())) return false;
+  return (
+    parsed.getFullYear() === date.getFullYear() &&
+    parsed.getMonth() === date.getMonth() &&
+    parsed.getDate() === date.getDate()
+  );
+}
+
+function isPastDue(row) {
+  const status = row.caseStatus || row.status;
+  if (['Closed', 'Complete', 'Cancelled'].includes(status)) return false;
+  const due = row.dueDate;
+  if (!due) return false;
+  const parsed = new Date(/^\d{4}-\d{2}-\d{2}$/.test(due) ? `${due}T12:00:00` : due);
+  return Number.isFinite(parsed.getTime()) && parsed < new Date();
 }
 
 const ASSET_MENU_ACTIONS = ASSET_ACTIONS.filter(
@@ -1004,11 +1101,13 @@ export function GenericList({ kind, view }) {
   const [editing, setEditing] = useState(null);
   const [q, setQ] = useState('');
   const [status, setStatus] = useState('All');
-  const [recordType, setRecordType] = useState('All');
+  const [recordType, setRecordType] = useState(() => RECORD_SCHEMAS[kind]?.defaultRecordType || 'All');
   const [accountScope, setAccountScope] = useState('All');
   const [filterCol, setFilterCol] = useState('');
   const [filterVal, setFilterVal] = useState('');
   const [hotOnly, setHotOnly] = useState(false);
+  const [pastDue, setPastDue] = useState(false);
+  const [dateScope, setDateScope] = useState(() => RECORD_SCHEMAS[kind]?.defaultFilter || 'all');
   const [sortKey, setSortKey] = useState('default');
   const [sortDir, setSortDir] = useState('asc');
   const [deletePending, setDeletePending] = useState(false);
@@ -1019,6 +1118,9 @@ export function GenericList({ kind, view }) {
   const [woSourceOpen, setWoSourceOpen] = useState(false);
   const [woSource, setWoSource] = useState('');
   const [sheet, setSheet] = useState(null);
+  const [builderOpen, setBuilderOpen] = useState(false);
+  const [nonRehrigOnly, setNonRehrigOnly] = useState(false);
+  const [mindmapOpen, setMindmapOpen] = useState(false);
   const openedRecordRef = useRef(null);
   const prevKindRef = useRef(kind);
   const { canCreateRecords, isScoped, persona, state, toast, navigate } = useStore();
@@ -1026,7 +1128,7 @@ export function GenericList({ kind, view }) {
   const recordsQuery = useRecords(kind === 'analytics' ? null : kind);
   const locationsQuery = useRecords(kind === 'assets' || kind === 'customers' ? 'locations' : null);
   const customerAssetsQuery = useRecords(kind === 'customers' ? 'assets' : null);
-  const workOrdersQuery = useRecords(kind === 'assets' ? 'workOrders' : null);
+  const workOrdersQuery = useRecords(kind === 'assets' || kind === 'dispatches' ? 'workOrders' : null);
   const tipsQuery = useRecords(kind === 'assets' ? 'individualTips' : null);
   const dispatchesQuery = useRecords(kind === 'assets' ? 'dispatches' : null);
   const createMutation = useCreateRecord(kind);
@@ -1054,11 +1156,13 @@ export function GenericList({ kind, view }) {
     if (variantSwitch) return;
     setQ('');
     setStatus('All');
-    setRecordType('All');
     setAccountScope('All');
     setFilterCol('');
     setFilterVal('');
     setHotOnly(false);
+    setPastDue(false);
+    setDateScope(RECORD_SCHEMAS[kind]?.defaultFilter || 'all');
+    setRecordType(RECORD_SCHEMAS[kind]?.defaultRecordType || 'All');
     setSortKey('default');
     setSortDir('asc');
   }, [kind]);
@@ -1123,6 +1227,18 @@ export function GenericList({ kind, view }) {
       return row.account === accountScope || row.accountId === accountScope;
     })
     .filter((row) => !hotOnly || isHotTicket(row))
+    .filter(
+      (row) =>
+        !nonRehrigOnly ||
+        row.competitorAsset ||
+        row.competitor ||
+        (row.vendor && row.vendor !== 'Rehrig')
+    )
+    .filter((row) => !pastDue || isPastDue(row))
+    .filter((row) => {
+      if (dateScope !== 'today') return true;
+      return isSameLocalDay(row.eventStartDateTime || row.timestamp || row.date);
+    })
     .filter((row) => {
       if (!filterCol || !filterVal.trim()) return true;
       const column = schema.listColumns.find((item) => item.key === filterCol) || { key: filterCol };
@@ -1146,6 +1262,9 @@ export function GenericList({ kind, view }) {
     recordType !== 'All' ||
     accountScope !== 'All' ||
     hotOnly ||
+    pastDue ||
+    dateScope === 'today' ||
+    nonRehrigOnly ||
     !!(filterCol && filterVal.trim());
 
   const saveRecord = async (values) => {
@@ -1451,9 +1570,14 @@ export function GenericList({ kind, view }) {
         }
         actions={
           <div className="flex flex-wrap gap-2">
-            {kind === 'workOrders' && canCreateRecords && (
-              <Button variant="secondary" onClick={() => openImportSheet('Work Orders')}>
+            {(kind === 'workOrders' || kind === 'locations') && canCreateRecords && (
+              <Button variant="secondary" onClick={() => openImportSheet(kind === 'locations' ? 'Locations' : 'Work Orders')}>
                 <Icon name="download" size={16} /> WOIT Import
+              </Button>
+            )}
+            {(kind === 'locations' || kind === 'customers' || kind === 'segments') && (
+              <Button variant="secondary" onClick={() => setMindmapOpen(true)}>
+                <Icon name="layers" size={16} /> Mindmap
               </Button>
             )}
             {kind === 'assets' && canCreateRecords && (
@@ -1483,7 +1607,7 @@ export function GenericList({ kind, view }) {
                 <Icon name="map" size={16} /> Map Center
               </Button>
             )}
-            {canCreateRecords && (
+            {canCreateRecords && schema.landing !== 'dispatch' && (
               <Button
                 variant="primary"
                 onClick={() => {
@@ -1504,6 +1628,18 @@ export function GenericList({ kind, view }) {
         error={recordsQuery.isError ? getErrorMessage(recordsQuery.error) : null}
         onRetry={() => recordsQuery.refetch()}
       >
+        {schema.landing === 'dispatch' ? (
+          <DispatchLanding
+            rows={filtered}
+            workOrders={workOrdersQuery.data?.data || []}
+            canCreate={canCreateRecords}
+            onOpen={openRecord}
+            onCreate={() => {
+              setEditing(null);
+              setBuilderOpen(true);
+            }}
+          />
+        ) : (
         <Panel>
           {schema.banner && (
             <div className="flex items-start gap-2 border-b border-line px-4 py-3 text-sm text-ink-muted sm:px-5">
@@ -1601,6 +1737,58 @@ export function GenericList({ kind, view }) {
                 onClick={() => setHotOnly((v) => !v)}
               >
                 Hot tickets
+              </Button>
+            )}
+            {schema.pastDueFilter && (
+              <Button
+                type="button"
+                variant={pastDue ? 'primary' : 'secondary'}
+                className="!px-3 !py-1.5 text-xs"
+                onClick={() => setPastDue((value) => !value)}
+              >
+                Past due
+              </Button>
+            )}
+            {schema.defaultFilter === 'today' && (
+              <Button
+                type="button"
+                variant={dateScope === 'today' ? 'primary' : 'secondary'}
+                className="!px-3 !py-1.5 text-xs"
+                onClick={() => setDateScope((value) => (value === 'today' ? 'all' : 'today'))}
+              >
+                Today
+              </Button>
+            )}
+            {kind === 'assets' && (
+              <Button
+                type="button"
+                variant={nonRehrigOnly ? 'primary' : 'secondary'}
+                className="!px-3 !py-1.5 text-xs"
+                onClick={() => setNonRehrigOnly((value) => !value)}
+              >
+                Non-Rehrig
+              </Button>
+            )}
+            {filtersActive && (
+              <Button
+                type="button"
+                variant="secondary"
+                className="!px-3 !py-1.5 text-xs"
+                onClick={() => {
+                  setQ('');
+                  setStatus('All');
+                  setRecordType(schema.defaultRecordType || 'All');
+                  setAccountScope('All');
+                  setFilterCol('');
+                  setFilterVal('');
+                  setHotOnly(false);
+                  setPastDue(false);
+                  setDateScope(schema.defaultFilter || 'all');
+                  setNonRehrigOnly(false);
+                  setSortKey('default');
+                }}
+              >
+                Clear all
               </Button>
             )}
             <Select
@@ -1715,7 +1903,24 @@ export function GenericList({ kind, view }) {
             </Table>
           )}
         </Panel>
+        )}
 
+        {builderOpen && (
+          <DispatchBuilder
+            editing={editing}
+            onClose={() => {
+              setBuilderOpen(false);
+              setEditing(null);
+            }}
+          />
+        )}
+        {mindmapOpen && (
+          <WorkspaceSheet title="Mindmap" description="Account entity tree." onClose={() => setMindmapOpen(false)}>
+            <div className="p-5">
+              <EntityMindmap embedded onClose={() => setMindmapOpen(false)} />
+            </div>
+          </WorkspaceSheet>
+        )}
         {formOpen && (
           <RecordForm
             schema={schema}

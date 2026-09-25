@@ -1,0 +1,195 @@
+ 132px
+ items
+ options
+ record
+#7FD1F3
+&&(c||Z)&&o.default.createElement(
+&&f&&o.default.createElement(
+&&p&&o.default.createElement(
+',y,'
+))))),e===
+))),K&&o.default.createElement(
+))),c&&o.default.createElement(
+)),A.map((Y,fe)=>o.default.createElement(
+)),o.default.createElement(
+)),t&&o.default.createElement(
+),!d&&o.default.createElement(
+),!v&&o.default.createElement(
+),U&&o.default.createElement(
+),[b,h]=(0,o.useState)(
+),className:
+),e===
+),n&&(!m||de.canCreate(m,e))&&o.default.createElement(
+),o.default.createElement(
+):[
+,ACTIVE_FCOUNT>0&&o.default.createElement(
+,D=!!N.accountFilter&&!!m&&I===
+,E.length,G||V?` of ${r||z.length}`:
+,P=D?(m.accounts||[]).filter(_=>_.accountType===
+,_.currentTarget.style.borderColor=l.cyan+
+,className:
+,color:l.amber}),o.default.createElement(
+,color:l.amber}},
+,color:l.cyan}},o.default.createElement(xt,{size:9}),
+,color:l.violet}),o.default.createElement(
+,cursor:
+,onChange:_=>CFS({...CF,[col.k]:_.target.value}),className:
+,onMouseEnter:_=>_.currentTarget.style.background=l.amber+
+,onMouseEnter:_=>_.currentTarget.style.background=l.violet+
+,onMouseLeave:B=>B.currentTarget.style.background=l.violet+
+,onMouseLeave:_=>_.currentTarget.style.background=
+,placeholder:
+,style:{background:K.tint+
+,style:{background:W?l.violet+
+,style:{background:b===
+,style:{background:l.cyan+
+,style:{background:l.surface,border:`1px solid ${G?l.violet+
+,style:{background:l.violet+
+,style:{borderColor:ACTIVE_FCOUNT>0?l.violet+
+,style:{color:l.faint}},
+,style:{color:l.faint}},String(W+1).padStart(2,
+,style:{color:l.faint}},s||
+,style:{color:l.muted}},
+,style:{color:l.text}})),o.default.createElement(
+,style:{width:15,height:15,background:l.violet,color:
+,text:
+,value:(fv&&fv.end)||
+,value:(fv&&fv.max)||
+,value:fv||
+,{className:
+,{key:Y.k,className:
+,{onClick:()=>FBARS(_=>!_),className:
+,{onClick:()=>S(_=>!_),className:
+,{onClick:()=>p(
+,{onClick:()=>{c(),S(!1)},className:
+,{onClick:f,className:
+,{onClick:n,className:
+,{ref:L,className:
+,{style:{color:l.faint}},
+,{type:
+0 12px 30px -8px rgba(0,0,0,0.4)
+3px 6px
+:void 0}},o.default.createElement(ma,{size:12}),
+?l.violet+
+?o.default.createElement(
+All Service Providers
+Clear all
+Filters
+Import Rehrig Assets
+Legacy Asset Import
+Min
+Scope this list to
+Service Provider
+Show records across every SP
+Switch as Admin
+USR-01
+__all
+absolute z-30 mt-1 rounded-lg overflow-hidden fade-in
+aggregatedName
+assetStatus
+boolean
+button
+caseStatus
+checkbox
+customerId
+customerNumber
+date
+dispatchNumber
+dispatchStatus
+div
+flex flex-col gap-1
+flex flex-wrap gap-x-8 gap-y-3 px-4 py-3
+flex items-baseline gap-1.5 mb-1
+flex items-center gap-1
+flex items-center gap-1.5
+flex items-center gap-1.5 px-2.5 h-8 rounded-lg
+flex items-center gap-1.5 text-[11.5px] cursor-pointer
+flex items-center gap-3
+flex items-center justify-between px-4 py-2.5
+flex items-center justify-end pr-1
+flex items-end justify-between mb-4
+flex-1 min-w-0
+flex-1 text-left min-w-0
+font-medium
+font-medium truncate
+grid px-3.5 py-1.5 text-[10px] uppercase tracking-wider
+h-7 px-3 text-[11.5px] font-semibold transition-colors
+h-px
+individualTipName
+input
+insyncId
+label
+locationNumber
+max-h-[320px] overflow-y-auto scroll-thin
+mono
+mousedown
+mt-0.5 shrink-0
+none
+normal-case text-[10px]
+number
+object
+p-10 text-center
+p-6 max-w-[1600px] mx-auto fade-in
+priority
+productCode
+publicGroupId
+relative mt-2.5 inline-block
+requestType
+rfidNumber
+rotate(0deg)
+rotate(180deg)
+rounded-xl mb-3 fade-in
+rounded-xl overflow-hidden
+routeNumber
+routeStatus
+routeUID
+serialNumber
+service
+serviceType
+span
+string
+syncStatus
+text
+text-[10.5px]
+text-[10.5px] uppercase tracking-[0.16em] mb-0.5
+text-[10.5px] uppercase tracking-wider font-semibold
+text-[11px]
+text-[11px] font-medium
+text-[12.5px] font-medium truncate
+text-[12px]
+text-[12px] font-semibold flex items-center gap-1.5
+text-[9.5px] uppercase tracking-wider
+text-[9px] px-1 py-0.5 rounded uppercase
+text-[9px] uppercase tracking-wider font-semibold mb-1.5
+transform 0.15s
+transparent
+truckNumber
+truckStatus
+truncate
+truncate pr-2
+type
+w-6 h-6 rounded flex items-center justify-center
+w-6 h-6 rounded flex items-center justify-center shrink-0
+workOrderNumber
+||!_.accountType):[],O=(0,o.useMemo)(()=>!D||b===
+},bulkImport:{tint:
+},customers:{tint:
+},fe===0?o.default.createElement(
+},i||B.label,V&&o.default.createElement(
+},masterProducts:{tint:
+},o.default.createElement(
+},o.default.createElement(Ve,{size:12}),
+},o.default.createElement(ca,{size:12}),
+},o.default.createElement(ca,{size:13,className:
+},o.default.createElement(cn,{size:12}),
+},o.default.createElement(fa,{size:12}),
+},o.default.createElement(fa,{size:13,className:
+},o.default.createElement(mn,{size:12}),
+},onClick:()=>a(_.id)},o.default.createElement(
+},onMouseLeave:_=>{_.currentTarget.style.background=l.cyan+
+},products:{tint:
+},routes:{tint:
+},segments:{tint:
+},title:
+}`,borderBottom:W<E.length-1?`1px solid ${l.border}`:
+}},ACTIVE_FCOUNT)),o.default.createElement(

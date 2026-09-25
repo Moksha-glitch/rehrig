@@ -1,0 +1,645 @@
+{
+  "home": {
+    "label": "Home",
+    "kind": "dashboard",
+    "global": true,
+    "settingsOnly": true,
+    "cols": [
+      "Account Name",
+      "Type",
+      "Industry",
+      "Owner",
+      "Phone",
+      "City"
+    ]
+  },
+  "chatter": {
+    "label": "Activity",
+    "kind": "chatter",
+    "global": true,
+    "settingsOnly": true,
+    "cols": [
+      "Account Name",
+      "Type",
+      "Industry",
+      "Owner",
+      "Phone",
+      "City"
+    ]
+  },
+  "accounts": {
+    "label": "Accounts",
+    "kind": "list",
+    "global": true,
+    "settingsOnly": true,
+    "cols": [
+      "Account Name",
+      "Type",
+      "Industry",
+      "Owner",
+      "Phone",
+      "City"
+    ]
+  },
+  "masterProducts": {
+    "label": "Master Product Catalog",
+    "kind": "list",
+    "global": true,
+    "settingsOnly": true,
+    "cols": [
+      "Product",
+      "Family",
+      "Volume",
+      "Service Type",
+      "Active"
+    ]
+  },
+  "picklists": {
+    "label": "Picklist Management",
+    "kind": "picklists",
+    "global": true,
+    "settingsOnly": true,
+    "cols": [
+      "Service Provider Product Number",
+      "Product",
+      "Product Code",
+      "Product Size",
+      "Product Size Type",
+      "Service Category",
+      "Family"
+    ]
+  },
+  "bulkImport": {
+    "label": "WOIT Import",
+    "kind": "bulkImport",
+    "global": true,
+    "settingsOnly": true,
+    "cols": [
+      "Service Provider Product Number",
+      "Product",
+      "Product Code",
+      "Product Size",
+      "Product Size Type",
+      "Service Category",
+      "Family"
+    ]
+  },
+  "reports": {
+    "label": "Reports",
+    "kind": "reports",
+    "global": true,
+    "settingsOnly": true,
+    "cols": [
+      "Service Provider Product Number",
+      "Product",
+      "Product Code",
+      "Product Size",
+      "Product Size Type",
+      "Service Category",
+      "Family"
+    ]
+  },
+  "dashboards": {
+    "label": "Dashboards",
+    "kind": "dashboards",
+    "global": true,
+    "settingsOnly": true,
+    "cols": [
+      "Service Provider Product Number",
+      "Product",
+      "Product Code",
+      "Product Size",
+      "Product Size Type",
+      "Service Category",
+      "Family"
+    ]
+  },
+  "mapCenter": {
+    "label": "Map Center",
+    "kind": "mapCenter",
+    "global": true,
+    "settingsOnly": true,
+    "cols": [
+      "Service Provider Product Number",
+      "Product",
+      "Product Code",
+      "Product Size",
+      "Product Size Type",
+      "Service Category",
+      "Family"
+    ]
+  },
+  "reportSubs": {
+    "label": "Report Subscriptions",
+    "kind": "reportSubs",
+    "global": true,
+    "settingsOnly": true,
+    "cols": [
+      "Service Provider Product Number",
+      "Product",
+      "Product Code",
+      "Product Size",
+      "Product Size Type",
+      "Service Category",
+      "Family"
+    ]
+  },
+  "setup": {
+    "label": "Workspace",
+    "kind": "setup",
+    "global": true,
+    "settingsOnly": true,
+    "cols": [
+      "Service Provider Product Number",
+      "Product",
+      "Product Code",
+      "Product Size",
+      "Product Size Type",
+      "Service Category",
+      "Family"
+    ]
+  },
+  "serviceTypes": {
+    "label": "Service Types",
+    "kind": "configure",
+    "global": true,
+    "settingsOnly": true,
+    "cols": [
+      "Service Provider Product Number",
+      "Product",
+      "Product Code",
+      "Product Size",
+      "Product Size Type",
+      "Service Category",
+      "Family"
+    ]
+  },
+  "locationTypes": {
+    "label": "Location Types",
+    "kind": "configure",
+    "global": true,
+    "settingsOnly": true,
+    "cols": [
+      "Service Provider Product Number",
+      "Product",
+      "Product Code",
+      "Product Size",
+      "Product Size Type",
+      "Service Category",
+      "Family"
+    ]
+  },
+  "assetTypes": {
+    "label": "Asset Types",
+    "kind": "configure",
+    "global": true,
+    "settingsOnly": true,
+    "cols": [
+      "Service Provider Product Number",
+      "Product",
+      "Product Code",
+      "Product Size",
+      "Product Size Type",
+      "Service Category",
+      "Family"
+    ]
+  },
+  "productTypes": {
+    "label": "Product",
+    "kind": "configure",
+    "global": true,
+    "settingsOnly": true,
+    "cols": [
+      "Service Provider Product Number",
+      "Product",
+      "Product Code",
+      "Product Size",
+      "Product Size Type",
+      "Service Category",
+      "Family"
+    ]
+  },
+  "apiIntegrations": {
+    "label": "API Integrations",
+    "kind": "configure",
+    "global": true,
+    "settingsOnly": true,
+    "cols": [
+      "Service Provider Product Number",
+      "Product",
+      "Product Code",
+      "Product Size",
+      "Product Size Type",
+      "Service Category",
+      "Family"
+    ]
+  },
+  "serviceNotifConfig": {
+    "label": "Service Notification Config",
+    "kind": "configure",
+    "global": true,
+    "settingsOnly": true,
+    "cols": [
+      "Service Provider Product Number",
+      "Product",
+      "Product Code",
+      "Product Size",
+      "Product Size Type",
+      "Service Category",
+      "Family"
+    ]
+  },
+  "device": {
+    "label": "Device",
+    "kind": "configure",
+    "global": true,
+    "settingsOnly": true,
+    "cols": [
+      "Service Provider Product Number",
+      "Product",
+      "Product Code",
+      "Product Size",
+      "Product Size Type",
+      "Service Category",
+      "Family"
+    ]
+  },
+  "truck": {
+    "label": "Truck",
+    "kind": "configure",
+    "global": true,
+    "settingsOnly": true,
+    "cols": [
+      "Service Provider Product Number",
+      "Product",
+      "Product Code",
+      "Product Size",
+      "Product Size Type",
+      "Service Category",
+      "Family"
+    ]
+  },
+  "tagScheme": {
+    "label": "Tag Scheme",
+    "kind": "configure",
+    "global": true,
+    "settingsOnly": true,
+    "cols": [
+      "Service Provider Product Number",
+      "Product",
+      "Product Code",
+      "Product Size",
+      "Product Size Type",
+      "Service Category",
+      "Family"
+    ]
+  },
+  "myLocations": {
+    "label": "My Locations",
+    "kind": "customerPortal",
+    "global": true,
+    "settingsOnly": true,
+    "cols": [
+      "Service Provider Product Number",
+      "Product",
+      "Product Code",
+      "Product Size",
+      "Product Size Type",
+      "Service Category",
+      "Family"
+    ]
+  },
+  "myWorkOrders": {
+    "label": "My Work Orders",
+    "kind": "customerPortal",
+    "global": true,
+    "settingsOnly": true,
+    "cols": [
+      "Service Provider Product Number",
+      "Product",
+      "Product Code",
+      "Product Size",
+      "Product Size Type",
+      "Service Category",
+      "Family"
+    ]
+  },
+  "myNotifications": {
+    "label": "Notifications",
+    "kind": "customerPortal",
+    "global": true,
+    "settingsOnly": true,
+    "cols": [
+      "Service Provider Product Number",
+      "Product",
+      "Product Code",
+      "Product Size",
+      "Product Size Type",
+      "Service Category",
+      "Family"
+    ]
+  },
+  "myAccount": {
+    "label": "My Account",
+    "kind": "customerPortal",
+    "global": true,
+    "settingsOnly": true,
+    "cols": [
+      "Service Provider Product Number",
+      "Product",
+      "Product Code",
+      "Product Size",
+      "Product Size Type",
+      "Service Category",
+      "Family"
+    ]
+  },
+  "mindmap": {
+    "label": "Mindmap",
+    "kind": "special",
+    "global": false,
+    "settingsOnly": true,
+    "cols": [
+      "Service Provider Product Number",
+      "Product",
+      "Product Code",
+      "Product Size",
+      "Product Size Type",
+      "Service Category",
+      "Family"
+    ]
+  },
+  "products": {
+    "label": "Service Provider Products",
+    "kind": "list",
+    "global": false,
+    "settingsOnly": true,
+    "cols": [
+      "Service Provider Product Number",
+      "Product",
+      "Product Code",
+      "Product Size",
+      "Product Size Type",
+      "Service Category",
+      "Family"
+    ]
+  },
+  "contacts": {
+    "label": "Contacts",
+    "kind": "list",
+    "global": false,
+    "settingsOnly": true,
+    "cols": [
+      "Contact Name",
+      "Role Title",
+      "Email",
+      "Phone",
+      "Status"
+    ]
+  },
+  "assets": {
+    "label": "Assets",
+    "kind": "list",
+    "global": false,
+    "settingsOnly": true,
+    "cols": [
+      "Asset Name",
+      "Serial Number",
+      "Status",
+      "Customer Location",
+      "Product",
+      "Install Date"
+    ]
+  },
+  "maintProfiles": {
+    "label": "Route Profile Templates",
+    "kind": "list",
+    "global": false,
+    "settingsOnly": true,
+    "cols": [
+      "Profile Name",
+      "Service Type",
+      "# Trucks",
+      "Start Time",
+      "Duration",
+      "Segment"
+    ]
+  },
+  "locations": {
+    "label": "Locations",
+    "kind": "list",
+    "global": false,
+    "settingsOnly": true,
+    "cols": [
+      "Location Name",
+      "Address",
+      "Type",
+      "Zone",
+      "Validated"
+    ]
+  },
+  "customers": {
+    "label": "Customers",
+    "kind": "list",
+    "global": false,
+    "settingsOnly": true,
+    "cols": [
+      "Customer #",
+      "Name",
+      "Segment",
+      "Email",
+      "Phone"
+    ]
+  },
+  "manageAccount": {
+    "label": "Manage Customers",
+    "kind": "manageAccount",
+    "global": false,
+    "settingsOnly": true,
+    "cols": [
+      "Dispatch Number",
+      "Route Date",
+      "Status",
+      "Truck",
+      "Driver",
+      "Service Type"
+    ]
+  },
+  "dispatches": {
+    "label": "Dispatches",
+    "kind": "list",
+    "global": false,
+    "settingsOnly": true,
+    "cols": [
+      "Dispatch Number",
+      "Route Date",
+      "Status",
+      "Truck",
+      "Driver",
+      "Service Type"
+    ]
+  },
+  "notes": {
+    "label": "Notes & Attachments",
+    "kind": "list",
+    "global": false,
+    "settingsOnly": true,
+    "cols": [
+      "Subject",
+      "Author",
+      "Created"
+    ]
+  },
+  "workOrders": {
+    "label": "Work Orders",
+    "kind": "list",
+    "global": false,
+    "settingsOnly": true,
+    "cols": [
+      "Work Order",
+      "Customer",
+      "Request Type",
+      "Subject",
+      "Due Date",
+      "Priority",
+      "Status"
+    ]
+  },
+  "reqCodes": {
+    "label": "Request Type & Resolution Codes",
+    "kind": "list",
+    "global": false,
+    "settingsOnly": true,
+    "cols": [
+      "RRC #",
+      "Default",
+      "Request Type",
+      "Resolution Code",
+      "Workflow Type",
+      "# of Attempts"
+    ]
+  },
+  "requestTypes": {
+    "label": "Request Types",
+    "kind": "list",
+    "global": true,
+    "settingsOnly": true,
+    "cols": [
+      "Code",
+      "Name",
+      "Workflow",
+      "Category",
+      "Service Category",
+      "Segment",
+      "Active"
+    ]
+  },
+  "resolutionCodes": {
+    "label": "Resolution Codes",
+    "kind": "list",
+    "global": true,
+    "settingsOnly": true,
+    "cols": [
+      "Code",
+      "Name",
+      "Workflow",
+      "Description",
+      "Active"
+    ]
+  },
+  "segments": {
+    "label": "Service Provider Segments",
+    "kind": "list",
+    "global": true,
+    "settingsOnly": true,
+    "cols": [
+      "Segment Name",
+      "Type",
+      "Parent"
+    ]
+  },
+  "aggTips": {
+    "label": "Trip Data",
+    "kind": "list",
+    "global": true,
+    "settingsOnly": true,
+    "cols": [
+      "Date",
+      "Truck #",
+      "# Tips",
+      "Total Distance",
+      "Idle Time (min)",
+      "Speeding Events"
+    ]
+  },
+  "trucks": {
+    "label": "Trucks",
+    "kind": "list",
+    "global": true,
+    "settingsOnly": true,
+    "cols": [
+      "Truck Name",
+      "Status",
+      "Service Type",
+      "Truck #",
+      "Type",
+      "Insyncld"
+    ]
+  },
+  "tips": {
+    "label": "Tips & Non-Tips",
+    "kind": "list",
+    "global": true,
+    "settingsOnly": true,
+    "cols": [
+      "Event Date / Time",
+      "Customer Location",
+      "Collection Route",
+      "Tipped",
+      "Truck #"
+    ]
+  },
+  "routes": {
+    "label": "Routes",
+    "kind": "list",
+    "global": true,
+    "settingsOnly": true,
+    "cols": [
+      "Route Number",
+      "Type",
+      "Days",
+      "Status",
+      "Truck",
+      "Driver",
+      "Segment"
+    ]
+  },
+  "support": {
+    "label": "Support",
+    "kind": "support",
+    "global": true,
+    "settingsOnly": true,
+    "cols": [
+      "Notification Name",
+      "Status",
+      "Notify Days",
+      "Trigger",
+      "From Email",
+      "Email Subject"
+    ]
+  },
+  "notifications": {
+    "label": "Service Notifications",
+    "kind": "list",
+    "global": false,
+    "settingsOnly": true,
+    "cols": [
+      "Notification Name",
+      "Status",
+      "Notify Days",
+      "Trigger",
+      "From Email",
+      "Email Subject"
+    ]
+  }
+}

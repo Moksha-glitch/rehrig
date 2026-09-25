@@ -99,6 +99,9 @@ export const NAV = {
         { key: 'support', module: 'support', label: 'Support', icon: 'help' },
         { key: 'tips', module: 'individualTips', label: 'Tips & Non-Tips', icon: 'layers', countKind: 'individualTips' },
         { key: 'workOrders', module: 'workOrders', label: 'Work Orders', icon: 'clipboard', countKind: 'workOrders' },
+        { key: 'mapCenter', module: 'mapCenter', label: 'Map Center', icon: 'map' },
+        { key: 'mindmap', module: 'mindmap', label: 'Mindmap', icon: 'layers' },
+        { key: 'notesAttachments', module: 'notesAttachments', label: 'Notes & Attachments', icon: 'clipboard', countKind: 'notesAttachments' },
       ],
     },
     {
@@ -179,6 +182,13 @@ export const NAV = {
         },
         { key: 'trucks', module: 'trucks', label: 'Trucks', icon: 'truck', countKind: 'trucks' },
         { key: 'picklists', module: 'picklists', label: 'Picklist Management', icon: 'sliders' },
+        {
+          key: 'maintenanceRouteProfiles',
+          module: 'maintenanceRouteProfiles',
+          label: 'Route Profile Templates',
+          icon: 'route',
+          countKind: 'maintenanceRouteProfiles',
+        },
       ],
     },
   ],
@@ -247,6 +257,7 @@ export const MODULE_LABELS = {
   myNotifications: 'Notifications',
   myAccount: 'My Account',
   userAccount: 'Your Account',
+  mindmap: 'Mindmap',
 };
 
 function filterNavItem(item, canNav, parentAllowed = false) {

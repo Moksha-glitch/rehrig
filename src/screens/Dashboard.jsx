@@ -26,6 +26,7 @@ import {
 } from '../components/UI.jsx';
 import { useStore } from '../state/AppStore.jsx';
 import { useRecords } from '../hooks/useRecords.js';
+import { useReportSpecs } from '../hooks/useConfig.js';
 import { getErrorMessage } from '../lib/errors.js';
 import { useAccounts } from '../hooks/useAccounts.js';
 import {
@@ -53,6 +54,17 @@ function localDateKey(date) {
   return [date.getFullYear(), date.getMonth() + 1, date.getDate()]
     .map((part) => String(part).padStart(2, '0'))
     .join('-');
+}
+
+function greetingFor(date) {
+  const hour = date.getHours();
+  if (hour < 12) return 'Good morning';
+  if (hour < 17) return 'Good afternoon';
+  return 'Good evening';
+}
+
+function isOpenWorkOrder(row) {
+  return !['Closed', 'Complete', 'Cancelled'].includes(row.caseStatus || row.status);
 }
 
 function OpsBar({ label, value, target, warn }) {
@@ -160,6 +172,8 @@ export default function Dashboard({ variant = 'home' }) {
   const tipsQuery = useRecords('aggregatedTips');
   const accountsQuery = useAccounts();
   const settingsQuery = useWorkspaceSettings();
+  const reportsQuery = useReportSpecs();
+  const pinnedReports = (reportsQuery.data || []).filter((spec) => spec.pinHome || spec.favorite);
   const { update: updateWorkspace } = useWorkspaceMutations();
   const workOrders = workOrdersQuery.data?.data || [];
   const dispatches = dispatchesQuery.data?.data || [];
@@ -313,8 +327,10 @@ export default function Dashboard({ variant = 'home' }) {
     persistLayout(next);
   };
 
-  const openWorkOrders = workOrders.filter((row) => !['Closed', 'Complete'].includes(row.status));
-  const activeDispatches = dispatches.filter((row) => ['In Route', 'In Progress'].includes(row.status));
+  const openWorkOrders = workOrders.filter(isOpenWorkOrder);
+  const activeDispatches = dispatches.filter((row) =>
+    ['In Route', 'In Progress', 'Scheduled'].includes(row.status)
+  );
   const activeTrucks = trucks.filter((row) => row.status === 'Active');
   const now = new Date();
   const todayKey = localDateKey(now);
@@ -550,8 +566,21 @@ export default function Dashboard({ variant = 'home' }) {
     const rows = isDispatch ? activeDispatches.slice(0, 5) : isMyWork ? myWorkOrders.slice(0, 5) : priorityWorkOrders;
     return <RecordList rows={rows} empty={isDispatch ? 'No active dispatches.' : 'No matching work orders.'} render={(row) => (
       <li key={row.id || row.number} className="py-3">
-        <div className="flex items-center justify-between gap-2 text-sm"><span className="truncate font-medium">{row.subject || row.number || row.id}</span><Badge color={isDispatch ? 'cyan' : 'amber'}>{row.status || row.priority}</Badge></div>
-        <p className="mt-0.5 truncate text-xs text-ink-muted">{row.account || 'Unassigned'}{row.owner ? ` · ${row.owner}` : ''}</p>
+        <button
+          type="button"
+          className="w-full text-left interactive"
+          onClick={() => navigate(isDispatch ? 'dispatches' : 'workOrders', { recordId: row.id })}
+        >
+          <div className="flex items-center justify-between gap-2 text-sm">
+            <span className="truncate font-medium">{row.subject || row.dispatchNumber || row.number || row.id}</span>
+            <Badge color={isDispatch ? 'cyan' : 'amber'}>{row.caseStatus || row.status || row.priority}</Badge>
+          </div>
+          <p className="mt-0.5 truncate text-xs text-ink-muted">
+            {row.account || 'Unassigned'}
+            {row.owner ? ` · ${row.owner}` : ''}
+            {isDispatch && row.progress != null ? ` · ${row.progress}%` : ''}
+          </p>
+        </button>
       </li>
     )} />;
   };
@@ -570,7 +599,7 @@ export default function Dashboard({ variant = 'home' }) {
               ? `Home — SP Segment Admin View · ${now.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}`
               : `Home · ${now.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}`
         }
-        title={isAnalytics ? 'Dashboards' : `Welcome, ${first}.`}
+        title={isAnalytics ? 'Dashboards' : `${greetingFor(now)}, ${first}.`}
         description={
           isAnalytics
             ? analyticsDashboard?.description
@@ -590,6 +619,11 @@ export default function Dashboard({ variant = 'home' }) {
                 Delete template
               </Button>
             )}
+            {!isAnalytics && (
+              <Button variant="secondary" onClick={() => persistLayout(fallbackLayout)}>
+                Reset layout
+              </Button>
+            )}
             {(!isAnalytics || isCustomTemplate) && available.length ? (
               <Select
                 value=""
@@ -602,6 +636,22 @@ export default function Dashboard({ variant = 'home' }) {
           </div>
         }
       />
+      {!isAnalytics && pinnedReports.length > 0 && (
+        <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          {pinnedReports.slice(0, 8).map((spec) => (
+            <button
+              key={spec.id}
+              type="button"
+              onClick={() => navigate('reports', { reportId: spec.id })}
+              className="rounded-2xl border border-line bg-surface px-4 py-3 text-left hover:border-line-strong hover:bg-elevated"
+            >
+              <p className="type-overline">Pinned report</p>
+              <p className="mt-1 text-sm font-semibold text-ink">{spec.name}</p>
+              <p className="mt-1 text-[12px] text-ink-muted">{spec.lastRun || spec.desc || 'Open in Reports'}</p>
+            </button>
+          ))}
+        </div>
+      )}
       {isAnalytics && (
         <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
           {dashboards.map((item) => {
