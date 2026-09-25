@@ -16,6 +16,7 @@ import {
   Select,
   Checkbox,
   AsyncState,
+  activateRow,
 } from '../components/UI.jsx';
 import { useStore } from '../state/AppStore.jsx';
 import { useAccounts, useSegments } from '../hooks/useAccounts.js';
@@ -38,9 +39,16 @@ function contactFormValues(contact, defaultAccountId = '') {
     firstName: contact?.firstName || '',
     lastName: contact?.lastName || '',
     email: contact?.email || '',
+    phone: contact?.phone || '',
+    mobile: contact?.mobile || '',
     title: contact?.title || '',
     role: contact?.roleTitle || contact?.role || PICKLISTS.wizardRole[0],
     segment: contact?.segment || '',
+    mailingStreet: contact?.mailingStreet || '',
+    mailingCity: contact?.mailingCity || '',
+    mailingState: contact?.mailingState || '',
+    mailingZip: contact?.mailingZip || '',
+    mailingCountry: contact?.mailingCountry || '',
     portal: !!(contact?.isUserCreated && contact?.isUserActive) || !!contact?.portal,
   };
 }
@@ -88,6 +96,13 @@ function ContactEditorDrawer({ accounts, contact, defaultAccountId, onClose, onS
       role: form.role,
       roleTitle: form.role,
       segment: form.segment.trim(),
+      phone: form.phone.trim(),
+      mobile: form.mobile.trim(),
+      mailingStreet: form.mailingStreet.trim(),
+      mailingCity: form.mailingCity.trim(),
+      mailingState: form.mailingState.trim(),
+      mailingZip: form.mailingZip.trim(),
+      mailingCountry: form.mailingCountry.trim(),
       portal: form.portal,
       isUserCreated: form.portal,
       isUserActive: form.portal,
@@ -152,6 +167,27 @@ function ContactEditorDrawer({ accounts, contact, defaultAccountId, onClose, onS
             onChange={(e) => set({ role: e.target.value })}
           />
         </Field>
+        <Field label="Phone">
+          <TextInput value={form.phone} onChange={(e) => set({ phone: e.target.value })} />
+        </Field>
+        <Field label="Mobile">
+          <TextInput value={form.mobile} onChange={(e) => set({ mobile: e.target.value })} />
+        </Field>
+        <Field label="Mailing Street" span2>
+          <TextInput value={form.mailingStreet} onChange={(e) => set({ mailingStreet: e.target.value })} />
+        </Field>
+        <Field label="City">
+          <TextInput value={form.mailingCity} onChange={(e) => set({ mailingCity: e.target.value })} />
+        </Field>
+        <Field label="State / Province">
+          <TextInput value={form.mailingState} onChange={(e) => set({ mailingState: e.target.value })} />
+        </Field>
+        <Field label="Postal Code">
+          <TextInput value={form.mailingZip} onChange={(e) => set({ mailingZip: e.target.value })} />
+        </Field>
+        <Field label="Country">
+          <TextInput value={form.mailingCountry} onChange={(e) => set({ mailingCountry: e.target.value })} />
+        </Field>
         <Field label="Segment" span2>
           <Select
             options={segmentOptions}
@@ -183,7 +219,7 @@ export default function ContactsDirectory() {
   const contacts = contactsQuery.data || [];
   const accById = Object.fromEntries(accounts.map((a) => [a.id, a.name]));
   const rows = contacts.filter((c) =>
-    [c.name, c.title, c.email, c.phone, c.mobile, c.roleTitle, c.segment, accById[c.accountId]].some(
+    [c.name, c.title, c.email, c.phone, c.mobile, c.roleTitle, c.segment, c.mailingStreet, c.mailingCity, c.mailingZip, accById[c.accountId]].some(
       (value) => String(value || '').toLowerCase().includes(q.trim().toLowerCase())
     )
   );
@@ -229,19 +265,24 @@ export default function ContactsDirectory() {
               'Contact Name',
               'Title',
               'Email',
+              'Phone',
               'Role',
               'Service Provider',
               'Segment',
               'Status',
               'Portal Access',
-              '',
             ]}
           >
             {rows.map((c) => (
-              <tr key={c.id} className="interactive hover:bg-elevated/70">
+              <tr
+                key={c.id}
+                className="interactive cursor-pointer hover:bg-elevated/70"
+                onClick={(event) => activateRow(event, () => setEditing(c))}
+              >
                 <td className="max-w-[10rem] truncate px-4 py-3.5 font-medium text-ink sm:px-5">{c.name}</td>
                 <td className="max-w-[8rem] truncate px-4 py-3.5 text-ink-muted sm:px-5">{c.title}</td>
                 <td className="max-w-[12rem] truncate px-4 py-3.5 text-ink-muted sm:px-5">{c.email}</td>
+                <td className="max-w-[8rem] truncate px-4 py-3.5 text-ink-muted sm:px-5">{c.phone || c.mobile}</td>
                 <td className="max-w-[8rem] truncate px-4 py-3.5 text-ink-muted sm:px-5">{c.roleTitle}</td>
                 <td className="max-w-[10rem] truncate px-4 py-3.5 text-ink-muted sm:px-5">{accById[c.accountId]}</td>
                 <td className="max-w-[8rem] truncate px-4 py-3.5 text-ink-muted sm:px-5">{c.segment}</td>
@@ -253,17 +294,6 @@ export default function ContactsDirectory() {
                     <Badge color="green">Portal User</Badge>
                   ) : (
                     <Badge color="slate">Not enrolled</Badge>
-                  )}
-                </td>
-                <td className="px-4 py-3.5 text-right sm:px-5">
-                  {canCreateAccounts && (
-                    <button
-                      type="button"
-                      className="link-brand text-xs font-medium"
-                      onClick={() => setEditing(c)}
-                    >
-                      Edit
-                    </button>
                   )}
                 </td>
               </tr>

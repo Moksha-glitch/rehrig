@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Icon from '../components/Icon.jsx';
-import { Badge, Page, PageHeader, Panel, Checkbox, SearchField, Select } from '../components/UI.jsx';
+import { Badge, Button, Page, PageHeader, Panel, Checkbox, SearchField, Select } from '../components/UI.jsx';
 import { useStore } from '../state/AppStore.jsx';
 import { useAccounts } from '../hooks/useAccounts.js';
 import { useRecords } from '../hooks/useRecords.js';
@@ -53,9 +53,9 @@ function relativePoint(base, seed, density) {
   };
 }
 
-export default function MapCenter() {
+export default function MapCenter({ embedded = false, overlayParams, onClose }) {
   const { state, navigate, persona } = useStore();
-  const navParams = state.nav?.params || {};
+  const navParams = overlayParams || state.nav?.params || {};
   const accountsQuery = useAccounts();
   const assetsQuery = useRecords('assets');
   const dispatchesQuery = useRecords('dispatches');
@@ -267,13 +267,17 @@ export default function MapCenter() {
         subtitle: `${selected.account.billing?.city || '—'}, ${selected.account.billing?.state || '—'}`,
         action: {
           label: 'Open provider',
-          onClick: () =>
-            persona === 'rehrig'
-              ? navigate('accountDetail', {
-                  accountId: selected.account.id,
-                  tab: 'details',
-                })
-              : navigate('account', { tab: 'details' }),
+          onClick: () => {
+            onClose?.();
+            if (persona === 'rehrig') {
+              navigate('accountDetail', {
+                accountId: selected.account.id,
+                tab: 'details',
+              });
+              return;
+            }
+            navigate('account', { tab: 'details' });
+          },
         },
       };
     }
@@ -303,12 +307,19 @@ export default function MapCenter() {
     };
   })();
 
-  return (
-    <Page wide>
+  const content = (
+    <>
       <PageHeader
         overline="Tools"
         title="Map Center"
         description="A schematic service-area view of enrolled providers, assets, dispatches, and work orders."
+        actions={
+          onClose ? (
+            <Button variant="secondary" onClick={onClose}>
+              Done
+            </Button>
+          ) : undefined
+        }
       />
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
@@ -538,6 +549,8 @@ export default function MapCenter() {
           </Panel>
         </div>
       </div>
-    </Page>
+    </>
   );
+
+  return embedded ? <div className="px-1 pb-4">{content}</div> : <Page wide>{content}</Page>;
 }

@@ -130,7 +130,7 @@ function chatReplyFor(key) {
   return String(answer.summary).replace(/\{\{(c\d+)\}\}/g, (_, id) => answer.claims?.[id]?.v || '');
 }
 
-export default function VisionChat({ onOnboard, onClose, children }) {
+export default function VisionChat({ onOnboard, onClose }) {
   const { state, persona, navigate, canAccessModule, canTab, toast } = useStore();
   const settingsQuery = useWorkspaceSettings();
   const { update: updateWorkspace } = useWorkspaceMutations();
@@ -169,6 +169,7 @@ export default function VisionChat({ onOnboard, onClose, children }) {
   const menusRef = useRef(null);
   const agentScrollRef = useRef(null);
   const currentAnswerRef = useRef(null);
+  const sendRef = useRef(() => {});
 
   useEffect(() => {
     const focusTimer = window.setTimeout(() => {
@@ -393,6 +394,17 @@ export default function VisionChat({ onOnboard, onClose, children }) {
     }, 400);
   };
 
+  sendRef.current = send;
+
+  useEffect(() => {
+    const onAsk = (event) => {
+      const prompt = event.detail?.prompt;
+      if (prompt) sendRef.current(prompt);
+    };
+    window.addEventListener('vision:ask', onAsk);
+    return () => window.removeEventListener('vision:ask', onAsk);
+  }, []);
+
   const currentTitle = titleFromTurns(turns);
   const currentIsFavorite = turns.length > 0 && favorites.some((item) => item.title === currentTitle);
   const activeTurnId = viewing.turnId;
@@ -596,8 +608,11 @@ export default function VisionChat({ onOnboard, onClose, children }) {
     (turn) => turn.playbookKey && turn.playbookKey !== DAY_METRICS_KEY && PLAYBOOK[turn.playbookKey]
   );
 
-  const agentPage = showDetail ? (
-    <section className="flex h-full min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-canvas" aria-label="Answer">
+  const reportPane = showDetail ? (
+    <section
+      className="flex h-full min-h-0 w-[min(40rem,46vw)] shrink-0 flex-col overflow-hidden border-l border-line bg-canvas max-lg:absolute max-lg:inset-0 max-lg:z-20 max-lg:w-full"
+      aria-label="Answer"
+    >
       <div className="flex h-[60px] shrink-0 items-center justify-between gap-2 border-b border-line bg-surface px-3">
         <div className="min-w-0">
           <p className="text-xs font-semibold text-brand">Today&apos;s collections</p>
@@ -608,14 +623,14 @@ export default function VisionChat({ onOnboard, onClose, children }) {
           onClick={closeDetail}
           className="shrink-0 rounded-lg px-2 py-1.5 text-xs font-medium text-ink-muted hover:bg-elevated hover:text-ink"
         >
-          Back to page
+          Hide report
         </button>
       </div>
       <div
         ref={agentScrollRef}
         className="relative min-h-0 flex-1 overflow-y-auto scroll-thin [overflow-anchor:none]"
       >
-        <div className="mx-auto w-full max-w-[72rem] px-6 py-5 xl:px-8">
+        <div className="mx-auto w-full max-w-[40rem] px-5 py-5">
           <LandingReport
             instant={!!viewing.instant}
             onAsk={askPlaybook}
@@ -648,11 +663,9 @@ export default function VisionChat({ onOnboard, onClose, children }) {
   ) : null;
 
   return (
-    <div className="flex h-full min-h-0 min-w-0 flex-1 overflow-hidden">
+    <div className="vision-dock relative flex h-full min-h-0 shrink-0 overflow-hidden border-l border-line bg-surface max-lg:absolute max-lg:inset-y-0 max-lg:right-0 max-lg:z-40 max-lg:shadow-float">
     <aside
-      className={`flex h-full min-h-0 shrink-0 flex-col overflow-hidden border-r border-line bg-surface ${
-        showDetail ? 'w-[426px]' : 'w-full lg:w-[426px]'
-      }`}
+      className="flex h-full min-h-0 w-[min(26.5rem,100vw)] shrink-0 flex-col overflow-hidden bg-surface"
       aria-label="Vision AI"
     >
       <div className="flex h-[60px] shrink-0 items-center justify-between gap-2 border-b border-line bg-surface px-3">
@@ -943,7 +956,7 @@ export default function VisionChat({ onOnboard, onClose, children }) {
         </form>
       </div>
     </aside>
-    {typeof children === 'function' ? children(agentPage) : children}
+    {reportPane}
     {widgetDraft && (
       <CreateWidgetDrawer
         draft={widgetDraft}

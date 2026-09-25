@@ -55,7 +55,78 @@ function NavButton({ item, active, onClick, collapsed }) {
   );
 }
 
-function FolderFlyout({ anchorEl, section, isItemActive, onSelect }) {
+function NestedNavItems({ items, isItemActive, onSelect, openNested, onToggleNested }) {
+  return items.map((item) => {
+    const active = isItemActive(item);
+    const hasChildren = Boolean(item.children?.length);
+    const nestedOpen = hasChildren && openNested.has(item.key);
+    const childActive = item.children?.some((nested) => isItemActive(nested));
+    return (
+      <div key={item.key}>
+        <button
+          type="button"
+          role="menuitem"
+          aria-expanded={hasChildren ? nestedOpen : undefined}
+          onClick={() => (hasChildren ? onToggleNested(item.key) : onSelect(item))}
+          className={`flex w-full items-center gap-3 rounded-xl px-3 py-1.5 text-left text-[13px] interactive transition-colors duration-200 ${
+            active || childActive
+              ? 'bg-white/10 text-white font-medium'
+              : 'text-white/70 hover:bg-white/10 hover:text-white'
+          }`}
+        >
+          {item.icon ? (
+            <Icon
+              name={item.icon}
+              size={15}
+              className={`shrink-0 ${active || childActive ? 'text-white' : 'text-white/70'}`}
+            />
+          ) : (
+            <span className="flex h-4 w-4 shrink-0 items-center justify-center text-[10px] font-semibold">
+              {item.label.charAt(0)}
+            </span>
+          )}
+          <span className="min-w-0 flex-1 truncate">{item.label}</span>
+          {item.badge !== undefined && item.badge !== null && (
+            <span className="ml-2 shrink-0 rounded bg-white/10 px-1.5 py-0.5 text-[10.5px] font-semibold text-white/70">
+              {item.badge > 99 ? '99+' : item.badge}
+            </span>
+          )}
+          {hasChildren && (
+            <Icon
+              name="chevronRight"
+              size={13}
+              className={`shrink-0 text-white/50 transition-transform ${nestedOpen ? 'rotate-90' : ''}`}
+            />
+          )}
+        </button>
+        {nestedOpen && (
+          <div className="ml-4 mt-0.5 space-y-0.5 border-l border-white/10 pl-2">
+            {item.children.map((nested) => {
+              const nestedActive = isItemActive(nested);
+              return (
+                <button
+                  key={nested.key}
+                  type="button"
+                  className={`flex w-full items-center gap-2.5 rounded-xl px-2.5 py-1.5 text-left text-[13px] transition-colors duration-200 ${
+                    nestedActive
+                      ? 'bg-white/10 text-white font-medium'
+                      : 'text-white/70 hover:bg-white/10 hover:text-white'
+                  }`}
+                  onClick={() => onSelect(nested)}
+                >
+                  {nested.icon ? <Icon name={nested.icon} size={14} className="shrink-0" /> : null}
+                  <span className="min-w-0 flex-1 truncate">{nested.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    );
+  });
+}
+
+function FolderFlyout({ anchorEl, section, isItemActive, onSelect, openNested, onToggleNested }) {
   const [pos, setPos] = useState({ top: 0, left: 0 });
 
   useLayoutEffect(() => {
@@ -86,33 +157,13 @@ function FolderFlyout({ anchorEl, section, isItemActive, onSelect }) {
       style={{ top: pos.top, left: pos.left }}
       className="fixed z-[60] min-w-[13.5rem] rounded-2xl border border-white/10 bg-brand p-1.5 shadow-float"
     >
-      {section.children.map((item) => {
-        const active = isItemActive(item);
-        return (
-          <button
-            key={item.key}
-            type="button"
-            role="menuitem"
-            onClick={() => onSelect(item)}
-            className={`flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-[13.5px] interactive transition-colors duration-200 ${
-              active ? 'bg-white/10 text-white' : 'text-white/70 hover:bg-white/10 hover:text-white'
-            }`}
-          >
-            {item.icon ? (
-              <Icon
-                name={item.icon}
-                size={16}
-                className={`shrink-0 ${active ? 'text-white' : 'text-white/70'}`}
-              />
-            ) : (
-              <span className="flex h-4 w-4 shrink-0 items-center justify-center text-[10px] font-semibold">
-                {item.label.charAt(0)}
-              </span>
-            )}
-            <span className="min-w-0 flex-1 truncate">{item.label}</span>
-          </button>
-        );
-      })}
+      <NestedNavItems
+        items={section.children}
+        isItemActive={isItemActive}
+        onSelect={onSelect}
+        openNested={openNested}
+        onToggleNested={onToggleNested}
+      />
     </div>,
     document.body
   );
@@ -129,7 +180,17 @@ function sectionRailIcon(section) {
   return SECTION_RAIL_ICONS[section.label] || section.children?.[0]?.icon || 'grid';
 }
 
-function FolderButton({ section, collapsed, open, active, onToggle, isItemActive, onSelect }) {
+function FolderButton({
+  section,
+  collapsed,
+  open,
+  active,
+  onToggle,
+  isItemActive,
+  onSelect,
+  openNested,
+  onToggleNested,
+}) {
   const buttonRef = useRef(null);
   const showIcon = true;
 
@@ -185,42 +246,19 @@ function FolderButton({ section, collapsed, open, active, onToggle, isItemActive
           section={section}
           isItemActive={isItemActive}
           onSelect={onSelect}
+          openNested={openNested}
+          onToggleNested={onToggleNested}
         />
       )}
       {open && !collapsed && (
         <div className="mb-1 ml-4 mt-0.5 space-y-0.5 border-l border-white/10 pl-2" role="menu" aria-label={section.label}>
-          {section.children.map((item) => {
-            const itemActive = isItemActive(item);
-            return (
-              <button
-                key={item.key}
-                type="button"
-                role="menuitem"
-                onClick={() => onSelect(item)}
-                className={`flex w-full items-center gap-3 rounded-xl px-3 py-1.5 text-left text-[13px] interactive transition-colors duration-200 ${
-                  itemActive ? 'bg-white/10 text-white font-medium' : 'text-white/70 hover:bg-white/10 hover:text-white'
-                }`}
-              >
-                {item.icon ? (
-                  <Icon
-                    name={item.icon}
-                    size={15}
-                    className={`shrink-0 ${itemActive ? 'text-white' : 'text-white/70'}`}
-                  />
-                ) : (
-                  <span className="flex h-4 w-4 shrink-0 items-center justify-center text-[10px] font-semibold">
-                    {item.label.charAt(0)}
-                  </span>
-                )}
-                <span className="min-w-0 flex-1 truncate">{item.label}</span>
-                {item.badge !== undefined && (
-                  <span className="ml-2 flex h-5 items-center justify-center rounded bg-danger px-1.5 text-[10.5px] font-semibold text-white">
-                    {item.badge}
-                  </span>
-                )}
-              </button>
-            );
-          })}
+          <NestedNavItems
+            items={section.children}
+            isItemActive={isItemActive}
+            onSelect={onSelect}
+            openNested={openNested}
+            onToggleNested={onToggleNested}
+          />
         </div>
       )}
     </div>
@@ -247,34 +285,86 @@ export default function SideNav({ open, onToggle }) {
   const accountsQuery = useAccounts();
   const user = state.currentUser;
   const [accountOpen, setAccountOpen] = useState(false);
-  const [openFolder, setOpenFolder] = useState(null);
+  const [openFolders, setOpenFolders] = useState(() => new Set());
+  const [openNested, setOpenNested] = useState(() => new Set());
   const accountRef = useRef(null);
   const shellRef = useRef(null);
 
   const tree = useMemo(() => filterNavTree(NAV[persona] || [], canNav), [persona, canNav]);
-
-  const activeModule = state.nav.module;
-  const activeParams = state.nav.params;
-
   const accounts = accountsQuery.data || [];
   const scopedAccount =
     persona !== 'rehrig'
       ? accounts.find((a) => user?.accountIds?.includes(a.id)) ||
         (persona === 'sp' ? accounts[0] : null)
       : null;
+  const countByKind = useMemo(() => {
+    const accountNames = new Set(
+      (persona === 'sp' ? [scopedAccount?.name].filter(Boolean) : accounts.map((account) => account.name))
+    );
+    const accountIds = new Set(
+      (persona === 'sp' ? [scopedAccount?.id].filter(Boolean) : accounts.map((account) => account.id))
+    );
+    const inScope = (record) =>
+      !accountNames.size ||
+      accountIds.has(record.accountId) ||
+      accountNames.has(record.account) ||
+      accountNames.has(record.accountName);
+    const records = state.operationalRecords || {};
+    const counts = {};
+    Object.entries(records).forEach(([kind, rows]) => {
+      counts[kind] = (rows || []).filter(inScope).length;
+    });
+    counts.segments = (state.segments || []).filter(
+      (segment) => !accountIds.size || accountIds.has(segment.accountId) || accountNames.has(segment.account)
+    ).length;
+    counts.customers = (records.customers || []).filter(inScope).length;
+    return counts;
+  }, [accounts, persona, scopedAccount, state.operationalRecords, state.segments]);
+
+  const activeModule = state.nav.module;
+  const activeParams = state.nav.params;
+
+  const decorateItem = (item) => ({
+    ...item,
+    badge: item.countKind ? countByKind[item.countKind] ?? 0 : item.badge,
+    children: item.children?.map(decorateItem),
+  });
+
+  const toggleNested = (key) => {
+    setOpenNested((current) => {
+      const next = new Set(current);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  };
 
   useEffect(() => {
     if (!open) {
-      setOpenFolder(null);
+      setOpenFolders(new Set());
       return;
     }
-    const activeSection = tree.find(
-      (node) =>
-        node.type === 'section' &&
-        node.children?.some((item) => isNavItemActive(item, activeModule, activeParams || {}))
-    );
-    if (activeSection) setOpenFolder(activeSection.label);
-  }, [open, tree, activeModule, activeParams]);
+    setOpenFolders(new Set(tree.filter((node) => node.type === 'section').map((node) => node.label)));
+  }, [open, tree]);
+
+  useEffect(() => {
+    const activeKeys = [];
+    tree.forEach((node) => {
+      (node.children || []).forEach((item) => {
+        if (
+          item.children?.some((nested) => isNavItemActive(nested, activeModule, activeParams || {}))
+        ) {
+          activeKeys.push(item.key);
+        }
+      });
+    });
+    if (!activeKeys.length) return;
+    setOpenNested((current) => {
+      const next = new Set(current);
+      activeKeys.forEach((key) => next.add(key));
+      return next;
+    });
+  }, [tree, activeModule, activeParams]);
 
   useEffect(() => {
     const onPointerDown = (event) => {
@@ -282,12 +372,12 @@ export default function SideNav({ open, onToggle }) {
       if (open) return;
       const inShell = shellRef.current?.contains(event.target);
       const inFlyout = event.target.closest?.('[role="menu"]');
-      if (!inShell && !inFlyout) setOpenFolder(null);
+      if (!inShell && !inFlyout) setOpenFolders(new Set());
     };
     const onKeyDown = (event) => {
       if (event.key === 'Escape') {
         setAccountOpen(false);
-        if (!open) setOpenFolder(null);
+        if (!open) setOpenFolders(new Set());
       }
     };
     document.addEventListener('pointerdown', onPointerDown);
@@ -304,7 +394,7 @@ export default function SideNav({ open, onToggle }) {
     persona === 'rehrig' ? 'Rehrig' : persona === 'sp' ? 'Service Provider' : 'Resident';
 
   const goTo = (item) => {
-    if (!open) setOpenFolder(null);
+    if (!open) setOpenFolders(new Set());
     if (item.module === 'assistant') {
       openAssistant();
       return;
@@ -371,20 +461,30 @@ export default function SideNav({ open, onToggle }) {
               );
             }
 
-            const sectionActive = node.children.some((item) => isItemActive(item));
+            const section = { ...node, children: node.children.map(decorateItem) };
+            const sectionActive = section.children.some(
+              (item) => isItemActive(item) || item.children?.some((nested) => isItemActive(nested))
+            );
             return (
               <FolderButton
                 key={node.label}
-                section={node}
+                section={section}
                 collapsed={!open}
-                open={openFolder === node.label}
+                open={openFolders.has(node.label)}
                 active={sectionActive}
                 onToggle={() => {
                   setAccountOpen(false);
-                  setOpenFolder((current) => (current === node.label ? null : node.label));
+                  setOpenFolders((current) => {
+                    const next = new Set(current);
+                    if (next.has(node.label)) next.delete(node.label);
+                    else next.add(node.label);
+                    return next;
+                  });
                 }}
                 isItemActive={isItemActive}
                 onSelect={goTo}
+                openNested={openNested}
+                onToggleNested={toggleNested}
               />
             );
           })}
@@ -406,6 +506,58 @@ export default function SideNav({ open, onToggle }) {
             <Icon name="chevronsLeft" size={16} className={`shrink-0 ${open ? '' : 'rotate-180'}`} />
             {open && <span>Collapse</span>}
           </button>
+          <div ref={accountRef} className="relative mt-1">
+            <button
+              type="button"
+              onClick={() => setAccountOpen((current) => !current)}
+              aria-label={`Signed in as ${user?.name || 'user'}`}
+              aria-expanded={accountOpen}
+              aria-haspopup="menu"
+              className={`flex w-full items-center rounded-xl py-1.5 text-left transition-colors duration-200 hover:bg-white/10 ${
+                open ? 'gap-2.5 px-2' : 'justify-center px-0'
+              } ${accountOpen ? 'bg-white/10' : ''}`}
+            >
+              {(() => {
+                const { initials, palette } = getAvatarProps(user?.name, user?.role);
+                return (
+                  <span
+                    className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold text-white ${
+                      isPreviewingPersona ? 'bg-warn' : ''
+                    }`}
+                    style={!isPreviewingPersona ? { background: palette.bg } : undefined}
+                  >
+                    {initials}
+                  </span>
+                );
+              })()}
+              {open && (
+                <div className="min-w-0 flex-1">
+                  <div className="truncate text-[13px] font-medium text-white">{user?.name}</div>
+                  <div className="truncate text-[11px] text-white/55">
+                    {user?.role}
+                    {user?.alias ? ` · ${user.alias}` : ''}
+                  </div>
+                </div>
+              )}
+            </button>
+            {accountOpen && (
+              <UserAccountMenu
+                user={user}
+                persona={persona}
+                scopedAccount={scopedAccount}
+                isScoped={isScoped}
+                canPreviewPersonas={canPreviewPersonas}
+                personaViews={personaViews}
+                previewPersona={previewPersona}
+                exitPersonaPreview={exitPersonaPreview}
+                previewOrigin={previewOrigin}
+                isPreviewingPersona={isPreviewingPersona}
+                navigate={navigate}
+                logout={logout}
+                onClose={() => setAccountOpen(false)}
+              />
+            )}
+          </div>
         </div>
       </aside>
     </div>

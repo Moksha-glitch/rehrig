@@ -22,7 +22,12 @@ import {
   Toolbar,
   SearchField,
   StatusDot,
+  WorkspaceSheet,
+  activateRow,
 } from '../components/UI.jsx';
+import BulkImport from './BulkImport.jsx';
+import MapCenter from './MapCenter.jsx';
+import CustomerMapPanel from '../components/CustomerMapPanel.jsx';
 import {
   ASSET_ACTIONS,
   RECORD_SCHEMAS,
@@ -30,7 +35,7 @@ import {
 } from '../data/recordSchemas.js';
 import { PICKLISTS } from '../data/picklists.js';
 import { useStore } from '../state/AppStore.jsx';
-import { useAccounts } from '../hooks/useAccounts.js';
+import { useAccounts, useSegments } from '../hooks/useAccounts.js';
 import {
   useCreateRecord,
   useDeleteRecord,
@@ -42,12 +47,44 @@ import ReportsStudio from './ReportsStudio.jsx';
 
 function recordStatusColor(status) {
   const s = String(status || '').toLowerCase();
-  if (['lost', 'decommissioned', 'failed', 'cancelled'].some((k) => s.includes(k))) return 'rose';
-  if (['paused', 'inactive', 'draft'].some((k) => s.includes(k))) return 'slate';
-  if (['pending', 'delayed', 'warning'].some((k) => s.includes(k))) return 'amber';
-  if (['complete', 'enabled', 'in service', 'available', 'active'].some((k) => s.includes(k)))
+  if (['lost', 'decommissioned', 'failed', 'cancelled', 'on hold', 'out of service'].some((k) => s.includes(k))) return 'rose';
+  if (['paused', 'inactive', 'draft', 'closed', 'scrapped'].some((k) => s.includes(k))) return 'slate';
+  if (['pending', 'delayed', 'warning', 'in progress', 'in route', 'being repaired', 'awaiting repair', 'medium'].some((k) => s.includes(k))) return 'amber';
+  if (['complete', 'enabled', 'in service', 'available', 'active', 'open', 'validated'].some((k) => s.includes(k)))
     return 'green';
+  if (['high'].some((k) => s.includes(k))) return 'rose';
   return 'cyan';
+}
+
+function readCol(row, column) {
+  const keys = [column.key, ...(column.aliases || [])];
+  for (const key of keys) {
+    const value = row?.[key];
+    if (value !== undefined && value !== null && value !== '') return value;
+  }
+  if (column.format === 'address') {
+    return [row.houseNumber, row.street, row.city, row.state].filter(Boolean).join(', ');
+  }
+  if (column.format === 'contactName') {
+    return [row.salutation, row.firstName, row.lastName].filter(Boolean).join(' ').trim();
+  }
+  return row?.[column.key];
+}
+
+function formatListValue(row, column) {
+  const raw = readCol(row, column);
+  if (column.format === 'hotTicket') {
+    return `${row.hotTicket ? '🔥 ' : ''}${raw || ''}`;
+  }
+  if (column.format === 'address') {
+    return raw || [row.houseNumber, row.street, row.city, row.state].filter(Boolean).join(', ');
+  }
+  if (column.format === 'check') {
+    return raw ? '✓' : '';
+  }
+  if (typeof raw === 'boolean') return raw ? 'Yes' : 'No';
+  if (Array.isArray(raw)) return raw.filter(Boolean).join(', ');
+  return raw;
 }
 
 const ASSET_MENU_ACTIONS = ASSET_ACTIONS.filter(
@@ -106,7 +143,7 @@ function exportCsv(filename, columns, rows) {
   };
   const lines = [
     columns.map((column) => escape(column.label)).join(','),
-    ...rows.map((row) => columns.map((column) => escape(row[column.key])).join(',')),
+    ...rows.map((row) => columns.map((column) => escape(formatListValue(row, column) ?? readCol(row, column))).join(',')),
   ];
   const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8' });
   const href = URL.createObjectURL(blob);
@@ -164,7 +201,15 @@ function compareValues(a, b) {
   return String(av).localeCompare(String(bv), undefined, { numeric: true });
 }
 
-function FieldInput({ field, value, onChange, error, disabled = false }) {
+function fieldValue(values, field) {
+  if (values?.[field.key] !== undefined && values?.[field.key] !== '') return values[field.key];
+  for (const alias of field.aliases || []) {
+    if (values?.[alias] !== undefined && values?.[alias] !== '') return values[alias];
+  }
+  return values?.[field.key];
+}
+
+function FieldInput({ field, value, onChange, error, disabled = false, options }) {
   const common = { value: value ?? '', onChange: (e) => onChange(e.target.value), disabled };
   if (disabled && field.type !== 'readonly') {
     return (
@@ -183,7 +228,7 @@ function FieldInput({ field, value, onChange, error, disabled = false }) {
     case 'textarea':
       return <TextArea rows={2} {...common} />;
     case 'select':
-      return <Select options={field.options || []} placeholder="Select…" {...common} />;
+      return <Select options={options || field.options || []} placeholder="Select…" {...common} />;
     case 'number':
       return <TextInput type="number" {...common} />;
     case 'date':
@@ -201,6 +246,20 @@ function FieldInput({ field, value, onChange, error, disabled = false }) {
         />
       );
     case 'lookup':
+      if (options?.length) {
+        return (
+          <Select
+            options={options}
+            placeholder={
+              field.hint ||
+              (field.key === 'segment'
+                ? 'Choose a Service Provider first — segments shown depend on it.'
+                : 'Select…')
+            }
+            {...common}
+          />
+        );
+      }
       return (
         <div className="relative">
           <TextInput placeholder="Search…" {...common} />
@@ -221,11 +280,28 @@ function RecordForm({ schema, initial, onClose, onSave, onDelete, readOnly = fal
   const [errors, setErrors] = useState({});
   const [saveError, setSaveError] = useState('');
   const [busy, setBusy] = useState(false);
+  const accountsQuery = useAccounts();
+  const segmentsQuery = useSegments();
+  const accounts = accountsQuery.data || [];
+  const segments = segmentsQuery.data || [];
+  const segmentOptions = useMemo(() => {
+    const providerName = values.account || values.serviceProviderName || '';
+    const provider = accounts.find(
+      (account) => account.name === providerName || account.id === providerName
+    );
+    const pool = provider
+      ? segments.filter(
+          (segment) => segment.accountId === provider.id || segment.account === provider.name
+        )
+      : segments;
+    const names = pool.map((segment) => segment.name || segment.segmentName).filter(Boolean);
+    return [...new Set(names)];
+  }, [accounts, segments, values.account, values.serviceProviderName]);
   const save = async () => {
     if (readOnly) return;
     const next = {};
     schema.sections.flatMap((s) => s.fields).forEach((field) => {
-      const value = values[field.key];
+      const value = fieldValue(values, field);
       if (field.required && (value === undefined || value === null || String(value).trim() === '')) {
         next[field.key] = `${field.label} is required`;
       }
@@ -297,11 +373,28 @@ function RecordForm({ schema, initial, onClose, onSave, onDelete, readOnly = fal
             >
               <FieldInput
                 field={field}
-                value={values[field.key]}
+                value={fieldValue(values, field)}
                 error={errors[field.key]}
                 disabled={readOnly}
+                options={field.key === 'segment' ? segmentOptions : undefined}
                 onChange={(value) => {
-                  setValues((current) => ({ ...current, [field.key]: value }));
+                  setValues((current) => {
+                    const next = { ...current, [field.key]: value };
+                    if (field.key === 'account' || field.key === 'serviceProviderName') {
+                      const nextProvider = accounts.find(
+                        (account) => account.name === value || account.id === value
+                      );
+                      const stillValid = segments.some(
+                        (segment) =>
+                          (segment.name === current.segment || segment.segmentName === current.segment) &&
+                          (nextProvider
+                            ? segment.accountId === nextProvider.id || segment.account === nextProvider.name
+                            : true)
+                      );
+                      if (!stillValid) next.segment = '';
+                    }
+                    return next;
+                  });
                   setErrors((current) => ({ ...current, [field.key]: undefined }));
                 }}
               />
@@ -925,10 +1018,14 @@ export function GenericList({ kind, view }) {
   const [assignOpen, setAssignOpen] = useState(false);
   const [woSourceOpen, setWoSourceOpen] = useState(false);
   const [woSource, setWoSource] = useState('');
+  const [sheet, setSheet] = useState(null);
+  const openedRecordRef = useRef(null);
+  const prevKindRef = useRef(kind);
   const { canCreateRecords, isScoped, persona, state, toast, navigate } = useStore();
   const accountsQuery = useAccounts();
   const recordsQuery = useRecords(kind === 'analytics' ? null : kind);
-  const locationsQuery = useRecords(kind === 'assets' ? 'locations' : null);
+  const locationsQuery = useRecords(kind === 'assets' || kind === 'customers' ? 'locations' : null);
+  const customerAssetsQuery = useRecords(kind === 'customers' ? 'assets' : null);
   const workOrdersQuery = useRecords(kind === 'assets' ? 'workOrders' : null);
   const tipsQuery = useRecords(kind === 'assets' ? 'individualTips' : null);
   const dispatchesQuery = useRecords(kind === 'assets' ? 'dispatches' : null);
@@ -939,6 +1036,11 @@ export function GenericList({ kind, view }) {
   const updateAssetMutation = useUpdateRecord('assets');
   const schema = RECORD_SCHEMAS[kind];
   useEffect(() => {
+    const previous = prevKindRef.current;
+    prevKindRef.current = kind;
+    const previousVariants = RECORD_SCHEMAS[previous]?.variants || [];
+    const variantSwitch = previousVariants.some((variant) => variant.kind === kind);
+    openedRecordRef.current = null;
     setFormOpen(false);
     setEditing(null);
     setDeletePending(false);
@@ -948,6 +1050,8 @@ export function GenericList({ kind, view }) {
     setAssignOpen(false);
     setWoSourceOpen(false);
     setWoSource('');
+    setSheet(null);
+    if (variantSwitch) return;
     setQ('');
     setStatus('All');
     setRecordType('All');
@@ -958,6 +1062,27 @@ export function GenericList({ kind, view }) {
     setSortKey('default');
     setSortDir('asc');
   }, [kind]);
+
+  useEffect(() => {
+    const recordId = state.nav.params?.recordId;
+    if (!recordId || recordId === openedRecordRef.current) return;
+    const data = recordsQuery.data?.data || [];
+    const row = data.find((item) => item.id === recordId);
+    if (!row) return;
+    openedRecordRef.current = recordId;
+    setEditing(row);
+    setFormOpen(true);
+  }, [state.nav.params?.recordId, recordsQuery.data]);
+
+  const openImportSheet = (object, mode) => setSheet({ type: 'import', object, mode });
+  const openMapSheet = (params = {}) => setSheet({ type: 'map', params });
+  const closeSheet = () => setSheet(null);
+  const clearRecordParam = () => {
+    if (!state.nav.params?.recordId) return;
+    const next = { ...state.nav.params };
+    delete next.recordId;
+    navigate(state.nav.module, next, { replace: true });
+  };
 
   if (kind === 'analytics') return <Analytics view={view} />;
   if (!schema) {
@@ -985,13 +1110,13 @@ export function GenericList({ kind, view }) {
   const rows = recordsQuery.data?.data || [];
   const scopedAccounts = accountsQuery.data || [];
   const accountNames = new Set(scopedAccounts.map((account) => account.name));
-  const statuses = [...new Set(rows.map((row) => row.status).filter(Boolean))];
+  const statuses = [...new Set(rows.map((row) => row.caseStatus || row.assetStatus || row.status).filter(Boolean))];
   const yardLocations = (locationsQuery.data?.data || [])
     .filter((loc) => /yard/i.test(String(loc.type || loc.name || '')))
     .map((loc) => loc.name)
     .filter(Boolean);
   const filtered = rows
-    .filter((row) => status === 'All' || row.status === status)
+    .filter((row) => status === 'All' || [row.status, row.caseStatus, row.assetStatus].includes(status))
     .filter((row) => matchesRecordType(kind, row, recordType))
     .filter((row) => {
       if (accountScope === 'All') return true;
@@ -1000,7 +1125,8 @@ export function GenericList({ kind, view }) {
     .filter((row) => !hotOnly || isHotTicket(row))
     .filter((row) => {
       if (!filterCol || !filterVal.trim()) return true;
-      return String(row[filterCol] ?? '')
+      const column = schema.listColumns.find((item) => item.key === filterCol) || { key: filterCol };
+      return String(readCol(row, column) ?? '')
         .toLowerCase()
         .includes(filterVal.trim().toLowerCase());
     })
@@ -1009,7 +1135,8 @@ export function GenericList({ kind, view }) {
     )
     .sort((a, b) => {
       if (sortKey === 'default') return 0;
-      const result = compareValues(a[sortKey], b[sortKey]);
+      const column = schema.listColumns.find((item) => item.key === sortKey) || { key: sortKey };
+      const result = compareValues(readCol(a, column), readCol(b, column));
       return sortDir === 'desc' ? -result : result;
     });
 
@@ -1027,8 +1154,13 @@ export function GenericList({ kind, view }) {
       return;
     }
     const generated =
-      schema.listColumns[0].key === 'number' && !values.number
-        ? { number: `${kind.slice(0, 3).toUpperCase()}-${String(rows.length + 1).padStart(5, '0')}` }
+      (schema.listColumns[0].key === 'number' || schema.listColumns[0].key === 'workOrderNumber') &&
+      !values.number &&
+      !values.workOrderNumber
+        ? {
+            number: `${kind.slice(0, 3).toUpperCase()}-${String(rows.length + 1).padStart(5, '0')}`,
+            workOrderNumber: `${kind.slice(0, 3).toUpperCase()}-${String(rows.length + 1).padStart(5, '0')}`,
+          }
         : {};
     const tipId =
       kind === 'individualTips' && !values.id
@@ -1045,6 +1177,43 @@ export function GenericList({ kind, view }) {
     const scopedDefault = isScoped && !values.account ? { account: [...accountNames][0] } : {};
     const accountName = values.account || scopedDefault.account || editing?.account;
     const account = scopedAccounts.find((candidate) => candidate.name === accountName);
+    const aliasPairs = [
+      ['workOrderNumber', 'number'],
+      ['caseStatus', 'status'],
+      ['dispatchNumber', 'number'],
+      ['assetName', 'name'],
+      ['serialNumber', 'serial'],
+      ['assetStatus', 'status'],
+      ['customerLocation', 'location'],
+      ['truckName', 'name'],
+      ['truckNumber', 'number'],
+      ['locationName', 'name'],
+      ['locationType', 'type'],
+      ['maintenanceRouteProfileName', 'name'],
+      ['serviceProviderSegment', 'segment'],
+      ['subject', 'title'],
+      ['author', 'createdBy'],
+      ['numTips', 'tips'],
+      ['eventStartDateTime', 'timestamp'],
+      ['sfdcTruckId', 'truck'],
+      ['workflowType', 'workflow'],
+      ['numberOfAttempts', 'attempts'],
+      ['serviceNotificationName', 'name'],
+      ['toBeSentBasedOn', 'trigger'],
+      ['productName', 'name'],
+      ['productFamily', 'family'],
+      ['sppNumber', 'number'],
+      ['productCode', 'code'],
+      ['productSize', 'size'],
+    ];
+    const mirrored = {};
+    aliasPairs.forEach(([htmlKey, reactKey]) => {
+      const value = values[htmlKey] ?? values[reactKey];
+      if (value !== undefined) {
+        mirrored[htmlKey] = value;
+        mirrored[reactKey] = value;
+      }
+    });
     const changes = {
       ...generated,
       ...tipId,
@@ -1052,6 +1221,7 @@ export function GenericList({ kind, view }) {
       ...aggName,
       ...scopedDefault,
       ...values,
+      ...mirrored,
       ...(account ? { accountId: account.id } : {}),
       ...(kind === 'assets' && !values.recordType ? { recordType: 'Asset' } : {}),
       ...(kind === 'individualTips' && !values.recordType
@@ -1184,17 +1354,13 @@ export function GenericList({ kind, view }) {
   const relatedDispatches = (asset) =>
     (dispatchesQuery.data?.data || []).filter((record) => assetReferences(record, asset));
 
+  const openRecord = (row) => {
+    setEditing(row);
+    setFormOpen(true);
+  };
+
   const buildRowActions = (row) => {
-    const items = [
-      {
-        key: 'open',
-        label: canCreateRecords ? 'Open / Edit' : 'View details',
-        onSelect: () => {
-          setEditing(row);
-          setFormOpen(true);
-        },
-      },
-    ];
+    const items = [];
     if (kind === 'assets') {
       if (canCreateRecords) {
         items.push({
@@ -1215,7 +1381,7 @@ export function GenericList({ kind, view }) {
           key: 'mapAssets',
           label: 'Map Assets',
           onSelect: () =>
-            navigate('mapCenter', {
+            openMapSheet({
               provider: row.accountId,
               account: row.account,
               assetId: row.id,
@@ -1235,10 +1401,21 @@ export function GenericList({ kind, view }) {
         key: 'mapCenter',
         label: 'Map Center',
         onSelect: () =>
-          navigate('mapCenter', {
+          openMapSheet({
             provider: row.accountId,
             account: row.account,
             route: row.routeNumber,
+          }),
+      });
+    }
+    if (kind === 'customers') {
+      items.push({
+        key: 'mapCustomer',
+        label: 'Map',
+        onSelect: () =>
+          setSheet({
+            type: 'customerMap',
+            customer: row,
           }),
       });
     }
@@ -1275,7 +1452,7 @@ export function GenericList({ kind, view }) {
         actions={
           <div className="flex flex-wrap gap-2">
             {kind === 'workOrders' && canCreateRecords && (
-              <Button variant="secondary" onClick={() => navigate('bulkImport', { object: 'Work Orders' })}>
+              <Button variant="secondary" onClick={() => openImportSheet('Work Orders')}>
                 <Icon name="download" size={16} /> WOIT Import
               </Button>
             )}
@@ -1287,12 +1464,12 @@ export function GenericList({ kind, view }) {
                     {
                       key: 'standard',
                       label: 'Asset Import (Standard)',
-                      onSelect: () => navigate('bulkImport', { object: 'Assets', mode: 'standard' }),
+                      onSelect: () => openImportSheet('Assets', 'standard'),
                     },
                     {
                       key: 'legacy',
                       label: 'Legacy Asset Import',
-                      onSelect: () => navigate('bulkImport', { object: 'Assets', mode: 'legacy' }),
+                      onSelect: () => openImportSheet('Assets', 'legacy'),
                     },
                   ]}
                 />
@@ -1302,7 +1479,7 @@ export function GenericList({ kind, view }) {
               </>
             )}
             {kind === 'routes' && (
-              <Button variant="secondary" onClick={() => navigate('mapCenter')}>
+              <Button variant="secondary" onClick={() => openMapSheet()}>
                 <Icon name="map" size={16} /> Map Center
               </Button>
             )}
@@ -1471,44 +1648,65 @@ export function GenericList({ kind, view }) {
           ) : (
             <Table columns={columns}>
               {filtered.map((row) => (
-                <tr key={row.id || row.number || row.name} className="interactive hover:bg-elevated/70">
-                  {schema.listColumns.map((c, j) => (
-                    <td key={c.key} className="px-4 py-3">
+                <tr
+                  key={row.id || row.number || row.name}
+                  className="interactive cursor-pointer hover:bg-elevated/70"
+                  onClick={(event) => activateRow(event, () => openRecord(row))}
+                >
+                  {schema.listColumns.map((c, j) => {
+                    const raw = readCol(row, c);
+                    const display = formatListValue(row, c);
+                    const statusLike =
+                      c.format === 'status' ||
+                      c.key === 'status' ||
+                      c.key === 'caseStatus' ||
+                      c.key === 'assetStatus' ||
+                      c.key === 'priority';
+                    const activeLike = c.format === 'active' || c.key === 'active' || c.format === 'tipped';
+                    return (
+                    <td key={c.key} className={`px-4 py-3 ${c.mono ? 'mono' : ''}`}>
                       {j === 0 ? (
-                        <button
-                          type="button"
-                          className="link-brand mono text-left"
-                          onClick={() => {
-                            setEditing(row);
-                            setFormOpen(true);
-                          }}
-                        >
+                        <span className={`font-medium text-ink ${c.mono ? 'mono' : ''}`}>
                           {kind === 'workOrders' && isHotTicket(row) && (
-                            <span className="mr-1 text-danger" aria-label="Hot ticket">
-                              HOT
+                            <span className="mr-1" aria-label="Hot ticket">
+                              🔥
                             </span>
                           )}
-                          {String(row[c.key] ?? '—')}
-                        </button>
-                      ) : c.key === 'status' ? (
-                        <Badge color={recordStatusColor(row[c.key])}>{row[c.key]}</Badge>
-                      ) : c.key === 'active' ? (
+                          {String(display ?? raw ?? '—')}
+                        </span>
+                      ) : statusLike ? (
+                        <Badge color={recordStatusColor(raw)}>{display || raw || '—'}</Badge>
+                      ) : activeLike || c.format === 'validated' ? (
                         <StatusDot
                           color={
-                            row[c.key] === true || row[c.key] === 'Yes' ? 'emerald' : 'slate'
+                            raw === true || raw === 'Yes' || raw === 'Active' || raw === 'Validated'
+                              ? 'emerald'
+                              : 'slate'
                           }
-                          label={row[c.key] === true || row[c.key] === 'Yes' ? 'Active' : 'Inactive'}
+                          label={
+                            display ||
+                            (raw === true || raw === 'Yes'
+                              ? c.format === 'tipped'
+                                ? 'Yes'
+                                : 'Active'
+                              : c.format === 'tipped'
+                                ? 'No'
+                                : c.format === 'validated'
+                                  ? 'Unvalidated'
+                                  : 'Inactive')
+                          }
                         />
-                      ) : typeof row[c.key] === 'boolean' ? (
+                      ) : typeof raw === 'boolean' || c.format === 'check' ? (
                         <StatusDot
-                          color={row[c.key] ? 'emerald' : 'slate'}
-                          label={row[c.key] ? 'Yes' : 'No'}
+                          color={raw ? 'emerald' : 'slate'}
+                          label={c.format === 'check' ? (raw ? '✓' : '') : raw ? 'Yes' : 'No'}
                         />
                       ) : (
-                        <span className="text-ink-muted">{row[c.key]}</span>
+                        <span className="text-ink-muted">{display ?? '—'}</span>
                       )}
                     </td>
-                  ))}
+                    );
+                  })}
                   <td className="px-4 py-3 text-right">
                     <RowActionMenu items={buildRowActions(row)} />
                   </td>
@@ -1528,6 +1726,7 @@ export function GenericList({ kind, view }) {
             onClose={() => {
               setFormOpen(false);
               setEditing(null);
+              clearRecordParam();
             }}
           />
         )}
@@ -1587,7 +1786,7 @@ export function GenericList({ kind, view }) {
             onSelect={(source) => {
               setWoSourceOpen(false);
               if (source === 'woit') {
-                navigate('bulkImport', { object: 'Work Orders' });
+                openImportSheet('Work Orders');
                 return;
               }
               setWoSource(source);
@@ -1595,6 +1794,61 @@ export function GenericList({ kind, view }) {
               setFormOpen(true);
             }}
           />
+        )}
+        {sheet?.type === 'import' && (
+          <WorkspaceSheet
+            title={sheet.mode === 'legacy' ? 'Legacy Asset Import' : 'Import'}
+            description="Upload and map records without leaving this list."
+            onClose={closeSheet}
+          >
+            <BulkImport
+              embedded
+              initialObject={sheet.object}
+              initialMode={sheet.mode}
+              onClose={closeSheet}
+            />
+          </WorkspaceSheet>
+        )}
+        {sheet?.type === 'map' && (
+          <WorkspaceSheet
+            title="Map Center"
+            description="Service-area view for the current records."
+            onClose={closeSheet}
+          >
+            <MapCenter embedded overlayParams={sheet.params} onClose={closeSheet} />
+          </WorkspaceSheet>
+        )}
+        {sheet?.type === 'customerMap' && (
+          <WorkspaceSheet
+            title={sheet.customer?.name || 'Customer map'}
+            description="This customer’s locations and assets, without leaving the list."
+            onClose={closeSheet}
+          >
+            <div className="px-5 py-5">
+              <CustomerMapPanel
+                customer={sheet.customer}
+                locations={(locationsQuery.data?.data || []).filter((row) =>
+                  [row.customer, row.customerId, row.name, row.account, row.location].some(
+                    (value) =>
+                      value &&
+                      [sheet.customer?.name, sheet.customer?.customerNumber, sheet.customer?.id, sheet.customer?.account]
+                        .filter(Boolean)
+                        .some((key) => String(value).toLowerCase().includes(String(key).toLowerCase()))
+                  )
+                )}
+                assets={(customerAssetsQuery.data?.data || []).filter((row) =>
+                  [row.customer, row.customerId, row.location, row.account].some(
+                    (value) =>
+                      value &&
+                      [sheet.customer?.name, sheet.customer?.customerNumber, sheet.customer?.id]
+                        .filter(Boolean)
+                        .some((key) => String(value).toLowerCase().includes(String(key).toLowerCase()))
+                  )
+                )}
+                onClose={closeSheet}
+              />
+            </div>
+          </WorkspaceSheet>
         )}
       </AsyncState>
     </Page>

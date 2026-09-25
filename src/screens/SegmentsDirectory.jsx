@@ -17,6 +17,7 @@ import {
   Checkbox,
   ConfirmDialog,
   AsyncState,
+  activateRow,
 } from '../components/UI.jsx';
 import { useStore } from '../state/AppStore.jsx';
 import {
@@ -755,15 +756,13 @@ export default function SegmentsDirectory() {
                 {filteredSegments.map((seg) => {
                   const cfg = TYPE_CONFIG[seg.type] || TYPE_CONFIG.District;
                   return (
-                    <tr key={seg.id} className="interactive hover:bg-elevated/70">
+                    <tr
+                      key={seg.id}
+                      className="interactive cursor-pointer hover:bg-elevated/70"
+                      onClick={(event) => activateRow(event, () => openEdit(seg))}
+                    >
                       <td className="max-w-[14rem] truncate px-4 py-3 font-semibold text-ink">
-                        <button
-                          type="button"
-                          onClick={() => openEdit(seg)}
-                          className="hover:text-brand hover:underline"
-                        >
-                          {seg.name}
-                        </button>
+                        {seg.name}
                       </td>
                       <td className="px-4 py-3">
                         <span
@@ -802,24 +801,14 @@ export default function SegmentsDirectory() {
                         )}
                       </td>
                       <td className="px-4 py-3 text-right">
-                        <div className="flex items-center justify-end gap-1">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => openEdit(seg)}
-                            className="h-7 px-2 text-xs"
-                          >
-                            <Icon name="edit" size={12} />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => setDeleteTarget(seg)}
-                            className="h-7 px-2 text-xs text-danger hover:bg-danger/10 hover:text-danger"
-                          >
-                            <Icon name="trash" size={12} />
-                          </Button>
-                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setDeleteTarget(seg)}
+                          className="h-7 px-2 text-xs text-danger hover:bg-danger/10 hover:text-danger"
+                        >
+                          <Icon name="trash" size={12} />
+                        </Button>
                       </td>
                     </tr>
                   );

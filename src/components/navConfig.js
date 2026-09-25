@@ -84,23 +84,21 @@ export const NAV = {
       label: 'ACTIVITIES',
       icon: 'clipboard',
       children: [
-        { key: 'assets', module: 'assets', label: 'Assets / Trucks', icon: 'box' },
-        { key: 'customers', module: 'customers', label: 'Customers', icon: 'user' },
-        { key: 'dispatches', module: 'dispatches', label: 'Dispatches', icon: 'send' },
-        { key: 'locations', module: 'locations', label: 'Locations', icon: 'mapPin' },
-        { key: 'manageAccount', module: 'manageAccount', label: 'Manage Customers', icon: 'users' },
-        { key: 'mapCenter', module: 'mapCenter', label: 'Map Center', icon: 'map' },
-        { key: 'notes', module: 'notesAttachments', label: 'Notes & Attachments', icon: 'paperclip' },
-        { key: 'routes', module: 'routes', label: 'Routes', icon: 'route' },
+        { key: 'assets', module: 'assets', label: 'Assets', icon: 'box', countKind: 'assets' },
+        { key: 'dispatches', module: 'dispatches', label: 'Dispatches', icon: 'send', countKind: 'dispatches' },
+        { key: 'locations', module: 'locations', label: 'Locations', icon: 'mapPin', countKind: 'locations' },
+        { key: 'manageAccount', module: 'manageAccount', label: 'Manage Customers', icon: 'users', countKind: 'customers' },
+        { key: 'routes', module: 'routes', label: 'Routes', icon: 'route', countKind: 'routes' },
         {
           key: 'notifications',
           module: 'serviceNotifications',
           label: 'Service Notifications',
           icon: 'bell',
+          countKind: 'serviceNotifications',
         },
-        { key: 'tips', module: 'individualTips', label: 'Tips & Non-Tips', icon: 'layers' },
-        { key: 'aggregatedTips', module: 'aggregatedTips', label: 'Aggregated Tips', icon: 'layers' },
-        { key: 'workOrders', module: 'workOrders', label: 'Work Orders', icon: 'clipboard' },
+        { key: 'support', module: 'support', label: 'Support', icon: 'help' },
+        { key: 'tips', module: 'individualTips', label: 'Tips & Non-Tips', icon: 'layers', countKind: 'individualTips' },
+        { key: 'workOrders', module: 'workOrders', label: 'Work Orders', icon: 'clipboard', countKind: 'workOrders' },
       ],
     },
     {
@@ -110,8 +108,20 @@ export const NAV = {
       children: [
         { key: 'chatter', module: 'activity', label: 'Activity', icon: 'activity' },
         { key: 'dashboards', module: 'dashboards', label: 'Dashboards', icon: 'grid' },
-        { key: 'reports', module: 'reports', label: 'Reports', icon: 'barChart' },
-        { key: 'reportSubscriptions', module: 'reportSubscriptions', label: 'Report Subscriptions', icon: 'mail' },
+        {
+          key: 'reports',
+          module: 'reports',
+          label: 'Reports',
+          icon: 'barChart',
+          children: [
+            { key: 'reports-workOrders', module: 'reports', params: { reportCategory: 'workOrders' }, label: 'Work Orders', icon: 'clipboard' },
+            { key: 'reports-routes', module: 'reports', params: { reportCategory: 'routes' }, label: 'Routes', icon: 'route' },
+            { key: 'reports-dispatches', module: 'reports', params: { reportCategory: 'dispatches' }, label: 'Dispatches', icon: 'send' },
+            { key: 'reports-assets', module: 'reports', params: { reportCategory: 'assets' }, label: 'Assets', icon: 'box' },
+            { key: 'reports-trucks', module: 'reports', params: { reportCategory: 'trucks' }, label: 'Trucks', icon: 'truck' },
+            { key: 'reports-segments', module: 'reports', params: { reportCategory: 'segments' }, label: 'Segments', icon: 'layers' },
+          ],
+        },
       ],
     },
     {
@@ -138,24 +148,21 @@ export const NAV = {
           module: 'requestTypes',
           label: 'Request Types',
           icon: 'clipboard',
+          countKind: 'requestTypes',
         },
         {
           key: 'resolutionCodes',
           module: 'resolutionCodes',
           label: 'Resolution Codes',
           icon: 'check',
+          countKind: 'resolutionCodes',
         },
         {
           key: 'reqCodes',
           module: 'reqCodes',
           label: 'Request Type & Resolution Codes',
           icon: 'layers',
-        },
-        {
-          key: 'maintProfiles',
-          module: 'maintenanceRouteProfiles',
-          label: 'Route Profile Templates',
-          icon: 'wrench',
+          countKind: 'reqCodes',
         },
         {
           key: 'serviceNotifConfig',
@@ -164,22 +171,16 @@ export const NAV = {
           icon: 'bell',
         },
         {
-          key: 'products',
-          module: 'products',
-          label: 'Service Provider Products',
-          icon: 'package',
-        },
-        {
           key: 'segments',
-          module: 'account',
-          params: { tab: 'segments' },
+          module: 'segments',
           label: 'Service Provider Segments',
           icon: 'layers',
+          countKind: 'segments',
         },
-        { key: 'trucks', module: 'trucks', label: 'Trucks', icon: 'truck' },
+        { key: 'trucks', module: 'trucks', label: 'Trucks', icon: 'truck', countKind: 'trucks' },
+        { key: 'picklists', module: 'picklists', label: 'Picklist Management', icon: 'sliders' },
       ],
     },
-    { type: 'item', key: 'inbox', module: 'notifications', label: 'Notifications', icon: 'bell' },
   ],
   customer: [
     { type: 'item', key: 'home', module: 'home', label: 'Home', icon: 'home' },
@@ -214,7 +215,7 @@ export const MODULE_LABELS = {
   setup: 'Workspace',
   workOrders: 'Work Orders',
   dispatches: 'Dispatches',
-  assets: 'Assets / Trucks',
+  assets: 'Assets',
   trucks: 'Trucks',
   locations: 'Locations',
   maintenanceRouteProfiles: 'Route Profile Templates',
@@ -227,6 +228,8 @@ export const MODULE_LABELS = {
   aggregatedTips: 'Aggregated Tips',
   mapCenter: 'Map Center',
   manageAccount: 'Manage Customers',
+  support: 'Support',
+  picklists: 'Picklist Management',
   routes: 'Routes',
   serviceNotifications: 'Service Notifications',
   products: 'Service Provider Products',
@@ -246,11 +249,22 @@ export const MODULE_LABELS = {
   userAccount: 'Your Account',
 };
 
+function filterNavItem(item, canNav, parentAllowed = false) {
+  const allowed = canNav(item.key) || parentAllowed;
+  if (!allowed && !(item.children || []).length) return null;
+  if (!item.children?.length) return allowed ? item : null;
+  const children = item.children
+    .map((child) => filterNavItem(child, canNav, allowed || canNav(item.key)))
+    .filter(Boolean);
+  if (!allowed && !children.length) return null;
+  return { ...item, children };
+}
+
 export function filterNavTree(tree, canNav) {
   return tree
     .map((n) => {
-      if (n.type === 'item') return canNav(n.key) ? n : null;
-      const children = (n.children || []).filter((c) => canNav(c.key));
+      if (n.type === 'item') return filterNavItem(n, canNav);
+      const children = (n.children || []).map((c) => filterNavItem(c, canNav)).filter(Boolean);
       if (!children.length) return null;
       return { ...n, children };
     })
@@ -259,21 +273,129 @@ export function filterNavTree(tree, canNav) {
 
 /** Flat list of destinations in a persona tree, tagged with their group label. */
 export function flattenNavDestinations(tree) {
-  return tree.flatMap((node) =>
-    node.type === 'item'
-      ? [{ ...node, group: null }]
-      : (node.children || []).map((child) => ({ ...child, group: node.label }))
-  );
+  return tree.flatMap((node) => {
+    if (node.type === 'item') return [{ ...node, group: null }];
+    return (node.children || []).flatMap((child) => [
+      { ...child, group: node.label },
+      ...((child.children || []).map((nested) => ({ ...nested, group: child.label }))),
+    ]);
+  });
 }
 
 export function isNavItemActive(item, activeModule, activeParams = {}) {
   if (item.module !== activeModule) return false;
+  if (item.params?.reportCategory) return activeParams.reportCategory === item.params.reportCategory;
   if (item.params?.tab) return item.params.tab === activeParams.tab;
   if (item.params?.section) {
-    const currentSection = activeParams.section || 'userMgmt';
+    const currentSection = activeParams.section || 'profileMgmt';
     return item.params.section === currentSection;
   }
   if (item.params?.view) return item.params.view === activeParams.view;
   if (activeModule === 'home') return item.key === 'home';
   return true;
+}
+
+function titleCaseSection(label) {
+  return String(label || '')
+    .toLowerCase()
+    .replace(/^\w/, (char) => char.toUpperCase());
+}
+
+export const ACCOUNT_TAB_LABELS = {
+  details: 'Details',
+  contacts: 'Contacts',
+  customers: 'Customers',
+  products: 'Service Provider Products',
+  segments: 'Service Provider Segments',
+  routes: 'Routes',
+  notifications: 'Service Notifications',
+};
+
+export const SETUP_SECTION_LABELS = {
+  profileMgmt: 'Profile Management',
+  userMgmt: 'User Management',
+};
+
+export const REPORT_CATEGORY_LABELS = {
+  workOrders: 'Work Orders',
+  routes: 'Routes',
+  dispatches: 'Dispatches',
+  assets: 'Assets',
+  trucks: 'Trucks',
+  segments: 'Segments',
+};
+
+function crumb(label, module = null, params = {}) {
+  return { label, module, params };
+}
+
+function findNavMatch(tree, module, params) {
+  for (const node of tree) {
+    if (node.type === 'item' && isNavItemActive(node, module, params)) {
+      return { section: null, item: node, nested: null };
+    }
+    if (node.type !== 'section') continue;
+    for (const child of node.children || []) {
+      const nested = (child.children || []).find((entry) => isNavItemActive(entry, module, params));
+      if (nested) return { section: node, item: child, nested };
+    }
+    const child = (node.children || []).find((entry) => {
+      if (entry.children?.length) return false;
+      return isNavItemActive(entry, module, params);
+    });
+    if (child) return { section: node, item: child, nested: null };
+    const folder = (node.children || []).find(
+      (entry) => entry.module === module && entry.children?.length
+    );
+    if (folder) return { section: node, item: folder, nested: null };
+  }
+  return null;
+}
+
+export function buildBreadcrumbs(tree, module, params = {}, extras = {}) {
+  const crumbs = [crumb('Home', 'home')];
+  if (!module || module === 'home') return crumbs;
+
+  const match = findNavMatch(tree, module, params);
+  if (match) {
+    if (match.section) crumbs.push(crumb(titleCaseSection(match.section.label)));
+    if (match.item) {
+      crumbs.push(crumb(match.item.label, match.item.module, match.item.params || {}));
+    }
+    if (match.nested) {
+      crumbs.push(crumb(match.nested.label, match.nested.module, match.nested.params || {}));
+    }
+  } else {
+    crumbs.push(crumb(MODULE_LABELS[module] || extras.fallbackLabel || module, module, params));
+  }
+
+  if ((module === 'account' || module === 'accountDetail') && extras.accountName) {
+    const last = crumbs[crumbs.length - 1];
+    if (last?.label !== extras.accountName) {
+      crumbs.push(crumb(extras.accountName, module, { ...params, tab: params.tab || 'details' }));
+    }
+  }
+  if ((module === 'account' || module === 'accountDetail') && params.tab && params.tab !== 'details') {
+    const tabLabel = ACCOUNT_TAB_LABELS[params.tab] || params.tab;
+    if (crumbs[crumbs.length - 1]?.label !== tabLabel) {
+      crumbs.push(crumb(tabLabel, module, { ...params, tab: params.tab }));
+    }
+  }
+  if (module === 'setup' && params.section && SETUP_SECTION_LABELS[params.section]) {
+    const sectionLabel = SETUP_SECTION_LABELS[params.section];
+    if (crumbs[crumbs.length - 1]?.label !== sectionLabel) {
+      crumbs.push(crumb(sectionLabel, 'setup', { section: params.section }));
+    }
+  }
+  if (module === 'reports' && params.reportCategory && REPORT_CATEGORY_LABELS[params.reportCategory]) {
+    const categoryLabel = REPORT_CATEGORY_LABELS[params.reportCategory];
+    if (crumbs[crumbs.length - 1]?.label !== categoryLabel) {
+      crumbs.push(crumb(categoryLabel, 'reports', { reportCategory: params.reportCategory }));
+    }
+  }
+  if (params.recordId && extras.recordLabel) {
+    crumbs.push(crumb(extras.recordLabel, module, params));
+  }
+
+  return crumbs.filter((entry, index, list) => index === 0 || entry.label !== list[index - 1].label);
 }

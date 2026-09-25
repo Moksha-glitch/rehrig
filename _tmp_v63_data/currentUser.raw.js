@@ -1,0 +1,1 @@
+{id:"USR-01",userId:"USR-01",profileId:"PROF-ADMIN",firstName:"Yolanda",lastName:"Wagner",email:"yolanda@vision.io",role:"Admin",alias:"ywagn",avatarInitials:"YW",status:"Active",scope:{accountIds:[],segmentIds:[]},personaType:"sp"}

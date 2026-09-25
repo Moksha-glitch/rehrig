@@ -1,5 +1,6 @@
 // Sectioned schemas for operational records (Spec Ch.18-20, Ch.25 / V1.4 drawers).
 import { PICKLISTS } from './picklists.js';
+import { V63_RECORDS } from './v63Records.js';
 
 const P = PICKLISTS;
 
@@ -33,13 +34,13 @@ export const RECORD_SCHEMAS = {
     newLabel: 'New Work Order',
     singular: 'Work Order',
     listColumns: [
-      { key: 'number', label: 'Work Order' },
-      { key: 'customer', label: 'Customer' },
+      { key: 'workOrderNumber', label: 'Work Order', aliases: ['number'], format: 'hotTicket', mono: true },
+      { key: 'account', label: 'Customer' },
       { key: 'requestType', label: 'Request Type' },
       { key: 'subject', label: 'Subject' },
       { key: 'dueDate', label: 'Due Date' },
-      { key: 'priority', label: 'Priority' },
-      { key: 'status', label: 'Status' },
+      { key: 'priority', label: 'Priority', format: 'status' },
+      { key: 'caseStatus', label: 'Status', aliases: ['status'], format: 'status' },
     ],
     banner: 'Use WOIT Import to create or close work orders from a CSV. Hot tickets show a fire prefix.',
     hotTicketFilter: true,
@@ -47,7 +48,7 @@ export const RECORD_SCHEMAS = {
       {
         title: 'Request Details',
         fields: [
-          { key: 'number', label: 'Work Order Number', type: 'readonly' },
+          { key: 'workOrderNumber', label: 'Work Order Number', type: 'readonly', aliases: ['number'] },
           { key: 'account', label: 'Account Name', type: 'lookup', required: true },
           { key: 'contactName', label: 'Contact Name', type: 'lookup' },
           { key: 'customer', label: 'Customer', type: 'text' },
@@ -68,7 +69,7 @@ export const RECORD_SCHEMAS = {
         fields: [
           { key: 'requestType', label: 'Request Type', type: 'select', options: P.requestType, required: true },
           { key: 'hotTicket', label: 'Hot Ticket', type: 'checkbox' },
-          { key: 'status', label: 'Case Status', type: 'select', options: P.workOrderStatus },
+          { key: 'caseStatus', label: 'Case Status', type: 'select', options: P.workOrderStatus, aliases: ['status'] },
           { key: 'priority', label: 'Priority', type: 'select', options: P.workOrderPriority },
           { key: 'dueDate', label: 'Due Date', type: 'date' },
           { key: 'dueDateType', label: 'Due Date Type', type: 'select', options: P.dueDateType },
@@ -134,113 +135,24 @@ export const RECORD_SCHEMAS = {
         fields: [
           { key: 'createdBy', label: 'Created By', type: 'readonly' },
           { key: 'lastModifiedBy', label: 'Last Modified By', type: 'readonly' },
-          { key: 'luid', label: 'LUID (External Order ID)', type: 'text' },
+          { key: 'luid', label: 'LUID (External Order ID)', type: 'text', aliases: ['workOrderLuid'] },
+        ],
+      },
+      {
+        title: 'Source & Channel',
+        fields: [
+          { key: 'source', label: 'Source', type: 'text' },
+          { key: 'requestTypeDisplay', label: 'Request Type Display', type: 'text' },
+          { key: 'serviceDay', label: 'Service Day', type: 'text' },
+          { key: 'routeNumber', label: 'Route Number', type: 'text' },
+          { key: 'opened', label: 'Opened', type: 'datetime' },
+          { key: 'paymentStatus', label: 'Payment Status', type: 'text' },
+          { key: 'notifyVia', label: 'Notify Via', type: 'text' },
+          { key: 'customerLocation', label: 'Customer Location (site)', type: 'text' },
         ],
       },
     ],
-    sample: [
-      {
-        number: '03933942',
-        customerId: 'cust-1001',
-        customer: "Sam O'Brien",
-        requestType: 'Deliver',
-        status: 'Open',
-        priority: 'Medium',
-        account: 'Edmonton AB',
-        location: '9803 102A Ave NW',
-        dueDate: '2026-07-03',
-        requestDate: '2026-06-28',
-        subject: 'Deliver 96 Gallon Trash',
-        serviceType: 'Residential',
-        owner: 'Ravindra Medam',
-        dueDateType: 'Next Available Day',
-        hotTicket: false,
-        serviceProviderWoNumber: 'EDM-WO-4421',
-        notificationRequested: 'YES',
-        notificationSent: 'NO',
-        notificationSentDate: '',
-        assetTypeToDeliver: 'Roll-Out Cart',
-        assetSizeToDeliver: '96 gal',
-        pickUpType: '',
-        pickupSize: '',
-      },
-      {
-        number: '03931120',
-        customerId: 'cust-1001',
-        customer: "Sam O'Brien",
-        requestType: 'Missed Pickup',
-        status: 'Closed',
-        priority: 'High',
-        account: 'Edmonton AB',
-        location: '9803 102A Ave NW',
-        dueDate: '2026-06-20',
-        requestDate: '2026-06-18',
-        subject: 'Missed Trash Pickup',
-        resolutionCode: 'Completed',
-        closedDesired: true,
-        serviceProviderWoNumber: 'EDM-WO-4388',
-        notificationRequested: 'YES',
-        notificationSent: 'YES',
-        notificationSentDate: '2026-06-20',
-        pickUpType: 'Trash',
-        pickupSize: '96 gal',
-      },
-      {
-        number: '03933920',
-        customer: 'Inactive Occupant',
-        requestType: 'Inactive Account Removal',
-        status: 'In Progress',
-        priority: 'Medium',
-        account: 'Edmonton AB',
-        dueDate: '2026-07-02',
-        requestDate: '2026-06-25',
-        subject: 'Remove carts — inactive account',
-        serviceProviderWoNumber: 'EDM-WO-4410',
-        notificationRequested: 'NO',
-        notificationSent: 'NO',
-        notificationSentDate: '',
-        assetToRemove: 'CART-000124',
-        assetTypeToRemove: 'Roll-Out Cart',
-        assetSizeToRemove: '120 L',
-      },
-      {
-        number: '03933901',
-        customer: 'Nadia Petrov',
-        requestType: 'Missed Pickup',
-        status: 'On Hold',
-        priority: 'Critical',
-        account: 'Toronto Waste Services',
-        dueDate: '2026-07-05',
-        requestDate: '2026-07-01',
-        subject: 'Missed Recycle Pickup',
-        hotTicket: true,
-        serviceProviderWoNumber: 'TOR-WO-2190',
-        notificationRequested: 'YES',
-        notificationSent: 'NO',
-        notificationSentDate: '',
-        pickUpType: 'Recycle',
-        pickupSize: '240 L',
-      },
-      {
-        number: '03933888',
-        customer: 'Calgary Depot Walk-in',
-        requestType: 'Repair',
-        status: 'Closed',
-        priority: 'Low',
-        account: 'Calgary Metro Waste',
-        dueDate: '2026-06-28',
-        requestDate: '2026-06-26',
-        subject: 'Repair damaged lid',
-        resolutionCode: 'Return Same Day',
-        serviceProviderWoNumber: 'CGY-WO-1102',
-        notificationRequested: 'YES',
-        notificationSent: 'YES',
-        notificationSentDate: '2026-06-28',
-        assetToRemove: 'CART-000123',
-        assetTypeToRemove: 'Roll-Out Cart',
-        assetSizeToRemove: '96 gal',
-      },
-    ],
+    sample: V63_RECORDS.workOrders,
   },
 
   dispatches: {
@@ -248,9 +160,9 @@ export const RECORD_SCHEMAS = {
     newLabel: 'New Dispatch',
     singular: 'Dispatch',
     listColumns: [
-      { key: 'number', label: 'Dispatch Number' },
+      { key: 'dispatchNumber', label: 'Dispatch Number', aliases: ['number'] },
       { key: 'routeDate', label: 'Route Date' },
-      { key: 'status', label: 'Status' },
+      { key: 'status', label: 'Status', format: 'status' },
       { key: 'truck', label: 'Truck' },
       { key: 'driver', label: 'Driver' },
       { key: 'serviceType', label: 'Service Type' },
@@ -265,7 +177,7 @@ export const RECORD_SCHEMAS = {
           { key: 'account', label: 'Service Provider', type: 'lookup', required: true },
           { key: 'status', label: 'Status', type: 'select', options: P.dispatchStatus },
           { key: 'routeDate', label: 'Route Date', type: 'date', required: true },
-          { key: 'segment', label: 'Service Provider Segment', type: 'lookup' },
+          { key: 'segment', label: 'Service Provider Segment', type: 'lookup', required: true },
           { key: 'serviceType', label: 'Service Type', type: 'select', options: P.serviceType },
           { key: 'truck', label: 'Truck', type: 'lookup' },
           { key: 'driver', label: 'Driver', type: 'lookup' },
@@ -299,22 +211,18 @@ export const RECORD_SCHEMAS = {
         ],
       },
     ],
-    sample: [
-      { number: 'D-72110', status: 'In Route', routeDate: '2026-07-01', truck: 'TRK-201', driver: 'David Thornton', account: 'Edmonton AB', serviceType: 'Residential', startTime: '06:30', routeNumber: 'R-201', collectionType: 'Trash', expectedStops: 420, published: true },
-      { number: 'D-72114', status: 'Scheduled', routeDate: '2026-07-01', truck: 'TRK-102', driver: 'Ravi Nair', account: 'Edmonton AB', serviceType: 'Residential', startTime: '07:00' },
-      { number: 'D-72098', status: 'Complete', routeDate: '2026-06-30', truck: 'TRK-115', driver: 'Marcus Chen', account: 'Calgary Metro Waste', serviceType: 'Commercial', startTime: '05:45' },
-    ],
+    sample: V63_RECORDS.dispatches,
   },
 
   assets: {
-    title: 'Assets / Trucks',
+    title: 'Assets',
     newLabel: 'New Asset',
     singular: 'Asset',
     listColumns: [
-      { key: 'name', label: 'Asset Name' },
-      { key: 'serial', label: 'Serial Number' },
-      { key: 'status', label: 'Status' },
-      { key: 'location', label: 'Customer Location' },
+      { key: 'assetName', label: 'Asset Name', aliases: ['name'] },
+      { key: 'serialNumber', label: 'Serial Number', aliases: ['serial'] },
+      { key: 'assetStatus', label: 'Status', aliases: ['status'], format: 'status' },
+      { key: 'customerLocation', label: 'Customer Location', aliases: ['location'] },
       { key: 'product', label: 'Product' },
       { key: 'installDate', label: 'Install Date' },
     ],
@@ -386,13 +294,23 @@ export const RECORD_SCHEMAS = {
           { key: 'syncIteration', label: 'SyncIteration', type: 'number' },
         ],
       },
+      {
+        title: 'Service History',
+        fields: [
+          { key: 'vendor', label: 'Vendor', type: 'text' },
+          { key: 'manufactureYear', label: 'Manufacture Year', type: 'text' },
+          { key: 'warrantyDate', label: 'Warranty Date', type: 'date' },
+          { key: 'lastServicedDate', label: 'Last Serviced Date', type: 'date' },
+          { key: 'lastServicedTime', label: 'Last Serviced Time', type: 'time' },
+          { key: 'lastTipDate', label: 'Last Tip Date', type: 'date' },
+          { key: 'lastTipTime', label: 'Last Tip Time', type: 'time' },
+          { key: 'distanceMoved', label: 'Distance Moved', type: 'text' },
+          { key: 'containerNumber', label: 'Container Number', type: 'text', aliases: ['container'] },
+          { key: 'customerLocation', label: 'Customer Location (site)', type: 'text' },
+        ],
+      },
     ],
-    sample: [
-      { name: 'CART-000123', status: 'In Service', product: '96 Gallon Trash', serial: 'SN-90012', account: 'Edmonton AB', location: '9803 102A Ave', rfid: 'RFID-90012', recordType: 'Asset', installDate: '2024-04-12', purchaseDate: '2024-03-28', family: 'Roll-Out Cart', casters: '2-wheel', hitch: 'None', containerColour: 'Black', sideDoor: 'None' },
-      { name: 'CART-000124', status: 'Awaiting Repair', product: '120 Liter Trash', serial: 'SN-90013', account: 'Edmonton AB', location: '9803 102A Ave', recordType: 'Asset', installDate: '2023-11-02', purchaseDate: '2023-10-15', family: 'Roll-Out Cart', casters: '2-wheel', hitch: 'None', containerColour: 'Green', sideDoor: 'None' },
-      { name: 'BIN-002210', status: 'Available', product: '3 YD Recycle Bin Recycling', serial: 'SN-71120', account: 'Toronto Waste Services', warehouse: 'Kennedale', location: '100 Queen St W', recordType: 'Asset', installDate: '2025-02-18', purchaseDate: '2025-01-30', family: 'Bin', casters: '4-wheel', hitch: 'Pintle', containerColour: 'Blue', sideDoor: 'Left' },
-      { name: 'TRK-201', status: 'In Service', product: 'Side-Loader', serial: 'VIN-201', account: 'Edmonton AB', warehouse: 'Kennedale', location: 'Kennedale', recordType: 'Truck', installDate: '2022-03-01', purchaseDate: '2021-11-18', family: 'Truck' },
-    ],
+    sample: V63_RECORDS.assets,
   },
 
   trucks: {
@@ -400,12 +318,12 @@ export const RECORD_SCHEMAS = {
     newLabel: 'New Truck',
     singular: 'Truck',
     listColumns: [
-      { key: 'name', label: 'Truck Name' },
-      { key: 'number', label: 'Truck #' },
-      { key: 'status', label: 'Status' },
-      { key: 'type', label: 'Type' },
+      { key: 'truckName', label: 'Truck Name', aliases: ['name'] },
+      { key: 'status', label: 'Status', format: 'status' },
       { key: 'serviceType', label: 'Service Type' },
-      { key: 'driver', label: 'Driver' },
+      { key: 'truckNumber', label: 'Truck #', aliases: ['number'] },
+      { key: 'type', label: 'Type' },
+      { key: 'insyncId', label: 'InsyncId', mono: true },
     ],
     sections: [
       {
@@ -417,7 +335,7 @@ export const RECORD_SCHEMAS = {
           { key: 'warehouse', label: 'Warehouse Location', type: 'lookup' },
           { key: 'status', label: 'Status', type: 'select', options: P.truckStatus },
           { key: 'assignToTruck', label: 'Assign to this truck', type: 'checkbox' },
-          { key: 'segment', label: 'Segment', type: 'lookup' },
+          { key: 'segment', label: 'Segment', type: 'lookup', required: true },
           { key: 'driver', label: 'Driver', type: 'lookup' },
           { key: 'timezone', label: 'Timezone', type: 'select', options: P.timeZone, required: true },
         ],
@@ -451,14 +369,13 @@ export const RECORD_SCHEMAS = {
           { key: 'createdBy', label: 'Created By', type: 'readonly' },
           { key: 'lastModifiedBy', label: 'Last Modified By', type: 'readonly' },
           { key: 'externalId', label: 'External Id', type: 'text' },
+          { key: 'insyncId', label: 'InsyncId', type: 'text' },
+          { key: 'odometer', label: 'Odometer', type: 'number' },
+          { key: 'lastPing', label: 'Last Ping', type: 'text' },
         ],
       },
     ],
-    sample: [
-      { name: 'Side-Loader 201', number: 'TRK-201', status: 'Active', type: 'Side-Loader', account: 'Edmonton AB', timezone: 'America/Edmonton', serviceType: 'Collection Truck', driver: 'David Thornton' },
-      { name: 'Rear-Loader 102', number: 'TRK-102', status: 'Active', type: 'Rear-Loader', account: 'Edmonton AB', timezone: 'America/Edmonton', serviceType: 'Collection Truck', driver: 'Ravi Nair' },
-      { name: 'Roll-Off 115', number: 'TRK-115', status: 'Being Repaired', type: 'Roll-Off', account: 'Calgary Metro Waste', timezone: 'America/Edmonton', serviceType: 'Roll Off', driver: 'Marcus Chen' },
-    ],
+    sample: V63_RECORDS.trucks,
   },
 
   locations: {
@@ -466,13 +383,11 @@ export const RECORD_SCHEMAS = {
     newLabel: 'New Location',
     singular: 'Location',
     listColumns: [
-      { key: 'number', label: 'Location #' },
-      { key: 'name', label: 'Name' },
-      { key: 'type', label: 'Location Type' },
-      { key: 'address', label: 'Address' },
-      { key: 'city', label: 'City' },
+      { key: 'locationName', label: 'Location Name', aliases: ['name'] },
+      { key: 'address', label: 'Address', format: 'address' },
+      { key: 'locationType', label: 'Type', aliases: ['type'] },
       { key: 'zone', label: 'Zone' },
-      { key: 'isValidated', label: 'Validated' },
+      { key: 'isValidated', label: 'Validated', format: 'validated' },
     ],
     sections: [
       {
@@ -510,18 +425,13 @@ export const RECORD_SCHEMAS = {
           { key: 'recycleRoute', label: 'Recycle Collection Route', type: 'lookup' },
           { key: 'organicRoute', label: 'Organic Collection Route', type: 'lookup' },
           { key: 'yardRoute', label: 'Yard Waste Route', type: 'lookup' },
-          { key: 'segment', label: 'Segment', type: 'lookup' },
+          { key: 'segment', label: 'Segment', type: 'lookup', required: true },
           { key: 'missingCartRetrieveOnly', label: 'Missing Cart Retrieve Only?', type: 'checkbox' },
           { key: 'isValidated', label: 'Is Validated', type: 'checkbox' },
         ],
       },
     ],
-    sample: [
-      { number: 'LOC-00001', name: '9803 102A Ave', type: 'Single-Family Home', city: 'Edmonton', account: 'Edmonton AB', state: 'Alberta', country: 'Canada', houseNumber: '9803', street: '102A Ave NW', address: '9803 102A Ave NW, Edmonton, Alberta', zone: 'DT-North', isValidated: true, zip: 'T5J 3A3' },
-      { number: 'LOC-00002', name: '100 Queen St W', type: 'Commercial Business', city: 'Toronto', account: 'Toronto Waste Services', state: 'Ontario', country: 'Canada', houseNumber: '100', street: 'Queen St W', address: '100 Queen St W, Toronto, Ontario', zone: 'Core-1', isValidated: true, zip: 'M5H 2N2' },
-      { number: 'YARD-KEN', name: 'Kennedale', type: 'Yard', city: 'Edmonton', account: 'Edmonton AB', state: 'Alberta', country: 'Canada', address: 'Kennedale Yard, Edmonton, Alberta', zone: 'Yard-A', isValidated: true },
-      { number: 'YARD-OTH', name: 'Edmonton AB Other Yard', type: 'Other Yard', city: 'Edmonton', account: 'Edmonton AB', state: 'Alberta', country: 'Canada', address: 'Edmonton AB Other Yard, Edmonton, Alberta', zone: 'Yard-B', isValidated: false },
-    ],
+    sample: V63_RECORDS.locations,
   },
 
   maintenanceRouteProfiles: {
@@ -530,13 +440,12 @@ export const RECORD_SCHEMAS = {
     singular: 'Route Profile Template',
     banner: 'Maintenance routes are managed in BDP. VISION shows them for reference only.',
     listColumns: [
-      { key: 'name', label: 'Name' },
-      { key: 'segment', label: 'Segment' },
+      { key: 'maintenanceRouteProfileName', label: 'Profile Name', aliases: ['name'] },
       { key: 'serviceType', label: 'Service Type' },
-      { key: 'status', label: 'Status' },
       { key: 'numberOfTrucks', label: '# Trucks' },
       { key: 'startTime', label: 'Start Time' },
       { key: 'duration', label: 'Duration' },
+      { key: 'serviceProviderSegment', label: 'Segment', aliases: ['segment'] },
     ],
     sections: [
       {
@@ -551,18 +460,12 @@ export const RECORD_SCHEMAS = {
           { key: 'startTime', label: 'Start Time', type: 'time' },
           { key: 'duration', label: 'Duration', type: 'text' },
           { key: 'serviceType', label: 'Service Type', type: 'select', options: P.serviceType },
-          { key: 'segment', label: 'Service Provider Segment', type: 'lookup' },
+          { key: 'segment', label: 'Service Provider Segment', type: 'lookup', required: true },
           { key: 'status', label: 'Status', type: 'select', options: ['Active', 'Inactive'] },
         ],
       },
     ],
-    sample: [
-      { name: 'MRP-Downtown', segment: 'Downtown District', serviceType: 'Residential', status: 'Active', account: 'Edmonton AB', numberOfTrucks: 4, startTime: '06:30', duration: '8h' },
-      { name: 'MRP-Hauler1', segment: 'Hauler 1', serviceType: 'Commercial', status: 'Active', account: 'Edmonton AB', numberOfTrucks: 2, startTime: '07:00', duration: '6h' },
-      { name: 'MRP-DivisionA', segment: 'Division A', serviceType: 'Residential', status: 'Active', account: 'Toronto Waste Services', numberOfTrucks: 3, startTime: '06:00', duration: '8h' },
-      { name: 'MRP-Weekend', segment: 'Edmonton AB Top', serviceType: 'Residential', status: 'Inactive', account: 'Edmonton AB', numberOfTrucks: 1, startTime: '08:00', duration: '4h' },
-      { name: 'MRP-Industrial', segment: 'Hauler 1', serviceType: 'Industrial', status: 'Active', account: 'Calgary Metro Waste', numberOfTrucks: 2, startTime: '05:30', duration: '10h' },
-    ],
+    sample: V63_RECORDS.maintenanceRouteProfiles,
   },
 
   notesAttachments: {
@@ -570,10 +473,8 @@ export const RECORD_SCHEMAS = {
     newLabel: 'New Note',
     singular: 'Note',
     listColumns: [
-      { key: 'title', label: 'Subject' },
-      { key: 'relatedTo', label: 'Related To' },
-      { key: 'type', label: 'Type' },
-      { key: 'createdBy', label: 'Author' },
+      { key: 'subject', label: 'Subject', aliases: ['title'] },
+      { key: 'author', label: 'Author', aliases: ['createdBy'] },
       { key: 'created', label: 'Created' },
     ],
     sections: [
@@ -590,10 +491,7 @@ export const RECORD_SCHEMAS = {
         ],
       },
     ],
-    sample: [
-      { title: 'Site access note', relatedTo: 'LOC-00001', type: 'Note', createdBy: 'Yolanda Wagner', account: 'Edmonton AB', created: '2026-06-28' },
-      { title: 'Cart photo.jpg', relatedTo: 'CART-000123', type: 'Attachment', createdBy: 'David Thornton', account: 'Edmonton AB', created: '2026-07-01' },
-    ],
+    sample: V63_RECORDS.notesAttachments,
   },
 
   requestTypeResolutions: {
@@ -620,13 +518,7 @@ export const RECORD_SCHEMAS = {
         ],
       },
     ],
-    sample: [
-      { name: 'Deliver', resolution: 'Schedule delivery', serviceType: 'Residential', active: true, account: 'Edmonton AB', sla: '5d', description: 'New asset delivery' },
-      { name: 'Replace', resolution: 'Replace within 3 days', serviceType: 'Residential', active: true, account: 'Edmonton AB', sla: '72h' },
-      { name: 'Repair', resolution: 'Return Same Day', serviceType: 'Residential', active: true, account: 'Edmonton AB', sla: '24h', description: 'Cart repair or replacement' },
-      { name: 'Missed Pickup', resolution: 'Completed', serviceType: 'Residential', active: true, account: 'Edmonton AB', sla: '24h' },
-      { name: 'Remove', resolution: 'Completed', serviceType: 'Commercial', active: true, account: 'Edmonton AB', sla: '5d' },
-    ],
+    sample: V63_RECORDS.requestTypeResolutions,
   },
 
   aggregatedTips: {
@@ -636,7 +528,7 @@ export const RECORD_SCHEMAS = {
     listColumns: [
       { key: 'date', label: 'Date' },
       { key: 'truckNumber', label: 'Truck #' },
-      { key: 'tips', label: '# Tips' },
+      { key: 'numTips', label: '# Tips', aliases: ['tips'] },
       { key: 'totalDistance', label: 'Total Distance' },
       { key: 'idleTime', label: 'Idle Time (min)' },
       { key: 'speedingEvents', label: 'Speeding Events' },
@@ -677,23 +569,19 @@ export const RECORD_SCHEMAS = {
         ],
       },
     ],
-    sample: [
-      { name: 'AGG-2026-07-01-201', date: '2026-07-01', truck: 'TRK-201', tips: 84, tons: '12.4', account: 'Edmonton AB', truckNumber: 'TRK-201', owner: 'Ravindra Medam', totalDistance: 62.4, idleTime: 48, speedingEvents: 2, hardBrakes: 3, hardAccels: 1, truckRunTime: 425, averageSpeed: 18.2, collectionRoute: 'R-201', truckStartTime: '06:30' },
-      { name: 'AGG-2026-07-01-102', date: '2026-07-01', truck: 'TRK-102', tips: 61, tons: '9.1', account: 'Edmonton AB', truckNumber: 'TRK-102', totalDistance: 48.7, idleTime: 36, speedingEvents: 0, hardBrakes: 1, hardAccels: 0, truckRunTime: 380, averageSpeed: 16.5, collectionRoute: 'R-202', truckStartTime: '07:00' },
-      { name: 'AGG-2026-06-30-115', date: '2026-06-30', truck: 'TRK-115', tips: 42, tons: '18.7', account: 'Calgary Metro Waste', truckNumber: 'TRK-115', totalDistance: 71.2, idleTime: 55, speedingEvents: 4, hardBrakes: 5, hardAccels: 2, truckRunTime: 510, averageSpeed: 22.1, truckStartTime: '05:45' },
-    ],
+    sample: V63_RECORDS.aggregatedTips,
   },
 
   individualTips: {
-    title: 'Individual Tip / Non-Tip',
+    title: 'Tips & Non-Tips',
     newLabel: 'New Tip',
     singular: 'Tip',
     listColumns: [
-      { key: 'timestamp', label: 'Event Date / Time' },
-      { key: 'location', label: 'Customer Location' },
+      { key: 'eventStartDateTime', label: 'Event Date / Time', aliases: ['timestamp'] },
+      { key: 'customerLocation', label: 'Customer Location', aliases: ['location'] },
       { key: 'collectionRoute', label: 'Collection Route' },
-      { key: 'wasTipped', label: 'Tipped' },
-      { key: 'truck', label: 'Truck #' },
+      { key: 'wasTipped', label: 'Tipped', format: 'tipped' },
+      { key: 'sfdcTruckId', label: 'Truck #', aliases: ['truck'] },
     ],
     recordTypes: ['Tip Events', 'Non-Tip Events', 'All'],
     variants: [
@@ -730,16 +618,18 @@ export const RECORD_SCHEMAS = {
           { key: 'duration', label: 'Duration (seconds)', type: 'number' },
           { key: 'imageUrl', label: 'ImageUrl', type: 'text' },
           { key: 'location', label: 'Customer Location', type: 'lookup' },
+          { key: 'locationAddress', label: 'Location Address', type: 'text' },
+          { key: 'houseNumber', label: 'House Number', type: 'text' },
+          { key: 'street', label: 'Street', type: 'text' },
+          { key: 'city', label: 'City', type: 'text' },
+          { key: 'zipCode', label: 'Postal Code', type: 'text' },
+          { key: 'observationDescription', label: 'Observation', type: 'textarea', span2: true },
+          { key: 'assetSerial', label: 'Asset Serial', type: 'text' },
           { key: 'owner', label: 'Owner', type: 'text' },
         ],
       },
     ],
-    sample: [
-      { id: 'TIP-90012', name: 'Tip SN-90012', asset: 'CART-000123', type: 'Tip', wasTipped: true, timestamp: '2026-07-01T07:14', account: 'Edmonton AB', truck: 'TRK-201', location: '9803 102A Ave', collectionRoute: 'R-201', recordType: 'Individual Telematics Events', timezone: 'America/Edmonton' },
-      { id: 'TIP-90013', name: 'Tip SN-90013', asset: 'CART-000124', type: 'Tip', wasTipped: true, timestamp: '2026-07-01T07:22', account: 'Edmonton AB', truck: 'TRK-201', location: '9803 102A Ave', collectionRoute: 'R-201', recordType: 'Individual Telematics Events', timezone: 'America/Edmonton' },
-      { id: 'TIP-90014', name: 'Non-Tip BIN-002210', asset: 'BIN-002210', type: 'Non-Tip', wasTipped: false, timestamp: '2026-07-01T08:01', account: 'Toronto Waste Services', truck: 'TRK-102', location: '100 Queen St W', collectionRoute: 'R-202', recordType: 'Individual Telematics Events', errorDescription: 'Heartbeat', timezone: 'America/Toronto' },
-      { id: 'TIP-90015', name: 'Tip SN-90012 b', asset: 'CART-000123', type: 'Tip', wasTipped: true, timestamp: '2026-07-01T08:18', account: 'Edmonton AB', truck: 'TRK-201', location: '9803 102A Ave', collectionRoute: 'R-201', recordType: 'Individual Telematics Events', timezone: 'America/Edmonton' },
-    ],
+    sample: V63_RECORDS.individualTips,
   },
 
   requestTypes: {
@@ -753,7 +643,7 @@ export const RECORD_SCHEMAS = {
       { key: 'category', label: 'Category' },
       { key: 'serviceCategory', label: 'Service Category' },
       { key: 'segment', label: 'Segment' },
-      { key: 'active', label: 'Active' },
+      { key: 'active', label: 'Active', format: 'active' },
     ],
     sections: [
       {
@@ -764,17 +654,13 @@ export const RECORD_SCHEMAS = {
           { key: 'workflow', label: 'Workflow Type', type: 'select', options: ['Standard', 'Hot Ticket', 'Recurring'] },
           { key: 'category', label: 'Category', type: 'text' },
           { key: 'serviceCategory', label: 'Service Category', type: 'select', options: P.productServiceCategory },
-          { key: 'segment', label: 'Segment', type: 'lookup' },
+          { key: 'segment', label: 'Segment', type: 'lookup', required: true },
           { key: 'account', label: 'Account', type: 'lookup', required: true },
           { key: 'active', label: 'Active', type: 'checkbox' },
         ],
       },
     ],
-    sample: [
-      { code: 'DEL', name: 'Deliver', workflow: 'Standard', category: 'Asset', serviceCategory: 'Residential', segment: 'Edmonton AB Top', active: true, account: 'Edmonton AB' },
-      { code: 'MIS', name: 'Missed Pickup', workflow: 'Hot Ticket', category: 'Collection', serviceCategory: 'Residential', segment: 'Edmonton AB Top', active: true, account: 'Edmonton AB' },
-      { code: 'REP', name: 'Repair', workflow: 'Standard', category: 'Asset', serviceCategory: 'Residential', segment: 'Downtown District', active: true, account: 'Edmonton AB' },
-    ],
+    sample: V63_RECORDS.requestTypes,
   },
 
   resolutionCodes: {
@@ -786,7 +672,7 @@ export const RECORD_SCHEMAS = {
       { key: 'name', label: 'Name' },
       { key: 'workflow', label: 'Workflow' },
       { key: 'description', label: 'Description' },
-      { key: 'active', label: 'Active' },
+      { key: 'active', label: 'Active', format: 'active' },
     ],
     sections: [
       {
@@ -801,11 +687,7 @@ export const RECORD_SCHEMAS = {
         ],
       },
     ],
-    sample: [
-      { code: 'CMP', name: 'Completed', workflow: 'Standard', description: 'Work completed as requested', active: true, account: 'Edmonton AB' },
-      { code: 'RSD', name: 'Return Same Day', workflow: 'Hot Ticket', description: 'Resolved on the same route day', active: true, account: 'Edmonton AB' },
-      { code: 'SCH', name: 'Schedule delivery', workflow: 'Standard', description: 'Scheduled for next available day', active: true, account: 'Edmonton AB' },
-    ],
+    sample: V63_RECORDS.resolutionCodes,
   },
 
   reqCodes: {
@@ -813,12 +695,12 @@ export const RECORD_SCHEMAS = {
     newLabel: 'New RRC Record',
     singular: 'RRC Record',
     listColumns: [
-      { key: 'rrcNumber', label: 'RRC #' },
-      { key: 'isDefault', label: 'Default' },
+      { key: 'id', label: 'RRC #', aliases: ['rrcNumber'] },
+      { key: 'isDefault', label: 'Default', format: 'check' },
       { key: 'requestType', label: 'Request Type' },
       { key: 'resolutionCode', label: 'Resolution Code' },
-      { key: 'workflow', label: 'Workflow Type' },
-      { key: 'attempts', label: '# of Attempts' },
+      { key: 'workflowType', label: 'Workflow Type', aliases: ['workflow'] },
+      { key: 'numberOfAttempts', label: '# of Attempts', aliases: ['attempts'] },
     ],
     sections: [
       {
@@ -834,11 +716,7 @@ export const RECORD_SCHEMAS = {
         ],
       },
     ],
-    sample: [
-      { rrcNumber: 'RRC-001', isDefault: true, requestType: 'Deliver', resolutionCode: 'Schedule delivery', workflow: 'Standard', attempts: 2, account: 'Edmonton AB' },
-      { rrcNumber: 'RRC-002', isDefault: true, requestType: 'Missed Pickup', resolutionCode: 'Completed', workflow: 'Hot Ticket', attempts: 1, account: 'Edmonton AB' },
-      { rrcNumber: 'RRC-003', isDefault: false, requestType: 'Repair', resolutionCode: 'Return Same Day', workflow: 'Standard', attempts: 3, account: 'Edmonton AB' },
-    ],
+    sample: V63_RECORDS.reqCodes,
   },
 
   customers: {
@@ -846,8 +724,9 @@ export const RECORD_SCHEMAS = {
     newLabel: 'New Customer',
     singular: 'Customer',
     listColumns: [
-      { key: 'customerNumber', label: 'Customer #' },
+      { key: 'customerId', label: 'Customer #', aliases: ['customerNumber'] },
       { key: 'name', label: 'Name' },
+      { key: 'location', label: 'Location' },
       { key: 'segment', label: 'Segment' },
       { key: 'email', label: 'Email' },
       { key: 'phone', label: 'Phone' },
@@ -866,7 +745,9 @@ export const RECORD_SCHEMAS = {
           { key: 'mobile', label: 'Mobile', type: 'text' },
           { key: 'parentCustomer', label: 'Parent Customer', type: 'lookup' },
           { key: 'owner', label: 'Owner', type: 'text' },
-          { key: 'segment', label: 'Segment', type: 'lookup' },
+          { key: 'segment', label: 'Segment', type: 'lookup', required: true },
+          { key: 'location', label: 'Location', type: 'lookup' },
+          { key: 'address', label: 'Address', type: 'text' },
           { key: 'custom1', label: 'Custom 1', type: 'text' },
           { key: 'custom2', label: 'Custom 2', type: 'text' },
           { key: 'custom3', label: 'Custom 3', type: 'text' },
@@ -876,11 +757,37 @@ export const RECORD_SCHEMAS = {
         ],
       },
     ],
-    sample: [
-      { customerNumber: 'cust-1001', name: "Sam O'Brien", email: 'sam@vision.io', phone: '(780) 555-0144', segment: 'Edmonton AB Top', account: 'Edmonton AB', owner: 'Yolanda Wagner' },
-      { customerNumber: 'cust-1002', name: 'Nadia Petrov', email: 'nadia@vision.io', phone: '(780) 555-0188', segment: 'Downtown District', account: 'Edmonton AB', owner: 'Yolanda Wagner' },
-      { customerNumber: 'cust-2101', name: 'Queen Street Lofts', email: 'lofts@vision.io', phone: '(416) 555-0190', segment: 'Toronto Top', account: 'Toronto Waste Services' },
+    sample: V63_RECORDS.customers,
+  },
+
+  customerLocations: {
+    title: 'Customer Locations',
+    newLabel: 'New Customer Location',
+    singular: 'Customer Location',
+    listColumns: [
+      { key: 'junctionNumber', label: 'Junction #' },
+      { key: 'customer', label: 'Customer' },
+      { key: 'location', label: 'Location' },
+      { key: 'serviceType', label: 'Service Type' },
+      { key: 'isActive', label: 'Active', format: 'boolean' },
     ],
+    banner: 'Junction records that attach a customer to a service location.',
+    sections: [
+      {
+        title: 'Information',
+        fields: [
+          { key: 'customer', label: 'Customer', type: 'lookup', required: true },
+          { key: 'location', label: 'Location', type: 'lookup', required: true },
+          { key: 'account', label: 'Service Provider', type: 'lookup' },
+          { key: 'segment', label: 'Segment', type: 'lookup' },
+          { key: 'serviceType', label: 'Service Type', type: 'text' },
+          { key: 'startDate', label: 'Start Date', type: 'date' },
+          { key: 'endDate', label: 'End Date', type: 'date' },
+          { key: 'isActive', label: 'Active', type: 'checkbox' },
+        ],
+      },
+    ],
+    sample: V63_RECORDS.customerLocations,
   },
 
   routes: {
@@ -889,12 +796,11 @@ export const RECORD_SCHEMAS = {
     singular: 'Route',
     listColumns: [
       { key: 'routeNumber', label: 'Route Number' },
-      { key: 'recordType', label: 'Type' },
-      { key: 'collectionDays', label: 'Days' },
-      { key: 'status', label: 'Status' },
+      { key: 'collectionType', label: 'Type' },
+      { key: 'status', label: 'Status', format: 'status' },
       { key: 'truck', label: 'Truck' },
       { key: 'driver', label: 'Driver' },
-      { key: 'segment', label: 'Segment' },
+      { key: 'serviceProviderSegment', label: 'Segment', aliases: ['segment'] },
     ],
     recordTypes: ['Collection', 'Maintenance', 'All'],
     banner: 'Only 4 collection route types: Trash, Recycle, Organic, Bulk.',
@@ -909,7 +815,7 @@ export const RECORD_SCHEMAS = {
           { key: 'routeUID', label: 'Route UID', type: 'text' },
           { key: 'startTime', label: 'Start Time', type: 'time' },
           { key: 'truck', label: 'Truck', type: 'lookup' },
-          { key: 'segment', label: 'Segment', type: 'lookup' },
+          { key: 'segment', label: 'Segment', type: 'lookup', required: true },
           { key: 'driver', label: 'Driver', type: 'lookup' },
           { key: 'account', label: 'Service Provider', type: 'lookup', required: true },
           { key: 'status', label: 'Status', type: 'select', options: P.routeStatus || ['Planned', 'In Progress', 'Complete'] },
@@ -935,10 +841,7 @@ export const RECORD_SCHEMAS = {
         ],
       },
     ],
-    sample: [
-      { routeNumber: 'R-201', recordType: 'Collection', dispatch: 'D-72110', routeUID: 'UID-R201', duration: '8h', startTime: '06:30', truck: 'TRK-201', driver: 'David Thornton', status: 'Planned', collectionType: 'Trash', collectionDays: 'Mon, Wed, Fri', expectedContainers: 420, account: 'Edmonton AB', segment: 'Edmonton AB Top' },
-      { routeNumber: 'R-202', recordType: 'Collection', dispatch: 'D-72114', routeUID: 'UID-R202', duration: '6h', startTime: '07:00', truck: 'TRK-102', driver: 'Ravi Nair', status: 'In Progress', collectionType: 'Recycle', collectionDays: 'Tue, Sat', expectedContainers: 310, account: 'Edmonton AB', segment: 'Hauler 1' },
-    ],
+    sample: V63_RECORDS.routes,
   },
 
   serviceNotifications: {
@@ -946,10 +849,10 @@ export const RECORD_SCHEMAS = {
     newLabel: 'New Service Notification',
     singular: 'Service Notification',
     listColumns: [
-      { key: 'name', label: 'Notification Name' },
-      { key: 'status', label: 'Status' },
+      { key: 'serviceNotificationName', label: 'Notification Name', aliases: ['name'] },
+      { key: 'enableServiceNotifications', label: 'Status', aliases: ['status'], format: 'active' },
       { key: 'notifyDays', label: 'Notify Days' },
-      { key: 'trigger', label: 'Trigger' },
+      { key: 'toBeSentBasedOn', label: 'Trigger', aliases: ['trigger'] },
       { key: 'fromEmail', label: 'From Email' },
       { key: 'emailSubject', label: 'Email Subject' },
     ],
@@ -969,10 +872,7 @@ export const RECORD_SCHEMAS = {
         ],
       },
     ],
-    sample: [
-      { name: 'Collection reminder', status: 'Active', notifyDays: 1, trigger: 'Due Date', fromEmail: 'noreply@vision.io', emailSubject: 'Your collection is tomorrow', channel: 'Email', account: 'Edmonton AB' },
-      { name: 'Hot ticket alert', status: 'Active', notifyDays: 0, trigger: 'Hot Ticket', fromEmail: 'alerts@vision.io', emailSubject: 'Hot ticket opened', channel: 'SMS', account: 'Edmonton AB' },
-    ],
+    sample: V63_RECORDS.serviceNotifications,
   },
 
   masterProducts: {
@@ -981,11 +881,11 @@ export const RECORD_SCHEMAS = {
     singular: 'Master Product',
     banner: "Master products are Rehrig's manufactured catalog. Service Provider Products point at these items.",
     listColumns: [
-      { key: 'name', label: 'Product' },
-      { key: 'family', label: 'Family' },
+      { key: 'productName', label: 'Product', aliases: ['name'] },
+      { key: 'productFamily', label: 'Family', aliases: ['family'] },
       { key: 'volume', label: 'Volume' },
       { key: 'serviceType', label: 'Service Type' },
-      { key: 'active', label: 'Active' },
+      { key: 'active', label: 'Active', format: 'active' },
     ],
     sections: [
       {
@@ -1002,11 +902,7 @@ export const RECORD_SCHEMAS = {
         ],
       },
     ],
-    sample: [
-      { name: '96 Gallon Trash', family: 'Roll-Out Cart', volume: '96 gal', serviceType: 'Trash', active: true, code: 'MPR-004' },
-      { name: '120 Liter Trash', family: 'Roll-Out Cart', volume: '120 L', serviceType: 'Trash', active: true, code: 'MPR-001' },
-      { name: '3 YD Recycle Bin Recycling', family: 'Bin', volume: '3 YD', serviceType: 'Recycle', active: true, code: 'MPR-007' },
-    ],
+    sample: V63_RECORDS.masterProducts,
   },
 
   products: {
@@ -1015,13 +911,13 @@ export const RECORD_SCHEMAS = {
     singular: 'Product',
     banner: 'Service Provider Products point at Master Product Catalog items and are scoped to an account.',
     listColumns: [
-      { key: 'number', label: 'SP Product #' },
-      { key: 'product', label: 'Product' },
-      { key: 'code', label: 'Product Code' },
-      { key: 'size', label: 'Size' },
-      { key: 'category', label: 'Service Category' },
-      { key: 'family', label: 'Family' },
-      { key: 'status', label: 'Status' },
+      { key: 'sppNumber', label: 'Service Provider Product Number', aliases: ['number'], mono: true },
+      { key: 'productName', label: 'Product', aliases: ['product'] },
+      { key: 'productCode', label: 'Product Code', aliases: ['code'] },
+      { key: 'productSize', label: 'Product Size', aliases: ['size'] },
+      { key: 'productSizeType', label: 'Product Size Type', aliases: ['sizeType'] },
+      { key: 'serviceCategory', label: 'Service Category', aliases: ['category'] },
+      { key: 'productFamily', label: 'Family', aliases: ['family'] },
     ],
     sections: [
       {
@@ -1041,10 +937,6 @@ export const RECORD_SCHEMAS = {
         ],
       },
     ],
-    sample: [
-      { number: 'SPP-000101', code: 'MPR-001', product: '120 Liter Trash', size: '120 L', sizeType: 'Liter', category: 'Residential', family: 'Roll-Out Cart', status: 'Active', account: 'Edmonton AB', masterProduct: '120 Liter Trash' },
-      { number: 'SPP-000102', code: 'MPR-004', product: '96 Gallon Trash', size: '96 gal', sizeType: 'Gallon', category: 'Residential', family: 'Roll-Out Cart', status: 'Active', account: 'Edmonton AB', masterProduct: '96 Gallon Trash' },
-      { number: 'SPP-000103', code: 'MPR-007', product: '3 YD Recycle Bin Recycling', size: '3 YD', sizeType: 'Yard', category: 'Commercial', family: 'Bin', status: 'Active', account: 'Edmonton AB', masterProduct: '3 YD Recycle Bin Recycling' },
-    ],
+    sample: V63_RECORDS.products,
   },
 };

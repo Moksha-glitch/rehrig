@@ -21,6 +21,7 @@ import {
   Checkbox,
   AsyncState,
   EmptyState,
+  activateRow,
 } from '../components/UI.jsx';
 import { useStore } from '../state/AppStore.jsx';
 import {
@@ -1138,17 +1139,13 @@ function CustomersTab({ account, customers, segments, canManage, onChanged }) {
           customers.map((customer) => {
             const inactive = isCustomerInactive(account, customer);
             return (
-              <tr key={customer.id} className="interactive hover:bg-elevated/70">
+              <tr
+                key={customer.id}
+                className="interactive cursor-pointer hover:bg-elevated/70"
+                onClick={(event) => activateRow(event, () => setSelected(customer))}
+              >
                 <td className="mono px-4 py-3 text-ink-muted">{customer.customerId || '—'}</td>
-                <td className="px-4 py-3 font-medium text-ink">
-                  <button
-                    type="button"
-                    className="link-brand font-medium"
-                    onClick={() => setSelected(customer)}
-                  >
-                    {customer.name}
-                  </button>
-                </td>
+                <td className="px-4 py-3 font-medium text-ink">{customer.name}</td>
                 <td className="px-4 py-3 text-ink-muted">{customer.email || '—'}</td>
                 <td className="px-4 py-3 text-ink-muted">
                   {segmentNamesFor(customer, segments) || '—'}
@@ -1162,24 +1159,15 @@ function CustomersTab({ account, customers, segments, canManage, onChanged }) {
                   )}
                 </td>
                 <td className="px-4 py-3 text-right">
-                  <div className="flex items-center justify-end gap-3">
+                  {canManage && (
                     <button
                       type="button"
                       className="link-brand text-xs font-medium"
-                      onClick={() => setSelected(customer)}
+                      onClick={() => setStatusTarget(customer)}
                     >
-                      {canManage ? 'Edit' : 'View'}
+                      {inactive ? 'Re-activate' : 'Deactivate'}
                     </button>
-                    {canManage && (
-                      <button
-                        type="button"
-                        className="link-brand text-xs font-medium"
-                        onClick={() => setStatusTarget(customer)}
-                      >
-                        {inactive ? 'Re-activate' : 'Deactivate'}
-                      </button>
-                    )}
-                  </div>
+                  )}
                 </td>
               </tr>
             );
@@ -1431,13 +1419,15 @@ function AccountSchemaList({ kind, account, fallbackRows = [], canManage }) {
       <Panel>
         <Table columns={schema.listColumns.map((column) => column.label)}>
           {rows.map((row) => (
-            <tr key={row.id || row.number || row.name} className="interactive hover:bg-elevated/70">
+            <tr
+              key={row.id || row.number || row.name}
+              className="interactive cursor-pointer hover:bg-elevated/70"
+              onClick={(event) => activateRow(event, () => openEdit(row))}
+            >
               {schema.listColumns.map((column, index) => (
                 <td key={column.key} className="px-4 py-3">
                   {index === 0 ? (
-                    <button type="button" className="link-brand text-left" onClick={() => openEdit(row)}>
-                      {row[column.key] || '—'}
-                    </button>
+                    <span className="font-medium text-ink">{row[column.key] || '—'}</span>
                   ) : column.key === 'status' ? (
                     <Badge color={recordStatusColor(recordStatus(row))}>{recordStatus(row)}</Badge>
                   ) : (

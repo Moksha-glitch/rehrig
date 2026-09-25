@@ -18,7 +18,7 @@ import {
   Switch,
 } from '../components/UI.jsx';
 import { useStore } from '../state/AppStore.jsx';
-import { useUsers } from '../hooks/useAccounts.js';
+import { useAccounts, useUsers } from '../hooks/useAccounts.js';
 import { useRecords } from '../hooks/useRecords.js';
 import {
   useWorkspaceMutations,
@@ -92,6 +92,11 @@ const PSGS = [
     perms: 'Assets, trucks, route profile templates, and assigned work orders. Chatter and approvals.',
   },
   {
+    name: 'SP Segment Admin PSG',
+    applies: 'SP Segment Admin — operations limited to assigned segments',
+    perms: 'Home, customers, assets, work orders, and reports inside assigned segments only.',
+  },
+  {
     name: 'Rehrig Admin PSG',
     applies: 'Rehrig internal administrators',
     perms: 'Full platform access: master catalog, all SP accounts, Configure sections.',
@@ -139,6 +144,11 @@ const NOTIF_OPTIONS = [
 export default function Setup() {
   const { state, navigate, persona, toast } = useStore();
   const usersQuery = useUsers();
+  const accountsQuery = useAccounts();
+  const homeAccount =
+    (state.currentUser?.accountIds || [])
+      .map((id) => (accountsQuery.data || []).find((account) => account.id === id))
+      .find(Boolean) || (accountsQuery.data || [])[0];
   const settingsQuery = useWorkspaceSettings();
   const { update: updateSettings } = useWorkspaceMutations();
   const settings = settingsQuery.data || {};
@@ -185,6 +195,10 @@ export default function Setup() {
   }, [state.nav.params?.section, state.nav.params?.tab]);
 
   const current = SECTIONS.find((s) => s.key === section) || SECTIONS[0];
+  const currentSubtitle =
+    current.key === 'userMgmt' && persona === 'sp'
+      ? `Everyone who can sign in within ${homeAccount?.name || 'your Service Provider'}. Create a new user and assign them a profile.`
+      : current.subtitle;
 
   const goSection = (key) => {
     setSection(key);
@@ -324,7 +338,7 @@ export default function Setup() {
         <div className="min-w-0 flex-1">
           <div className="mb-5">
             <h2 className="font-display text-title-md text-ink">{current.title}</h2>
-            <p className="mt-1 text-sm text-ink-muted">{current.subtitle}</p>
+            <p className="mt-1 text-sm text-ink-muted">{currentSubtitle}</p>
           </div>
 
           {section === 'userMgmt' && (

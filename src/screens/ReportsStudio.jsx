@@ -398,6 +398,7 @@ function ReportConfigDrawer({ draft, baseline, onChange, onClose, onSave, busy, 
 
 export default function ReportsStudio() {
   const { state, toast, canCreateRecords, canCreateAccounts, canAccessModule } = useStore();
+  const reportCategory = state.nav?.params?.reportCategory || '';
   const canEdit =
     (canCreateAccounts || canCreateRecords) &&
     (canAccessModule('reports') || canAccessModule('analytics'));
@@ -437,6 +438,7 @@ export default function ReportsStudio() {
   };
   const filteredSpecs = specs
     .filter((spec) => folderMatches(spec, folder))
+    .filter((spec) => !reportCategory || spec.source === reportCategory)
     .filter((spec) =>
       `${spec.name} ${spec.desc || ''} ${spec.owner} ${REPORT_DATA_SOURCES[spec.source]?.label || ''}`
         .toLowerCase()

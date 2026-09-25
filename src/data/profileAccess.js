@@ -95,6 +95,18 @@ export const SEED_PROFILES = [
     lastUpdatedDate: '18/03/26',
     preset: 'view',
   },
+  {
+    id: 'PROF-SPUSER',
+    role: 'Service Provider User',
+    access: 'Segments: 1 · Screen: Partial access',
+    status: 'Active',
+    description: 'Day-to-day operator limited to assigned segments.',
+    created: 'Helena',
+    createdDate: '12/08/26',
+    lastUpdatedBy: 'Helena',
+    lastUpdatedDate: '12/08/26',
+    preset: 'partial',
+  },
 ];
 
 export const PROFILE_SCREEN_MODULES = [
@@ -603,17 +615,55 @@ export function buildProviderTree(accounts = [], segments = [], options = {}) {
       checked,
       segments: kids.map((segment) => ({
         id: segment.id,
-        name: segment.name,
+        name: segment.name || segment.segmentName,
+        type: segment.type || '',
         checked,
       })),
     };
   });
 }
 
-export function summarizeProfileAccess(providers, screens) {
+export function buildSPSegmentProvider(account, segments = [], options = {}) {
+  const allSelected = options.checked === true;
+  const kids = account
+    ? segments.filter(
+        (segment) => segment.accountId === account.id || segment.account === account.name
+      )
+    : [];
+  return [
+    {
+      id: account?.id || 'self',
+      name: account?.name || 'This account',
+      checked: allSelected,
+      segments: kids.map((segment) => ({
+        id: segment.id,
+        name: segment.name || segment.segmentName,
+        type: segment.type || '',
+        checked: false,
+      })),
+    },
+  ];
+}
+
+export function hasAccessSelection(providers = []) {
+  return providers.some(
+    (provider) => provider.checked || provider.segments?.some((segment) => segment.checked)
+  );
+}
+
+export function countSelectedSegments(providers = []) {
+  return providers.reduce(
+    (sum, provider) =>
+      sum + (provider.checked ? provider.segments?.length || 0 : provider.segments?.filter((segment) => segment.checked).length || 0),
+    0
+  );
+}
+
+export function summarizeProfileAccess(providers, screens, persona) {
   const selectedProviders = providers.filter(
     (provider) => provider.checked || provider.segments.some((segment) => segment.checked)
   ).length;
+  const selectedSegments = countSelectedSegments(providers);
   const enabledScreens = screens.reduce(
     (sum, group) =>
       sum +
@@ -624,14 +674,21 @@ export function summarizeProfileAccess(providers, screens) {
   );
   const totalScreens = screens.reduce((sum, group) => sum + group.screens.length, 0);
   const allProviders = selectedProviders === providers.length && providers.length > 0;
+  const allSegments = persona === 'sp' && !!providers[0]?.checked;
   const allScreens = enabledScreens === totalScreens && totalScreens > 0;
   const noScreens = enabledScreens === 0;
 
-  const spLabel = allProviders ? 'All access' : String(selectedProviders);
+  const scopeLabel = persona === 'sp'
+    ? allSegments
+      ? 'All access'
+      : String(selectedSegments)
+    : allProviders
+      ? 'All access'
+      : String(selectedProviders);
   let screenLabel = 'Partial access';
   if (allScreens) screenLabel = 'All access';
   else if (noScreens) screenLabel = 'None';
   else if (enabledScreens <= 2) screenLabel = 'Mobile only';
 
-  return `SP: ${spLabel} · Screen: ${screenLabel}`;
+  return `${persona === 'sp' ? 'Segments' : 'SP'}: ${scopeLabel} · Screen: ${screenLabel}`;
 }

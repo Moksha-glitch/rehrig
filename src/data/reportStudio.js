@@ -1,3 +1,5 @@
+import { V63_SAVED_REPORTS } from './v63HtmlExtras.js';
+
 /** Reports Studio options and seed specs (V1.4 report builder). */
 
 export const REPORT_TIMEFRAMES = [
@@ -62,6 +64,31 @@ export const REPORT_DATA_SOURCES = {
     kind: 'locations',
     fields: ['type', 'account', 'city', 'state'],
   },
+  routes: {
+    label: 'Routes',
+    kind: 'routes',
+    fields: ['status', 'account', 'collectionType', 'recordType'],
+  },
+  segments: {
+    label: 'Segments',
+    kind: 'segments',
+    fields: ['type', 'account', 'name'],
+  },
+  customers: {
+    label: 'Customers',
+    kind: 'customers',
+    fields: ['account', 'segment', 'name'],
+  },
+  contacts: {
+    label: 'Contacts',
+    kind: 'contacts',
+    fields: ['account', 'roleTitle', 'isUserCreated'],
+  },
+  accounts: {
+    label: 'Accounts',
+    kind: 'accounts',
+    fields: ['industry', 'type', 'accountType'],
+  },
 };
 
 export const REPORT_SORT_BY = [
@@ -122,7 +149,57 @@ export function validateAiReport(draft) {
   return '';
 }
 
+const FOLDER_CATEGORY = {
+  'F-ops': 'Operations',
+  'F-fleet': 'Fleet Health',
+  'F-cust': 'Customer Insights',
+  'F-sla': 'SLA & Compliance',
+};
+
+const TIMEFRAME = {
+  '7d': 'last7d',
+  '30d': 'last30d',
+  '90d': 'last90d',
+};
+
+const REPORT_SOURCES = new Set(Object.keys(REPORT_DATA_SOURCES));
+
+function htmlReportGroupBy(row) {
+  if (row.groupBy === 'productFamily') return 'family';
+  if (row.groupBy === 'truckNumber') return 'number';
+  if (row.groupBy === 'date') return 'requestDate';
+  if (row.groupBy === 'age') return 'priority';
+  return row.groupBy || 'status';
+}
+
+const OWNER_IDS = {
+  'Yolanda Wagner': 'u-ywagn',
+  'Marcus Chen': 'u-mchen',
+  'Priya Ramanathan': 'u-praman',
+  'Helena Rehrig': 'u-hrehrig',
+};
+
+const HTML_REPORT_SPECS = V63_SAVED_REPORTS.map((row) =>
+  blankReportSpec({
+    id: row.id,
+    name: row.name,
+    desc: row.desc,
+    source: REPORT_SOURCES.has(row.source) ? row.source : 'workOrders',
+    groupBy: htmlReportGroupBy(row),
+    chart: row.chart || 'bar',
+    timeframe: TIMEFRAME[row.timeRange] || 'last30d',
+    owner: row.owner,
+    ownerId: OWNER_IDS[row.owner] || '',
+    favorite: !!row.isFavorite,
+    visibility: row.isPublic ? 'public' : 'private',
+    sharedWith: row.isPublic ? ['*'] : [],
+    category: FOLDER_CATEGORY[row.folder] || 'Operations',
+    lastViewed: /^\d{4}-\d{2}-\d{2}/.test(String(row.lastRun || '')) ? row.lastRun : '',
+  })
+);
+
 export const SEED_REPORT_SPECS = [
+  ...HTML_REPORT_SPECS,
   blankReportSpec({
     id: 'rpt-hot-aging',
     name: 'Hot Tickets Aging',

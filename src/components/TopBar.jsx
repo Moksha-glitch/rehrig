@@ -7,6 +7,7 @@ import VisionAiMark from './VisionAiMark.jsx';
 import UserAccountMenu from './UserAccountMenu.jsx';
 import { useStore } from '../state/AppStore.jsx';
 import { useAccounts } from '../hooks/useAccounts.js';
+import { useSearch } from '../hooks/useSearch.js';
 import { NAV, filterNavTree, isNavItemActive } from './navConfig.js';
 import { getAvatarProps } from '../utils/theme.js';
 
@@ -38,20 +39,41 @@ export default function TopBar() {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isAiMode, setIsAiMode] = useState(false);
+  const searchResults = useSearch(searchQuery);
+  const liveResults = searchResults.data || [];
 
   const normalSuggestions = [
-    { icon: 'box', label: 'View Assets / Trucks' },
-    { icon: 'clipboard', label: 'Recent Work Orders' },
-    { icon: 'users', label: 'Manage Customers' },
-    { icon: 'search', label: 'Search for "Rehrig Pacific"' },
+    { icon: 'box', label: 'View Assets / Trucks', module: 'assets' },
+    { icon: 'clipboard', label: 'Recent Work Orders', module: 'workOrders' },
+    { icon: 'users', label: 'Manage Customers', module: 'customers' },
   ];
 
   const aiSuggestions = [
     { icon: 'star', label: 'Summarize recent dispatches in my area' },
     { icon: 'star', label: 'Find delayed routes from yesterday' },
-    { icon: 'star', label: 'Generate a report for route efficiency' },
+    { icon: 'star', label: "Show today's collections" },
     { icon: 'star', label: 'Show me alerts for missing containers' },
   ];
+
+  const closeSearch = () => {
+    setIsSearchFocused(false);
+    setIsAiMode(false);
+  };
+
+  const goToResult = (result) => {
+    if (!result?.module) return;
+    navigate(result.module, result.params || {});
+    setSearchQuery('');
+    closeSearch();
+  };
+
+  const askFromSearch = (prompt) => {
+    const text = String(prompt || searchQuery || '').trim();
+    openAssistant();
+    if (text) window.dispatchEvent(new CustomEvent('vision:ask', { detail: { prompt: text } }));
+    setSearchQuery('');
+    closeSearch();
+  };
 
   const tree = useMemo(
     () => filterNavTree(NAV[persona] || [], canNav),
@@ -181,6 +203,16 @@ export default function TopBar() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => setIsSearchFocused(true)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  event.preventDefault();
+                  if (isAiMode) {
+                    askFromSearch(searchQuery);
+                    return;
+                  }
+                  if (liveResults[0]) goToResult(liveResults[0]);
+                }
+              }}
               className="h-full min-w-0 flex-1 bg-transparent text-[13.5px] text-ink outline-none"
             />
 
@@ -189,6 +221,10 @@ export default function TopBar() {
               type="button"
               onClick={(e) => {
                 e.preventDefault();
+                if (searchQuery.trim()) {
+                  askFromSearch(searchQuery);
+                  return;
+                }
                 if (isSearchFocused) {
                   setIsAiMode(!isAiMode);
                 } else {
@@ -216,20 +252,62 @@ export default function TopBar() {
           >
             <div className="p-2">
               <div className="mb-1 px-2 text-[11px] font-semibold uppercase tracking-wider text-ink-faint">
-                {isAiMode ? 'Vision AI Suggestions' : 'Recent Searches'}
+                {isAiMode
+                  ? 'Vision AI Suggestions'
+                  : searchQuery.trim().length >= 2
+                    ? 'Matching records'
+                    : 'Jump to'}
               </div>
               <ul className="flex flex-col gap-0.5">
-                {(isAiMode ? aiSuggestions : normalSuggestions).map((s, i) => (
-                  <li key={i}>
-                    <button
-                      type="button"
-                      className="flex w-full items-center gap-2.5 rounded-md px-2 py-1.5 text-left text-sm text-ink-muted interactive hover:bg-elevated hover:text-ink"
-                    >
-                      <Icon name={s.icon} size={15} className="shrink-0 text-ink-faint" />
-                      <span className="truncate">{s.label}</span>
-                    </button>
-                  </li>
-                ))}
+                {isAiMode ? (
+                  aiSuggestions.map((s, i) => (
+                    <li key={i}>
+                      <button
+                        type="button"
+                        className="flex w-full items-center gap-2.5 rounded-md px-2 py-1.5 text-left text-sm text-ink-muted interactive hover:bg-elevated hover:text-ink"
+                        onClick={() => askFromSearch(s.label)}
+                      >
+                        <Icon name={s.icon} size={15} className="shrink-0 text-ink-faint" />
+                        <span className="truncate">{s.label}</span>
+                      </button>
+                    </li>
+                  ))
+                ) : searchQuery.trim().length >= 2 ? (
+                  liveResults.length ? (
+                    liveResults.slice(0, 8).map((result) => (
+                      <li key={result.id}>
+                        <button
+                          type="button"
+                          className="flex w-full items-center gap-2.5 rounded-md px-2 py-1.5 text-left text-sm text-ink interactive hover:bg-elevated"
+                          onClick={() => goToResult(result)}
+                        >
+                          <Icon name="search" size={15} className="shrink-0 text-ink-faint" />
+                          <span className="min-w-0">
+                            <span className="block truncate">{result.title || result.label}</span>
+                            <span className="block truncate text-[11px] text-ink-faint">
+                              {result.meta || result.category}
+                            </span>
+                          </span>
+                        </button>
+                      </li>
+                    ))
+                  ) : (
+                    <li className="px-2 py-3 text-sm text-ink-muted">No matching records.</li>
+                  )
+                ) : (
+                  normalSuggestions.map((s, i) => (
+                    <li key={i}>
+                      <button
+                        type="button"
+                        className="flex w-full items-center gap-2.5 rounded-md px-2 py-1.5 text-left text-sm text-ink-muted interactive hover:bg-elevated hover:text-ink"
+                        onClick={() => goToResult(s)}
+                      >
+                        <Icon name={s.icon} size={15} className="shrink-0 text-ink-faint" />
+                        <span className="truncate">{s.label}</span>
+                      </button>
+                    </li>
+                  ))
+                )}
               </ul>
             </div>
           </div>

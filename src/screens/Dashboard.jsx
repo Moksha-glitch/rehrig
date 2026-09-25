@@ -566,13 +566,17 @@ export default function Dashboard({ variant = 'home' }) {
         overline={
           isAnalytics
             ? 'Analytics'
-            : `Home · ${now.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}`
+            : user?.segmentIds?.length
+              ? `Home — SP Segment Admin View · ${now.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}`
+              : `Home · ${now.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}`
         }
         title={isAnalytics ? 'Dashboards' : `Welcome, ${first}.`}
         description={
           isAnalytics
             ? analyticsDashboard?.description
-            : `${openWorkOrders.length} open work orders · ${activeDispatches.length} active dispatches`
+            : user?.segmentIds?.length
+              ? `${openWorkOrders.length} open work orders · ${activeDispatches.length} active dispatches · scoped to ${user.scopeLabel || 'assigned segments'}`
+              : `${openWorkOrders.length} open work orders · ${activeDispatches.length} active dispatches`
         }
         actions={
           <div className="flex flex-wrap items-center gap-2">

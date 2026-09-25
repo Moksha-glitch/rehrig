@@ -19,6 +19,7 @@ import {
   Table,
   TextInput,
   Toolbar,
+  activateRow,
 } from '../components/UI.jsx';
 import { RECORD_SCHEMAS } from '../data/recordSchemas.js';
 import { useStore } from '../state/AppStore.jsx';
@@ -398,7 +399,16 @@ export default function Devices() {
                 label="Device registry"
               >
                 {filtered.map((row) => (
-                  <tr key={row.id} className="interactive hover:bg-elevated/70">
+                  <tr
+                    key={row.id}
+                    className="interactive cursor-pointer hover:bg-elevated/70"
+                    onClick={(event) =>
+                      activateRow(event, () => {
+                        if (row.editable && canCreateRecords) openForm(row);
+                        else navigate(row.module, {});
+                      })
+                    }
+                  >
                     <td className="px-4 py-3.5">
                       {row.serial ? (
                         <span className="mono text-ink">{row.serial}</span>
@@ -408,13 +418,7 @@ export default function Devices() {
                     </td>
                     <td className="px-4 py-3.5 text-ink-muted">{row.type}</td>
                     <td className="px-4 py-3.5">
-                      <button
-                        type="button"
-                        className="link-brand text-left"
-                        onClick={() => navigate(row.module, {})}
-                      >
-                        {row.hostLabel}
-                      </button>
+                      <div className="font-medium text-ink">{row.hostLabel}</div>
                       {row.hostMeta && (
                         <div className="mt-0.5 text-xs text-ink-faint">{row.hostMeta}</div>
                       )}
@@ -434,34 +438,15 @@ export default function Devices() {
                       {row.tips ? ` · ${row.tips} tips` : ''}
                     </td>
                     <td className="px-4 py-3.5 text-right">
-                      {row.editable && canCreateRecords ? (
-                        <>
-                          <button
-                            type="button"
-                            className="link-brand mr-3 text-xs"
-                            onClick={() => openForm(row)}
-                          >
-                            {row.serial ? 'Replace' : 'Register'}
-                          </button>
-                          {row.serial && (
-                            <button
-                              type="button"
-                              className="text-xs text-danger hover:underline"
-                              onClick={() => setClearPending(row)}
-                            >
-                              Clear
-                            </button>
-                          )}
-                        </>
-                      ) : (
+                      {row.editable && canCreateRecords && row.serial ? (
                         <button
                           type="button"
-                          className="link-brand text-xs"
-                          onClick={() => navigate(row.module, {})}
+                          className="text-xs text-danger hover:underline"
+                          onClick={() => setClearPending(row)}
                         >
-                          Open source
+                          Clear
                         </button>
-                      )}
+                      ) : null}
                     </td>
                   </tr>
                 ))}

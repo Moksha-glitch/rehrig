@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useStore } from './state/AppStore.jsx';
 import { useAuth } from './state/AuthContext.jsx';
 import { useAccounts } from './hooks/useAccounts.js';
 import { useCompleteOnboarding } from './hooks/useOnboarding.js';
 import TopBar from './components/TopBar.jsx';
 import SideNav from './components/SideNav.jsx';
+import Breadcrumb from './components/Breadcrumb.jsx';
 import VisionChat from './components/VisionChat.jsx';
 import { Toast } from './components/UI.jsx';
 import Login from './screens/Login.jsx';
@@ -30,6 +31,8 @@ import Activity from './screens/Activity.jsx';
 import Notifications from './screens/Notifications.jsx';
 import ReportSubscriptions from './screens/ReportSubscriptions.jsx';
 import UserAccount from './screens/UserAccount.jsx';
+import Support from './screens/Support.jsx';
+import PicklistManagement from './screens/PicklistManagement.jsx';
 import { getErrorMessage } from './lib/errors.js';
 import { SearchModal } from './components/SearchModal.jsx';
 import { onboardingNavParams, parseOnboardingReturn } from './utils/appNavigation.js';
@@ -75,6 +78,8 @@ function Router({ onOnboard }) {
     tagScheme: 'tagScheme',
     apiIntegrations: 'apiIntegrations',
     notificationConfig: 'notificationConfig',
+    support: 'support',
+    picklists: 'picklists',
     onboarding: 'onboarding',
     contractOnboarding: 'contractOnboarding',
     setup: 'setup',
@@ -148,6 +153,10 @@ function Router({ onOnboard }) {
       return <MasterConfig configKey="apiIntegrations" />;
     case 'notificationConfig':
       return <MasterConfig configKey="notificationConfig" />;
+    case 'support':
+      return <Support />;
+    case 'picklists':
+      return <PicklistManagement />;
     case 'setup':
       if (params.section === 'profileMgmt') return <ProfileManagement />;
       return <Setup />;
@@ -258,25 +267,6 @@ export default function App() {
     }
   }, [sidebarOpen]);
 
-  const prevModuleRef = useRef(state.nav.module);
-  const wasLoggedIn = useRef(false);
-
-  useEffect(() => {
-    if (!state.currentUser) {
-      wasLoggedIn.current = false;
-      return;
-    }
-
-    const loggedInNow = !wasLoggedIn.current;
-    wasLoggedIn.current = true;
-
-    const previous = prevModuleRef.current;
-    prevModuleRef.current = state.nav.module;
-
-    if (loggedInNow) return;
-    if (previous !== state.nav.module) closeAssistant();
-  }, [state.currentUser, state.nav.module, closeAssistant]);
-
   const toggleSidebar = () => setSidebarOpen((open) => !open);
 
   const openOnboard = (draftId = null) => {
@@ -308,37 +298,25 @@ export default function App() {
         Skip to main content
       </a>
       {!isOnboarding && <SideNav open={sidebarOpen} onToggle={toggleSidebar} />}
-      {!isOnboarding && assistantOpen ? (
-        <VisionChat key={state.currentUser?.id || 'anon'} onOnboard={openOnboard} onClose={closeAssistant}>
-          {(agentPage) => (
-            <div className={`flex h-full min-h-0 min-w-0 flex-1 flex-col overflow-hidden ${agentPage ? '' : 'max-lg:hidden'}`}>
-              {agentPage || (
-                <>
-                  <TopBar />
-                  <main id="main-content" tabIndex={-1} className="min-h-0 flex-1 overflow-y-auto scroll-thin">
-                    <Router onOnboard={openOnboard} />
-                  </main>
-                </>
-              )}
-            </div>
-          )}
-        </VisionChat>
-      ) : (
-        <div className="flex min-h-0 min-w-0 flex-1 flex-col">
-          {!isOnboarding && <TopBar />}
-          <main
-            id="main-content"
-            tabIndex={-1}
-            className={
-              isOnboarding
-                ? 'flex min-h-0 flex-1 flex-col overflow-hidden'
-                : 'min-h-0 flex-1 overflow-y-auto scroll-thin'
-            }
-          >
-            <Router onOnboard={openOnboard} />
-          </main>
-        </div>
+      <div className="workspace-stage flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+        {!isOnboarding && <TopBar />}
+        {!isOnboarding && <Breadcrumb />}
+        <main
+          id="main-content"
+          tabIndex={-1}
+          className={
+            isOnboarding
+              ? 'flex min-h-0 flex-1 flex-col overflow-hidden'
+              : 'min-h-0 flex-1 overflow-y-auto scroll-thin'
+          }
+        >
+          <Router onOnboard={openOnboard} />
+        </main>
+      </div>
+      {!isOnboarding && assistantOpen && (
+        <VisionChat key={state.currentUser?.id || 'anon'} onOnboard={openOnboard} onClose={closeAssistant} />
       )}
+      {searchOpen && <SearchModal onClose={() => setSearchOpen(false)} />}
       <Toast message={state.toast} />
     </div>
   );

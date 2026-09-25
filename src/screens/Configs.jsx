@@ -20,6 +20,7 @@ import {
   Checkbox,
   ConfirmDialog,
   AsyncState,
+  activateRow,
 } from '../components/UI.jsx';
 import { useStore } from '../state/AppStore.jsx';
 import {
@@ -36,7 +37,7 @@ import { PICKLISTS } from '../data/picklists.js';
 
 const WASTE_STREAMS = PICKLISTS.productServiceType;
 const WASTE_STREAM_CATEGORIES = PICKLISTS.productServiceCategory;
-const LOCATION_CATEGORIES = ['Residential', 'Commercial', 'Industrial', 'Facility', 'Other'];
+const LOCATION_CATEGORIES = ['Residential', 'Commercial', 'Industrial', 'Public', 'Yard', 'Special', 'Facility', 'Other'];
 const ASSET_CATEGORIES = PICKLISTS.productFamily;
 
 const CONFIG_FIELDS = {
@@ -514,7 +515,18 @@ export function MasterConfig({ configKey }) {
           </Toolbar>
           <Table columns={meta.columns}>
             {filtered.map((row) => (
-              <tr key={row.id} className="interactive hover:bg-elevated/70">
+              <tr
+                key={row.id}
+                className="interactive cursor-pointer hover:bg-elevated/70"
+                onClick={(event) =>
+                  activateRow(event, () => {
+                    if (!canEdit) return;
+                    if (meta.kind === 'config') setEditing(emptyConfigForm(configKey, row));
+                    else if (meta.kind === 'api') openApiForm(row);
+                    else if (meta.kind === 'notif') openNotifForm(row);
+                  })
+                }
+              >
                 {meta.kind === 'notif' && (
                   <td className="px-4 py-3">
                     <Switch
@@ -575,49 +587,13 @@ export function MasterConfig({ configKey }) {
                 )}
                 {(meta.kind === 'config' || meta.kind === 'api' || meta.kind === 'notif') && (
                   <td className="px-4 py-3 text-right">
-                    {canEdit && meta.kind === 'config' && (
-                      <>
-                        <button
-                          type="button"
-                          className="link-brand mr-3 text-xs"
-                          onClick={() => setEditing(emptyConfigForm(configKey, row))}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          type="button"
-                          className="text-xs text-danger hover:underline"
-                          onClick={() => setDeletePending(row)}
-                        >
-                          Delete
-                        </button>
-                      </>
-                    )}
-                    {canEdit && meta.kind === 'api' && (
-                      <>
-                        <button
-                          type="button"
-                          className="link-brand mr-3 text-xs"
-                          onClick={() => openApiForm(row)}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          type="button"
-                          className="text-xs text-danger hover:underline"
-                          onClick={() => setDeletePending(row)}
-                        >
-                          Delete
-                        </button>
-                      </>
-                    )}
-                    {canEdit && meta.kind === 'notif' && (
+                    {canEdit && (meta.kind === 'config' || meta.kind === 'api') && (
                       <button
                         type="button"
-                        className="link-brand text-xs"
-                        onClick={() => openNotifForm(row)}
+                        className="text-xs text-danger hover:underline"
+                        onClick={() => setDeletePending(row)}
                       >
-                        Edit
+                        Delete
                       </button>
                     )}
                   </td>

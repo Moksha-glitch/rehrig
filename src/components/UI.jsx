@@ -6,10 +6,25 @@ import Icon from './Icon.jsx';
 export function Page({ children, wide = false, className = '' }) {
   return (
     <div
-      className={`mx-auto min-w-0 w-full max-w-screen-2xl animate-fade-up px-5 py-6 sm:px-7 sm:py-8 lg:px-10 lg:py-10 ${className}`}
+      className={`mx-auto min-w-0 w-full max-w-screen-2xl px-5 py-6 sm:px-7 sm:py-8 lg:px-10 lg:py-10 ${className}`}
     >
       {children}
     </div>
+  );
+}
+
+export function WorkspaceSheet({
+  open = true,
+  title,
+  description,
+  onClose,
+  children,
+  extraWide = true,
+}) {
+  return (
+    <Drawer open={open} extraWide={extraWide} title={title} description={description} onClose={onClose}>
+      <div className="min-h-0 flex-1 overflow-y-auto scroll-thin">{children}</div>
+    </Drawer>
   );
 }
 
@@ -573,6 +588,19 @@ export function Tabs({ items, value, onChange, label = 'Sections', className = '
       })}
     </div>
   );
+}
+
+export function isRowControlClick(event) {
+  return Boolean(
+    event.target.closest(
+      'button, a, input, select, textarea, label, [role="menuitem"], [data-stop-row]'
+    )
+  );
+}
+
+export function activateRow(event, onActivate) {
+  if (!onActivate || isRowControlClick(event)) return;
+  onActivate();
 }
 
 export function Table({ columns, children, className = '', caption, label }) {

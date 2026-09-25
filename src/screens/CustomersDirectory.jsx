@@ -8,9 +8,10 @@ import {
   Toolbar,
   SearchField,
   AsyncState,
+  activateRow,
 } from '../components/UI.jsx';
 import { useStore } from '../state/AppStore.jsx';
-import { useAccounts, useUsers } from '../hooks/useAccounts.js';
+import { useAccounts, useSegments, useUsers } from '../hooks/useAccounts.js';
 import { getErrorMessage } from '../lib/errors.js';
 
 export default function CustomersDirectory() {
@@ -18,12 +19,17 @@ export default function CustomersDirectory() {
   const [quickView, setQuickView] = useState(null);
   const accountsQuery = useAccounts();
   const usersQuery = useUsers();
+  const segmentsQuery = useSegments();
   const [q, setQ] = useState('');
   const compact = assistantOpen;
   const accounts = accountsQuery.data || [];
   const accById = useMemo(
     () => Object.fromEntries(accounts.map((account) => [account.id, account])),
     [accounts]
+  );
+  const segById = useMemo(
+    () => Object.fromEntries((segmentsQuery.data || []).map((segment) => [segment.id, segment])),
+    [segmentsQuery.data]
   );
 
   const customers = useMemo(
@@ -36,7 +42,11 @@ export default function CustomersDirectory() {
       .map((id) => accById[id]?.name)
       .filter(Boolean)
       .join(' ');
-    return [customer.name, customer.email, customer.customerId, customer.scopeLabel, providerNames].some(
+    const segmentNames = (customer.segmentIds || [])
+      .map((id) => segById[id]?.name || segById[id]?.segmentName)
+      .filter(Boolean)
+      .join(' ');
+    return [customer.name, customer.email, customer.customerId, customer.scopeLabel, customer.segment, providerNames, segmentNames].some(
       (value) => String(value || '').toLowerCase().includes(q.trim().toLowerCase())
     );
   });
@@ -78,6 +88,7 @@ export default function CustomersDirectory() {
               'Customer Name',
               { label: 'Email', className: compact ? 'hidden' : '' },
               'Service Provider',
+              'Segment',
               { label: 'Scope', className: compact ? 'hidden' : '' },
               'Status',
             ]}
@@ -85,24 +96,31 @@ export default function CustomersDirectory() {
             {rows.map((customer) => {
               const provider =
                 (customer.accountIds || []).map((id) => accById[id]).find(Boolean) || null;
+              const segmentLabel =
+                (customer.segmentIds || [])
+                  .map((id) => segById[id]?.name || segById[id]?.segmentName)
+                  .filter(Boolean)
+                  .join(', ') ||
+                customer.segment ||
+                '—';
               return (
-                <tr key={customer.id} className="interactive hover:bg-elevated/70">
+                <tr
+                  key={customer.id}
+                  className="interactive cursor-pointer hover:bg-elevated/70"
+                  onClick={(event) =>
+                    activateRow(event, () =>
+                      navigate('accountDetail', {
+                        accountId: provider?.id || customer.accountIds?.[0],
+                        tab: 'customers',
+                      })
+                    )
+                  }
+                >
                   <td className="mono px-4 py-3.5 text-ink-muted sm:px-5">
                     {customer.customerId || '—'}
                   </td>
-                  <td className="min-w-0 px-4 py-3.5 sm:px-5">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        navigate('accountDetail', {
-                          accountId: provider?.id || customer.accountIds?.[0],
-                          tab: 'customers',
-                        })
-                      }
-                      className="link-brand max-w-full truncate text-left font-medium"
-                    >
-                      {customer.name}
-                    </button>
+                  <td className="min-w-0 truncate px-4 py-3.5 font-medium text-ink sm:px-5">
+                    {customer.name}
                   </td>
                   <td
                     className={`max-w-[14rem] truncate px-4 py-3.5 text-ink-muted sm:px-5 ${
@@ -113,6 +131,9 @@ export default function CustomersDirectory() {
                   </td>
                   <td className="max-w-[12rem] truncate px-4 py-3.5 text-ink-muted sm:px-5">
                     {provider?.name || '—'}
+                  </td>
+                  <td className="max-w-[12rem] truncate px-4 py-3.5 text-ink-muted sm:px-5">
+                    {segmentLabel}
                   </td>
                   <td
                     className={`max-w-[8rem] truncate px-4 py-3.5 text-ink-muted sm:px-5 ${
@@ -132,7 +153,7 @@ export default function CustomersDirectory() {
             {!rows.length && (
               <tr>
                 <td
-                  colSpan={compact ? 4 : 6}
+                  colSpan={compact ? 5 : 7}
                   className="px-4 py-8 text-center text-sm text-ink-faint"
                 >
                   {q ? 'No customers match this search.' : 'No customers are available.'}

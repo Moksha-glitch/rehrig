@@ -576,6 +576,25 @@ a {
   animation: fade-up 280ms var(--ease-out) both;
 }
 
+.workspace-stage {
+  min-width: 0;
+}
+
+.vision-dock {
+  animation: dock-in 220ms var(--ease-out) both;
+}
+
+@keyframes dock-in {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 .loading-spinner {
   width: 1rem;
   height: 1rem;

@@ -1,4 +1,17 @@
 // Seed fixtures for Vision Pulse (Spec Ch.1, Ch.12, Ch.21, Ch.23).
+import {
+  enrichAccounts,
+  enrichContacts,
+  mapHtmlApiIntegrations,
+  mapHtmlAssetTypes,
+  mapHtmlDevices,
+  mapHtmlLocationTypes,
+  mapHtmlNotificationConfig,
+  mapHtmlProductTypes,
+  mapHtmlServiceTypes,
+  mapHtmlTagSchemes,
+  mapHtmlTruckTypes,
+} from './v63SeedAdapters.js';
 
 // ---- Seed users across the three personas (Ch.1) ----
 export const USERS = [
@@ -13,29 +26,31 @@ export const USERS = [
   { id: 'u-skami', alias: 'skami', name: 'Sarah Kaminski', firstName: 'Sarah', email: 'sarah@vision.io', persona: 'sp', role: 'Dispatcher', scopeLabel: 'Toronto Waste Services only', active: true, accountIds: ['acc-212883'], segmentIds: [] },
   { id: 'u-jortiz', alias: 'jortiz', name: 'Jordan Ortiz', firstName: 'Jordan', email: 'jordan@vision.io', persona: 'sp', role: 'Maintenance Admin', scopeLabel: 'Edmonton AB only', active: true, accountIds: ['acc-212880'], segmentIds: [] },
   { id: 'u-rmedam', alias: 'rmedam', name: 'Ravindra Medam', firstName: 'Ravindra', email: 'ravi.medam@vision.io', persona: 'sp', role: 'Admin', scopeLabel: 'All accounts', active: true, accountIds: [], segmentIds: [] },
+  { id: 'u-lchen', alias: 'lchen', name: 'Lena Chen', firstName: 'Lena', email: 'lena@vision.io', persona: 'sp', role: 'Segment Admin', scopeLabel: 'Downtown District only', active: true, accountIds: ['acc-212880'], segmentIds: ['seg-3'] },
+  { id: 'u-jweth', alias: 'jweth', name: 'Janeal Wetherbee', firstName: 'Janeal', email: 'janeal.wetherbee@edmontonab.example.com', persona: 'sp', role: 'Service Provider User', scopeLabel: 'Edmonton AB', active: true, accountIds: ['acc-212880'], segmentIds: [] },
   // customer persona
-  { id: 'u-sobrien', alias: 'sobrien', name: "Sam O'Brien", firstName: 'Sam', email: 'sam@vision.io', persona: 'customer', role: 'Portal User', scopeLabel: 'Edmonton AB', active: true, accountIds: ['acc-212880'], segmentIds: [], customerId: 'cust-1001' },
-  { id: 'u-npetrov', alias: 'npetrov', name: 'Nadia Petrov', firstName: 'Nadia', email: 'nadia@vision.io', persona: 'customer', role: 'Portal User', scopeLabel: 'Edmonton AB', active: true, accountIds: ['acc-212880'], segmentIds: [], customerId: 'cust-1002' },
+  { id: 'u-sobrien', alias: 'sobrien', name: "Sam O'Brien", firstName: 'Sam', email: 'sam.obrien@example.com', persona: 'customer', role: 'Portal User', scopeLabel: 'Edmonton AB', active: true, accountIds: ['acc-212880'], segmentIds: ['seg-2'], customerId: 'C-4765577', segment: 'Edmonton AB' },
+  { id: 'u-npetrov', alias: 'npetrov', name: 'Nadia Petrov', firstName: 'Nadia', email: 'n.petrov@example.com', persona: 'customer', role: 'Portal User', scopeLabel: 'Edmonton AB', active: true, accountIds: ['acc-212880'], segmentIds: ['seg-2'], customerId: 'C-4765578', segment: 'Edmonton AB' },
 ];
 
 // ---- The six existing Service Provider accounts (Ch.23) ----
-export const ACCOUNTS = [
+const SEED_ACCOUNTS = [
   {
     id: 'acc-212880',
     name: 'Edmonton AB',
     uid: '212880',
     type: 'Customer',
-    industry: 'Municipal',
-    phone: '(780) 555-0110',
+    industry: 'Finance',
+    phone: '(886) 742-8232',
     owner: 'ywagn',
     ownerName: 'Yolanda Wagner',
-    website: 'edmonton.ca',
-    description: 'Municipal waste services for the City of Edmonton.',
-    employees: 240,
+    website: 'support.rehrigpacific.com',
+    description: 'Edmonton Account',
+    employees: 220,
     numberOfWeeks: 52,
-    jdEdwardsId: '',
+    jdEdwardsId: '205024',
     serviceTypes: ['Commercial', 'Residential'],
-    serviceModules: 'WO, Dispatch, Tips, Notifications',
+    serviceModules: 'WO, Dispatch, Tips',
     hardwareType: 'RFID + Arm-lift',
     trackObservations: true,
     trackSafetyEvents: true,
@@ -45,14 +60,14 @@ export const ACCOUNTS = [
     enableMoveBurntCarts: true,
     isTableauCloud: true,
     inactive: false,
-    supportEmail: 'support@edmonton.ca',
+    supportEmail: 'rehrigtechsupport@rehrig.com',
     notif: {
       enableTab: true, send: true, messageLimit: 1, timeZone: 'Asia/Kolkata',
       startTime: '08:00', endTime: '19:00', emailSendTime: '22:56', smsSendTime: '15:00',
       smsFailed: false, phoneFailed: false, sendGridFailed: false,
     },
-    billing: { country: 'Canada', street: '9803 102A Ave NW', city: 'Edmonton', state: 'Alberta', zip: 'T5J 3A3' },
-    shipping: { country: 'Canada', street: '9803 102A Ave NW', city: 'Edmonton', state: 'Alberta', zip: 'T5J 3A3' },
+    billing: { country: 'Canada', street: '12802 58th Street NW', city: 'Edmonton', state: 'Alberta', zip: 'T5A 4L3' },
+    shipping: { country: 'Canada', street: '12804 58th Street NW', city: 'Edmonton', state: 'Alberta', zip: 'T5A 4L3' },
     paymentRequired: false,
     apiIntegrated: false,
     onboardingComplete: true,
@@ -67,14 +82,14 @@ export const ACCOUNTS = [
     uid: '212881',
     type: 'Customer',
     industry: 'Municipal',
-    phone: '(403) 555-0134',
-    owner: 'rmedam',
-    ownerName: 'Ravindra Medam',
-    website: 'calgarymetrowaste.ca',
-    description: 'Residential recycling and organics for Calgary metro.',
-    employees: 180,
+    phone: '(403) 555-0142',
+    owner: 'mchen',
+    ownerName: 'Marcus Chen',
+    website: 'calgarymetro.ca',
+    description: 'Calgary municipal contract',
+    employees: 140,
     numberOfWeeks: 52,
-    jdEdwardsId: '',
+    jdEdwardsId: '205025',
     serviceTypes: ['Residential'],
     serviceModules: 'WO, Dispatch',
     hardwareType: 'RFID',
@@ -106,9 +121,9 @@ export const ACCOUNTS = [
     id: 'acc-212882',
     name: 'Vancouver Sanitation Co',
     uid: '212882',
-    type: 'Customer',
+    type: 'Prospect',
     industry: 'Environmental',
-    phone: '(604) 555-0158',
+    phone: '(604) 555-8891',
     owner: 'rmedam',
     ownerName: 'Ravindra Medam',
     website: 'vansanitation.co',
@@ -149,14 +164,14 @@ export const ACCOUNTS = [
     uid: '212883',
     type: 'Customer',
     industry: 'Municipal',
-    phone: '(416) 555-0172',
-    owner: 'rmedam',
-    ownerName: 'Ravindra Medam',
-    website: 'torontowaste.ca',
-    description: 'Commercial and residential collection across Toronto.',
-    employees: 320,
+    phone: '(416) 555-2100',
+    owner: 'ywagn',
+    ownerName: 'Yolanda Wagner',
+    website: 'torontows.ca',
+    description: 'Toronto commercial + residential',
+    employees: 310,
     numberOfWeeks: 52,
-    jdEdwardsId: '',
+    jdEdwardsId: '205027',
     serviceTypes: ['Commercial', 'Residential'],
     serviceModules: 'WO, Dispatch, Tips, Notifications, Payments',
     hardwareType: 'RFID + Arm-lift',
@@ -190,14 +205,14 @@ export const ACCOUNTS = [
     uid: '212884',
     type: 'Customer',
     industry: 'Environmental',
-    phone: '(204) 555-0193',
-    owner: 'rmedam',
-    ownerName: 'Ravindra Medam',
-    website: 'winnipeggreenbins.ca',
-    description: 'Residential green bin program for Winnipeg.',
-    employees: 60,
+    phone: '(204) 555-7712',
+    owner: 'mchen',
+    ownerName: 'Marcus Chen',
+    website: 'wpggreenbins.ca',
+    description: 'Residential only - inactive contract',
+    employees: 45,
     numberOfWeeks: 52,
-    jdEdwardsId: '',
+    jdEdwardsId: '205028',
     serviceTypes: ['Residential'],
     serviceModules: '',
     hardwareType: 'None',
@@ -231,14 +246,14 @@ export const ACCOUNTS = [
     uid: '212885',
     type: 'Customer',
     industry: 'Municipal',
-    phone: '(703) 555-0217',
+    phone: '(703) 555-9100',
     owner: 'ywagn',
     ownerName: 'Yolanda Wagner',
     website: 'fairfaxcounty.gov',
-    description: 'Residential collection for Fairfax County, Virginia.',
-    employees: 210,
+    description: 'Payment-gated resident portal',
+    employees: 180,
     numberOfWeeks: 52,
-    jdEdwardsId: '',
+    jdEdwardsId: '205029',
     serviceTypes: ['Residential'],
     serviceModules: 'WO, Dispatch, Payments',
     hardwareType: 'RFID',
@@ -268,87 +283,50 @@ export const ACCOUNTS = [
   },
 ];
 
+export const ACCOUNTS = enrichAccounts(SEED_ACCOUNTS);
+
 // ---- Master Product Catalog (Ch.12, Ch.21) ----
 export const MASTER_CATALOG = [
   { code: 'MPR-001', name: '120 Liter Trash', family: 'Roll-Out Cart', serviceType: 'Trash', category: 'Residential', size: '120 L', active: true },
   { code: 'MPR-002', name: '240 Liter Trash', family: 'Roll-Out Cart', serviceType: 'Trash', category: 'Residential', size: '240 L', active: true },
-  { code: 'MPR-003', name: '360 Liter Organics', family: 'Universal Cart', serviceType: 'Organics', category: 'Residential', size: '360 L', active: true },
+  { code: 'MPR-003', name: '360 Liter Organics Universal Cart', family: 'Universal Cart', serviceType: 'Organics', category: 'Residential', size: '360 L', active: true },
   { code: 'MPR-004', name: '96 Gallon Trash', family: 'Roll-Out Cart', serviceType: 'Trash', category: 'Residential', size: '96 gal', active: true },
   { code: 'MPR-005', name: '3 YD Garbage Bin Trash', family: 'Bin', serviceType: 'Trash', category: 'Commercial', size: '3 YD', active: true },
   { code: 'MPR-006', name: '4 YD Garbage Bin Trash', family: 'Bin', serviceType: 'Trash', category: 'Commercial', size: '4 YD', active: true },
   { code: 'MPR-007', name: '3 YD Recycle Bin Recycling', family: 'Bin', serviceType: 'Recycling', category: 'Commercial', size: '3 YD', active: true },
-  { code: 'MPR-008', name: '1100 Liter Universal', family: 'Universal Cart', serviceType: 'Industrial', category: 'Industrial', size: '1100 L', active: true },
+  { code: 'MPR-008', name: '1100 Liter Universal', family: 'Bulk Container', serviceType: 'Multi', category: 'Industrial', size: '1100 L', active: true },
 ];
 
 // Products shown on Wizard Step 5 (Ch.12.1 - six products)
 export const WIZARD_PRODUCTS = ['MPR-001', 'MPR-002', 'MPR-004', 'MPR-005', 'MPR-006', 'MPR-007'];
 
 // ---- API Integrations at launch (Ch.21.5) ----
-export const API_INTEGRATIONS = [
-  { id: 'api-1', name: 'Calgary Metro Waste', endpoint: '/api/v1/workorder', status: 'Active', calls30d: 1420 },
-  { id: 'api-2', name: 'Toronto Waste Services', endpoint: '/api/v1/workorder', status: 'Active', calls30d: 3218 },
-  { id: 'api-3', name: 'Unknown (Legacy)', endpoint: '/api/v1/workorder', status: 'Suspected', calls30d: 22 },
-];
+export const API_INTEGRATIONS = mapHtmlApiIntegrations();
 
 // ---- Service Notification Config rules (Ch.21, Ch.21.6) ----
-export const NOTIFICATION_CONFIG = [
-  { id: 'nc-1', enabled: true, name: 'Work Order Completed', event: 'work_order.completed', channel: 'SMS', priority: 'High' },
-  { id: 'nc-2', enabled: true, name: 'Delivery Scheduled', event: 'work_order.delivery_scheduled', channel: 'Email', priority: 'Medium' },
-  { id: 'nc-3', enabled: true, name: 'Missed Pickup Reported', event: 'work_order.missed_pickup', channel: 'SMS', priority: 'High' },
-  { id: 'nc-4', enabled: false, name: 'Route Delayed', event: 'route.delayed', channel: 'Email', priority: 'Low' },
-  { id: 'nc-5', enabled: true, name: 'Cart Delivered', event: 'asset.delivered', channel: 'Phone', priority: 'Medium' },
-];
+export const NOTIFICATION_CONFIG = mapHtmlNotificationConfig();
 
-// ---- Master configuration vocabularies (Ch.21) ----
-export const CONFIG_SERVICE_TYPES = [
-  { id: 'st-1', name: 'Residential', description: 'Households; route-based collection.' },
-  { id: 'st-2', name: 'Commercial', description: 'Businesses; on-demand or contract.' },
-  { id: 'st-3', name: 'Industrial', description: 'Large sites; roll-off / front-load.' },
-];
-export const CONFIG_LOCATION_TYPES = [
-  { id: 'lt-1', name: 'Single-Family Home', description: 'Detached residential property' },
-  { id: 'lt-2', name: 'Multi-Family Home', description: 'Duplex, triplex, or similar' },
-  { id: 'lt-3', name: 'Town Home', description: 'Terraced or town house' },
-  { id: 'lt-4', name: 'Apartment', description: 'Apartment or condo building' },
-  { id: 'lt-5', name: 'Commercial Business', description: 'Any commercial service address' },
-  { id: 'lt-6', name: 'Yard', description: 'SP facility or depot' },
-  { id: 'lt-7', name: 'Site', description: 'Industrial or construction site' },
-  { id: 'lt-8', name: 'Rehrig Manufacturing', description: 'Rehrig own facility — used internally' },
-  { id: 'lt-9', name: 'Other Yard', description: 'External third-party depot' },
-  { id: 'lt-10', name: 'UNASSIGNED-WOIT', description: 'Catch-all for unmatched geocoding imports' },
-];
-export const CONFIG_ASSET_TYPES = [
-  { id: 'at-1', name: 'Roll-Out Cart', description: 'Standard wheeled residential cart' },
-  { id: 'at-2', name: 'Universal Cart', description: 'Multi-stream universal cart' },
-  { id: 'at-3', name: 'Cart Bi-Weekly', description: 'Cart on a bi-weekly cycle' },
-  { id: 'at-4', name: 'Industrial Container', description: 'Large industrial container' },
-  { id: 'at-5', name: 'Self Contained Compactor', description: 'Compactor with integrated container' },
-  { id: 'at-6', name: 'Break Away Compactor', description: 'Detachable compactor unit' },
-  { id: 'at-7', name: 'IC Container', description: 'Intermediate container' },
-  { id: 'at-8', name: 'Pickup', description: 'Pickup vehicle asset' },
-  { id: 'at-9', name: 'Compactor', description: 'Standalone compactor' },
-  { id: 'at-10', name: 'Roll Off', description: 'Roll-off container' },
-  { id: 'at-11', name: 'Bin', description: 'Front-load / rear-load bin' },
-];
-export const CONFIG_PRODUCT_TYPES = CONFIG_ASSET_TYPES.map((t, i) => ({ id: 'pt-' + (i + 1), name: t.name, description: t.description }));
-export const CONFIG_DEVICES = [
-  { id: 'dev-1', name: 'RFID Arm Reader', code: 'RFID-ARM', type: 'RFID Reader', manufacturer: 'Rehrig', isActive: true, description: 'Side-arm RFID reader for residential carts.' },
-  { id: 'dev-2', name: 'All-in-one Telematics', code: 'AIO-TEL', type: 'All-in-one', manufacturer: 'Samsara', isActive: true, description: 'Combined GPS, camera and tip sensor unit.' },
-  { id: 'dev-3', name: 'Yard Handheld', code: 'HH-YARD', type: 'Other', manufacturer: 'Zebra', isActive: true, description: 'Handheld scanner used in maintenance yards.' },
-];
-export const CONFIG_TRUCKS = [
-  { id: 'trkcfg-1', name: 'Residential Side Loader', code: 'RSL', type: 'Side Loader', isActive: true, description: 'Automated side-load truck for cart collection.' },
-  { id: 'trkcfg-2', name: 'Commercial Front Loader', code: 'CFL', type: 'Front Loader', isActive: true, description: 'Front-load truck for commercial bins.' },
-  { id: 'trkcfg-3', name: 'Roll-Off Hauler', code: 'ROH', type: 'Roll-Off', isActive: true, description: 'Roll-off truck for industrial containers.' },
-];
+// ---- Master configuration vocabularies from V6.3 ----
+export const CONFIG_SERVICE_TYPES = mapHtmlServiceTypes();
+export const CONFIG_LOCATION_TYPES = mapHtmlLocationTypes();
+export const CONFIG_ASSET_TYPES = mapHtmlAssetTypes();
+export const CONFIG_PRODUCT_TYPES = mapHtmlProductTypes();
+export const CONFIG_DEVICES = mapHtmlDevices();
+export const CONFIG_TRUCKS = mapHtmlTruckTypes();
+export const CONFIG_TAG_SCHEMES = mapHtmlTagSchemes();
 
 // ---- Related records for account detail tabs ----
-export const CONTACTS = [
-  { id: 'con-1', accountId: 'acc-212880', salutation: 'Ms.', firstName: 'Yolanda', lastName: 'Wagner', name: 'Yolanda Wagner', email: 'yolanda@vision.io', phone: '(780) 555-0110', mobile: '(780) 555-2001', title: 'Operations Director', roleTitle: 'Service Provider Admin', segment: 'Edmonton AB Top', segmentId: 'seg-1', isUserCreated: true, isUserActive: true },
-  { id: 'con-2', accountId: 'acc-212880', salutation: 'Mr.', firstName: 'David', lastName: 'Thornton', name: 'David Thornton', email: 'david@vision.io', phone: '(780) 555-0110', mobile: '(780) 555-2002', title: 'Field Technician', roleTitle: 'Field Tech', segment: 'Hauler 1', segmentId: 'seg-2', isUserCreated: true, isUserActive: true },
-  { id: 'con-3', accountId: 'acc-212880', salutation: 'Mr.', firstName: 'Marcus', lastName: 'Chen', name: 'Marcus Chen', email: 'marcus@vision.io', phone: '(780) 555-0110', mobile: '(780) 555-2003', title: 'Ops Manager', roleTitle: 'Maintenance Admin', segment: 'Downtown District', segmentId: 'seg-3', isUserCreated: true, isUserActive: false },
-  { id: 'con-4', accountId: 'acc-212883', salutation: 'Ms.', firstName: 'Sarah', lastName: 'Kaminski', name: 'Sarah Kaminski', email: 'sarah@vision.io', phone: '(416) 555-0172', mobile: '(416) 555-3001', title: 'Dispatch Lead', roleTitle: 'Dispatcher', segment: 'Toronto Top', segmentId: 'seg-10', isUserCreated: true, isUserActive: true },
+const SEED_CONTACTS = [
+  { id: 'CON-001', accountId: 'acc-212880', salutation: 'Ms.', firstName: 'Yolanda', lastName: 'Wagner', name: 'Yolanda Wagner', email: 'y.wagner@edmontonab.ca', phone: '(886) 742-8232', mobile: '(780) 555-1122', title: 'Ops Director', roleTitle: 'Service Provider Admin', segment: 'Edmonton AB', segmentId: 'seg-2', isUserCreated: true, isUserActive: true, department: 'Operations' },
+  { id: 'CON-002', accountId: 'acc-212880', salutation: 'Mr.', firstName: 'David', lastName: 'Thornton', name: 'David Thornton', email: 'd.thornton@edmontonab.ca', phone: '(886) 742-8241', mobile: '(780) 555-3344', title: 'Route Supervisor', roleTitle: 'Maintenance Admin', segment: 'Hauler 1', segmentId: 'seg-3', isUserCreated: true, isUserActive: true, department: 'Field Ops', reportsTo: 'Yolanda Wagner' },
+  { id: 'CON-003', accountId: 'acc-212880', salutation: 'Mr.', firstName: 'Kevin', lastName: 'Abrams', name: 'Kevin Abrams', email: 'kabrams@edmontonab.ca', phone: '(886) 742-8250', mobile: '', title: 'VP Operations', roleTitle: 'Top-Level Executive', segment: 'Hauler 2', segmentId: 'seg-4', isUserCreated: false, isUserActive: false, department: 'Executive' },
+  { id: 'CON-004', accountId: 'acc-212880', salutation: 'Ms.', firstName: 'Nadia', lastName: 'Aimal', name: 'Nadia Aimal', email: 'n.aimal@edmontonab.ca', phone: '(886) 742-8232', mobile: '', title: 'Fleet Coordinator', roleTitle: 'Maintenance Admin', segment: 'Edmonton AB Communal', segmentId: 'seg-6', isUserCreated: true, isUserActive: true, department: 'Operations', reportsTo: 'Yolanda Wagner' },
+  { id: 'CON-005', accountId: 'acc-212881', salutation: 'Mr.', firstName: 'Marcus', lastName: 'Chen', name: 'Marcus Chen', email: 'm.chen@calgarymetro.ca', phone: '(403) 555-0142', mobile: '(403) 555-2200', title: 'Fleet Manager', roleTitle: 'Service Provider Admin', segment: 'Calgary Metro', segmentId: 'seg-20', isUserCreated: true, isUserActive: true, department: 'Operations' },
+  { id: 'CON-006', accountId: 'acc-212883', salutation: 'Ms.', firstName: 'Sarah', lastName: 'Kaminski', name: 'Sarah Kaminski', email: 's.kaminski@torontows.ca', phone: '(416) 555-2101', mobile: '(416) 555-3011', title: 'Senior Dispatcher', roleTitle: 'Dispatcher', segment: 'Toronto Central', segmentId: 'seg-31', isUserCreated: true, isUserActive: true, department: 'Dispatch' },
+  { id: 'CON-007', accountId: 'acc-212882', salutation: 'Ms.', firstName: 'Priya', lastName: 'Ramanathan', name: 'Priya Ramanathan', email: 'p.raman@vansan.com', phone: '(604) 555-8891', mobile: '', title: 'General Manager', roleTitle: 'Top-Level Executive', segment: 'Vancouver West', segmentId: 'seg-41', isUserCreated: true, isUserActive: true, department: 'Executive' },
 ];
+
+export const CONTACTS = enrichContacts(SEED_CONTACTS);
 
 export const SEGMENTS = [
   // Edmonton AB (acc-212880)
@@ -358,9 +336,8 @@ export const SEGMENTS = [
   { id: 'seg-4', accountId: 'acc-212880', name: 'Hauler 2', segmentName: 'Hauler 2', shortName: 'H2', type: 'District', parentId: 'seg-1', delaySharing: false, delayDuration: 0, publicGroupId: '00G4M000002L2pWCL' },
   { id: 'seg-5', accountId: 'acc-212880', name: 'Hauler 5', segmentName: 'Hauler 5', shortName: 'H5', type: 'District', parentId: 'seg-1', delaySharing: false, delayDuration: 0, publicGroupId: '00G4M000002M3qXDM' },
   { id: 'seg-6', accountId: 'acc-212880', name: 'Edmonton AB Communal', segmentName: 'Edmonton AB Communal', shortName: 'EDM-COM', type: 'Division', parentId: 'seg-1', delaySharing: false, delayDuration: 0, publicGroupId: '00G4M000002N4rYEN' },
-  { id: 'seg-7', accountId: 'acc-212880', name: 'Downtown District', segmentName: 'Downtown District', shortName: 'DT', type: 'District', parentId: 'seg-2', delaySharing: false, delayDuration: 0, publicGroupId: '00G4M000002O5sZFO' },
-  { id: 'seg-8', accountId: 'acc-212880', name: 'Division A', segmentName: 'Division A', shortName: 'DIV-A', type: 'Division', parentId: 'seg-7', delaySharing: true, delayDuration: 300, publicGroupId: '00G4M000002P6tAGP' },
-  
+  { id: 'seg-9', accountId: 'acc-212880', name: 'Test0420', segmentName: 'Test0420', shortName: 'T0420', type: 'Division', parentId: 'seg-2', delaySharing: false, delayDuration: 0, publicGroupId: '' },
+ 
   // Calgary Metro Waste (acc-212881)
   { id: 'seg-20', accountId: 'acc-212881', name: 'Calgary Metro', segmentName: 'Calgary Metro', shortName: 'CAL-TOP', type: 'Top', parentId: null, delaySharing: false, delayDuration: 0, publicGroupId: '00G4M000002Q7uBHQ' },
   { id: 'seg-21', accountId: 'acc-212881', name: 'Calgary North', segmentName: 'Calgary North', shortName: 'CAL-N', type: 'Market Area', parentId: 'seg-20', delaySharing: false, delayDuration: 0, publicGroupId: '00G4M000002R8vCIR' },
@@ -383,15 +360,25 @@ export const SEGMENTS = [
 ];
 
 export const ROUTES = [
-  { id: 'rt-1', accountId: 'acc-212880', routeNumber: 'R-201', recordType: 'Collection', dispatch: 'D-72110', routeUID: 'UID-R201', duration: '8h', startTime: '06:30', truck: 'TRK-201', driver: 'David Thornton', status: 'Planned', collectionType: 'Trash', collectionDays: 'Monday, Wednesday, Friday', expectedContainers: 420 },
-  { id: 'rt-2', accountId: 'acc-212880', routeNumber: 'R-202', recordType: 'Collection', dispatch: 'D-72114', routeUID: 'UID-R202', duration: '6h', startTime: '07:00', truck: 'TRK-102', driver: 'Ravi Nair', status: 'In Progress', collectionType: 'Recycle', collectionDays: 'Tuesday, Saturday', expectedContainers: 310 },
+  { id: 'RTE-R014', accountId: 'acc-212880', routeNumber: 'FRI-MILL-2', recordType: 'Collection', dispatch: 'D-71628', routeUID: 'UID-R014', duration: '8h', startTime: '05:40', truck: 'TRK-101', driver: 'Frank Delaney', status: 'In Progress', collectionType: 'Trash', collectionDays: 'Friday', expectedContainers: 342, segment: 'Edmonton AB' },
+  { id: 'RTE-TUE2', accountId: 'acc-212880', routeNumber: 'TUE-2', recordType: 'Collection', dispatch: 'D-71678', routeUID: 'UID-TUE2', duration: '8h', startTime: '05:45', truck: 'TRK-102', driver: 'Ravi Nair', status: 'In Progress', collectionType: 'Recycle', collectionDays: 'Tuesday', expectedContainers: 88, segment: 'Edmonton AB' },
+  { id: 'RTE-WED1', accountId: 'acc-212880', routeNumber: 'WED-1', recordType: 'Collection', dispatch: 'D-72110', routeUID: 'UID-WED1', duration: '9h', startTime: '06:00', truck: 'TRK-201', driver: '', status: 'Planned', collectionType: 'Recycle', collectionDays: 'Wednesday', expectedContainers: 411, segment: 'Edmonton AB' },
+  { id: 'RTE-M1', accountId: 'acc-212880', routeNumber: 'MAINT-1', recordType: 'Maintenance', dispatch: 'D-72425', routeUID: 'UID-M1', duration: '6h', startTime: '07:00', truck: 'TRK-103', driver: 'David Thornton', status: 'Draft', collectionType: '', collectionDays: 'Monday,Wednesday,Friday', expectedContainers: 24, segment: 'Hauler 3' },
+  { id: 'RTE-R033', accountId: 'acc-212881', routeNumber: 'SAT-1', recordType: 'Collection', dispatch: 'D-72540', routeUID: 'UID-SAT1', duration: '10h', startTime: '05:30', truck: 'TRK-201', driver: '', status: 'Draft', collectionType: 'Trash', collectionDays: 'Saturday', expectedContainers: 220, segment: 'Calgary Metro' },
 ];
 
 export const PRODUCTS_BY_ACCOUNT = {
   'acc-212880': [
-    { id: 'spp-1', number: 'SPP-000101', code: 'MPR-001', product: '120 Liter Trash', size: '120 L', sizeType: 'Liter', category: 'Residential', family: 'Roll-Out Cart' },
-    { id: 'spp-2', number: 'SPP-000102', code: 'MPR-004', product: '96 Gallon Trash', size: '96 gal', sizeType: 'Gallon', category: 'Residential', family: 'Roll-Out Cart' },
-    { id: 'spp-3', number: 'SPP-000103', code: 'MPR-007', product: '3 YD Recycle Bin Recycling', size: '3 YD', sizeType: 'Yard', category: 'Commercial', family: 'Bin' },
+    { id: 'SPP-5749', number: 'SPP-5749', code: '120LiterTrash', product: '120 Liter Trash', size: '120 Liter', sizeType: 'Liter', category: 'Residential', family: 'Roll-Out Cart' },
+    { id: 'SPP-5751', number: 'SPP-5751', code: '360LiterOrganics', product: '360 Liter Organics Universal Cart', size: '360 Liter', sizeType: 'Liter', category: 'Residential', family: 'Universal Cart' },
+    { id: 'SPP-5752', number: 'SPP-5752', code: '120LiterOrganics', product: '120 Liter Organics', size: '120 Liter', sizeType: 'Liter', category: 'Residential', family: 'Roll-Out Cart' },
+    { id: 'SPP-5837', number: 'SPP-5837', code: '360LiterTrash', product: '360 Liter Trash Universal Cart', size: '360 Liter', sizeType: 'Liter', category: 'Residential', family: 'Universal Cart' },
+    { id: 'SPP-5933', number: 'SPP-5933', code: '240LiterTrash', product: '240 Liter Trash', size: '240 Liter', sizeType: 'Liter', category: 'Residential', family: 'Roll-Out Cart' },
+    { id: 'SPP-6255', number: 'SPP-6255', code: 'OBS3', product: '96 Gallon Trash', size: '96 Gallon', sizeType: 'Gallon', category: 'Residential', family: 'Roll-Out Cart' },
+    { id: 'SPP-6253', number: 'SPP-6253', code: 'OBS1', product: '120 Liter Trash (Old)', size: '120 Liter', sizeType: 'Liter', category: 'Residential', family: 'Roll-Out Cart' },
+    { id: 'SPP-6241', number: 'SPP-6241', code: 'CP3', product: '3 YD Garbage Bin Trash', size: '3 YD Garbage Bin', sizeType: 'Yard', category: 'Commercial', family: 'Bin' },
+    { id: 'SPP-6242', number: 'SPP-6242', code: 'CP4', product: '4 YD Garbage Bin Trash', size: '4 YD Garbage Bin', sizeType: 'Yard', category: 'Commercial', family: 'Bin' },
+    { id: 'SPP-6244', number: 'SPP-6244', code: 'RCP3', product: '3 YD Recycle Bin Recycling', size: '3 YD Recycle Bin', sizeType: 'Yard', category: 'Commercial', family: 'Bin' },
   ],
 };
 
@@ -417,6 +404,7 @@ export const LIVE_DISPATCHES = [
 ];
 
 export const PRIORITY_WORK_ORDERS = [
-  { id: '03933942', priority: 'Medium', subject: 'Deliver — 96...', account: 'Edmonton AB', owner: 'Yolanda Wagner' },
-  { id: '03933920', priority: 'Medium', subject: 'Inactive Acco...', account: 'Edmonton AB', owner: 'Yolanda Wagner' },
+  { id: '03933942', priority: 'Medium', subject: 'Deliver — 96G cart', account: 'Edmonton AB', owner: 'Yolanda Wagner' },
+  { id: '03933920', priority: 'Medium', subject: 'Inactive Account Removal', account: 'Edmonton AB', owner: 'Yolanda Wagner' },
+  { id: '03933921', priority: 'High', subject: 'Missed Pickup — Downtown Multi', account: 'Edmonton AB', owner: 'Yolanda Wagner' },
 ];

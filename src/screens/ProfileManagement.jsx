@@ -175,7 +175,7 @@ function Popover({ open, onClose, align = 'right', width = 'w-[14.5rem]', childr
 }
 
 export default function ProfileManagement() {
-  const { state, toast } = useStore();
+  const { state, toast, persona } = useStore();
   const accountsQuery = useAccounts();
   const segmentsQuery = useSegments();
   const [profiles, setProfiles] = useState(readProfiles);
@@ -200,9 +200,18 @@ export default function ProfileManagement() {
     writeProfiles(profiles);
   }, [profiles]);
 
-  const accounts = accountsQuery.data || [];
+  const allAccounts = accountsQuery.data || [];
   const segments = segmentsQuery.data || [];
   const actor = state.currentUser?.name || 'You';
+  const accounts = useMemo(() => {
+    if (persona !== 'sp') return allAccounts;
+    const scopedIds = state.currentUser?.accountIds || [];
+    if (scopedIds.length) {
+      const scoped = allAccounts.filter((account) => scopedIds.includes(account.id));
+      return scoped.length ? scoped : allAccounts.slice(0, 1);
+    }
+    return allAccounts.slice(0, 1);
+  }, [persona, allAccounts, state.currentUser?.accountIds]);
 
   const filtered = useMemo(() => {
     const term = query.trim().toLowerCase();
@@ -745,6 +754,7 @@ export default function ProfileManagement() {
           profiles={profiles}
           accounts={accounts}
           segments={segments}
+          persona={persona}
           onClose={() => setEditing(null)}
           onSave={saveProfile}
           onDelete={deleteProfile}

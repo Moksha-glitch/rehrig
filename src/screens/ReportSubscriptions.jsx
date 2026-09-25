@@ -20,6 +20,7 @@ import {
   TextArea,
   TextInput,
   Toolbar,
+  activateRow,
 } from '../components/UI.jsx';
 import { useStore } from '../state/AppStore.jsx';
 import { useReportSpecs } from '../hooks/useConfig.js';
@@ -329,15 +330,13 @@ export default function ReportSubscriptions() {
               label="Report subscriptions"
             >
               {rows.map((row) => (
-                <tr key={row.id} className="interactive hover:bg-elevated/70">
+                <tr
+                  key={row.id}
+                  className="interactive cursor-pointer hover:bg-elevated/70"
+                  onClick={(event) => activateRow(event, () => openForm(row))}
+                >
                   <td className="px-4 py-3.5">
-                    <button
-                      type="button"
-                      className="link-brand text-left"
-                      onClick={() => openForm(row)}
-                    >
-                      {row.reportName || 'Untitled report'}
-                    </button>
+                    <div className="font-medium text-ink">{row.reportName || 'Untitled report'}</div>
                     <div className="mono mt-0.5 text-xs text-ink-faint">{row.id}</div>
                   </td>
                   <td className="px-4 py-3.5 text-ink-muted">{cadenceLabel(row)}</td>
@@ -355,7 +354,7 @@ export default function ReportSubscriptions() {
                     />
                   </td>
                   <td className="px-4 py-3.5 text-right">
-                    {canEdit ? (
+                    {canEdit && (
                       <>
                         <button
                           type="button"
@@ -366,27 +365,12 @@ export default function ReportSubscriptions() {
                         </button>
                         <button
                           type="button"
-                          className="link-brand mr-3 text-xs"
-                          onClick={() => openForm(row)}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          type="button"
                           className="text-xs text-danger hover:underline"
                           onClick={() => setDeletePending(row)}
                         >
                           Delete
                         </button>
                       </>
-                    ) : (
-                      <button
-                        type="button"
-                        className="link-brand text-xs"
-                        onClick={() => openForm(row)}
-                      >
-                        View
-                      </button>
                     )}
                   </td>
                 </tr>

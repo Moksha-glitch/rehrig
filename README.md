@@ -74,3 +74,7 @@ Product rules that matter while developing:
 - Your Account is the signed-in user, not a service-provider account.
 
 Reset demo data by clearing `localStorage` keys that start with `vision.`.
+
+## Product & UX
+
+See [docs/VISION_PULSE.md](docs/VISION_PULSE.md) for Vision AI, onboarding, reports, branding, personas, and the UX checklist.

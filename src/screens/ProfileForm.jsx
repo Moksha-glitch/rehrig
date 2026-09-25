@@ -14,8 +14,11 @@ import {
   TOTAL_PROFILE_SCREENS,
   accessStateFromFlags,
   buildProviderTree,
+  buildSPSegmentProvider,
   buildScreenModules,
   collectFlags,
+  countSelectedSegments,
+  hasAccessSelection,
   moduleAccessState,
   screenAccessState,
   summarizeProfileAccess,
@@ -47,9 +50,20 @@ function screensFromProfile(profile) {
   return buildScreenModules(profile?.preset || (profile?.id ? 'partial' : 'none'), profile?.role);
 }
 
-function providersFromProfile(profile, accounts, segments, { blank = false } = {}) {
+function providersFromProfile(profile, accounts, segments, { blank = false, persona } = {}) {
   if (!blank && profile?.providers?.length) {
-    return JSON.parse(JSON.stringify(profile.providers));
+    const saved = JSON.parse(JSON.stringify(profile.providers));
+    if (persona === 'sp' && saved.length > 1) {
+      const homeId = accounts[0]?.id;
+      const match = saved.find((provider) => provider.id === homeId) || saved[0];
+      return [match];
+    }
+    return saved;
+  }
+  if (persona === 'sp') {
+    return buildSPSegmentProvider(accounts[0], segments, {
+      checked: !blank && profile?.preset === 'all',
+    });
   }
   return buildProviderTree(accounts, segments, {
     checked: !blank && profile?.preset === 'all',
@@ -188,6 +202,95 @@ function ProviderTree({ providers, setProviders }) {
           );
         })}
       </div>
+    </div>
+  );
+}
+
+function SegmentOnlyPicker({ providers, setProviders }) {
+  const root = providers[0] || { checked: false, segments: [] };
+  const allSelected = !!root.checked;
+  const segments = root.segments || [];
+
+  const toggleAll = () => {
+    setProviders((prev) =>
+      prev.map((provider, index) =>
+        index === 0
+          ? {
+              ...provider,
+              checked: !provider.checked,
+              segments: provider.segments.map((segment) => ({ ...segment, checked: false })),
+            }
+          : provider
+      )
+    );
+  };
+
+  const toggleSegment = (segmentId) => {
+    setProviders((prev) =>
+      prev.map((provider, index) =>
+        index === 0
+          ? {
+              ...provider,
+              checked: false,
+              segments: provider.segments.map((segment) =>
+                segment.id === segmentId ? { ...segment, checked: !segment.checked } : segment
+              ),
+            }
+          : provider
+      )
+    );
+  };
+
+  return (
+    <div className="max-h-[380px] overflow-y-auto rounded-xl border border-line bg-elevated/30 p-1.5 scroll-thin">
+      <label
+        className={`mb-1 flex cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-2 text-[12px] font-semibold transition-colors ${
+          allSelected ? 'bg-brand-soft/60' : 'hover:bg-surface'
+        }`}
+      >
+        <input
+          type="checkbox"
+          checked={allSelected}
+          onChange={toggleAll}
+          className="h-4 w-4 shrink-0 rounded border-line-strong text-brand focus:ring-brand/30"
+        />
+        <span className="text-ink">All Segments</span>
+      </label>
+      {segments.length === 0 ? (
+        <p className="py-4 text-center text-[12px] text-ink-faint">
+          No segments configured for this account.
+        </p>
+      ) : (
+        segments.map((segment) => {
+          const checked = !allSelected && !!segment.checked;
+          return (
+            <label
+              key={segment.id}
+              className={`flex items-center justify-between gap-2 rounded-lg px-2.5 py-1.5 text-[12px] transition-colors ${
+                allSelected ? 'cursor-not-allowed opacity-45' : 'cursor-pointer hover:bg-surface'
+              } ${checked ? 'bg-brand-soft/40' : ''}`}
+            >
+              <span className="flex min-w-0 items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={checked}
+                  disabled={allSelected}
+                  onChange={() => toggleSegment(segment.id)}
+                  className="h-3.5 w-3.5 shrink-0 rounded border-line-strong text-brand focus:ring-brand/30"
+                />
+                <span className={`min-w-0 truncate ${allSelected ? 'text-ink-faint' : 'text-ink'}`}>
+                  {segment.name}
+                </span>
+              </span>
+              {segment.type ? (
+                <span className="shrink-0 rounded bg-elevated px-1.5 py-0.5 text-[9.5px] font-semibold uppercase tracking-wider text-ink-muted">
+                  {segment.type}
+                </span>
+              ) : null}
+            </label>
+          );
+        })
+      )}
     </div>
   );
 }
@@ -511,6 +614,7 @@ export default function ProfileForm({
   profiles = [],
   accounts = [],
   segments = [],
+  persona,
   onClose,
   onSave,
   onDelete,
@@ -518,6 +622,7 @@ export default function ProfileForm({
   error = '',
 }) {
   const isNew = !profile?.id;
+  const isSP = persona === 'sp';
   const [step, setStep] = useState(isNew ? 'choose' : 'form');
   const [createMode, setCreateMode] = useState('blank');
   const [cloneId, setCloneId] = useState(profiles[0]?.id || '');
@@ -525,7 +630,11 @@ export default function ProfileForm({
   const [status, setStatus] = useState(isNew ? false : profile?.status !== 'Inactive');
   const [description, setDescription] = useState(isNew ? '' : profile?.description || '');
   const [providers, setProviders] = useState(() =>
-    isNew ? buildProviderTree(accounts, segments, { checked: false }) : providersFromProfile(profile, accounts, segments)
+    isNew
+      ? isSP
+        ? buildSPSegmentProvider(accounts[0], segments, { checked: false })
+        : buildProviderTree(accounts, segments, { checked: false })
+      : providersFromProfile(profile, accounts, segments, { persona })
   );
   const [screens, setScreens] = useState(() =>
     isNew ? buildScreenModules('none') : screensFromProfile(profile)
@@ -536,7 +645,12 @@ export default function ProfileForm({
   const initialRef = useRef(isNew ? '' : snapshot);
   const dirty = step === 'form' && snapshot !== initialRef.current;
   const screenCount = enabledScreenCount(screens);
-  const canSave = !!name.trim() && screenCount > 0;
+  const hasScope = hasAccessSelection(providers);
+  const selectedCount = isSP
+    ? countSelectedSegments(providers)
+    : providers.filter((provider) => provider.checked || provider.segments?.some((segment) => segment.checked)).length;
+  const allSegments = isSP && !!providers[0]?.checked;
+  const canSave = !!name.trim() && screenCount > 0 && hasScope;
 
   const startForm = () => {
     if (createMode === 'clone') {
@@ -545,13 +659,13 @@ export default function ProfileForm({
       setName('');
       setStatus(false);
       setDescription('');
-      setProviders(providersFromProfile(source, accounts, segments));
+      setProviders(providersFromProfile(source, accounts, segments, { persona }));
       setScreens(screensFromProfile(source));
     } else {
       setName('');
       setStatus(false);
       setDescription('');
-      setProviders(providersFromProfile(null, accounts, segments, { blank: true }));
+      setProviders(providersFromProfile(null, accounts, segments, { blank: true, persona }));
       setScreens(buildScreenModules('none'));
     }
     setStep('form');
@@ -559,15 +673,14 @@ export default function ProfileForm({
   };
 
   const handleSubmit = () => {
-    if (!name.trim()) return;
-    if (screenCount === 0) return;
+    if (!name.trim() || screenCount === 0 || !hasScope) return;
     onSave({
       ...(profile || {}),
       id: profile?.id,
       role: name.trim(),
       status: status ? 'Active' : 'Inactive',
       description: description.slice(0, 255),
-      access: summarizeProfileAccess(providers, screens),
+      access: summarizeProfileAccess(providers, screens, persona),
       providers,
       screens,
     });
@@ -807,9 +920,18 @@ export default function ProfileForm({
               {name.trim() || <span className="italic text-ink-faint">Enter a profile name…</span>}
             </p>
             <p className="mt-0.5 text-[11.5px] text-ink-muted">
-              {screenCount > 0
-                ? <>{screenCount} screen{screenCount !== 1 ? 's' : ''} enabled · {providers.filter(p => p.checked || p.segments?.some(s => s.checked)).length} provider{providers.filter(p => p.checked || p.segments?.some(s => s.checked)).length !== 1 ? 's' : ''}</>
-                : 'No screens enabled yet'}
+              {screenCount > 0 ? (
+                <>
+                  {screenCount} screen{screenCount !== 1 ? 's' : ''} enabled ·{' '}
+                  {isSP
+                    ? allSegments
+                      ? 'All segments'
+                      : `${selectedCount} segment${selectedCount !== 1 ? 's' : ''}`
+                    : `${selectedCount} provider${selectedCount !== 1 ? 's' : ''}`}
+                </>
+              ) : (
+                'No screens enabled yet'
+              )}
             </p>
           </div>
           <span className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[10.5px] font-semibold ${
@@ -846,16 +968,30 @@ export default function ProfileForm({
         <div className="grid gap-5 pt-1 lg:grid-cols-[340px_1fr]">
           <div className="min-w-0">
             <div className="mb-2 flex items-center justify-between">
-              <span className="text-[10.5px] font-semibold uppercase tracking-wider text-ink-faint">Service Providers</span>
+              <span className="text-[10.5px] font-semibold uppercase tracking-wider text-ink-faint">
+                {isSP ? 'Segments' : 'Service Providers'} <span className="text-danger">*</span>
+              </span>
               <span className="rounded-full bg-elevated px-1.5 py-0.5 text-[10px] font-medium text-ink-faint">
-                {providers.filter(p => p.checked || p.segments?.some(s => s.checked)).length} selected
+                {isSP && allSegments ? 'All' : `${selectedCount} selected`}
               </span>
             </div>
-            <ProviderTree providers={providers} setProviders={setProviders} />
+            {isSP ? (
+              <SegmentOnlyPicker providers={providers} setProviders={setProviders} />
+            ) : (
+              <ProviderTree providers={providers} setProviders={setProviders} />
+            )}
+            {!hasScope && (
+              <p className="mt-2 flex items-center gap-1 text-[12px] text-danger">
+                <Icon name="x" size={12} />
+                {isSP ? 'Select at least one segment' : 'Select at least one Service Provider or segment'}
+              </p>
+            )}
           </div>
           <div className="min-w-0">
             <div className="mb-2 flex items-center justify-between">
-              <span className="text-[10.5px] font-semibold uppercase tracking-wider text-ink-faint">Screens · by module <span className="text-danger">*</span></span>
+              <span className="text-[10.5px] font-semibold uppercase tracking-wider text-ink-faint">
+                Screens · grouped by module <span className="text-danger">*</span>
+              </span>
               <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-medium ${
                 screenCount > 0 ? 'bg-brand-soft text-brand-ink' : 'bg-elevated text-ink-faint'
               }`}>
@@ -865,7 +1001,7 @@ export default function ProfileForm({
             <ScreenModulePanel modules={screens} setModules={setScreens} />
             {screenCount === 0 && (
               <p className="mt-2 flex items-center gap-1 pb-4 text-[12px] text-danger">
-                <Icon name="x" size={12} /> Turn on at least one screen.
+                <Icon name="x" size={12} /> Turn on at least one screen
               </p>
             )}
           </div>

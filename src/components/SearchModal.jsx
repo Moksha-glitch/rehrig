@@ -2,26 +2,35 @@ import React, { useState, useEffect, useRef } from 'react';
 
 import Icon from './Icon.jsx';
 import { useStore } from '../state/AppStore.jsx';
+import { useSearch } from '../hooks/useSearch.js';
 
 export function SearchModal({ onClose }) {
   const [query, setQuery] = useState('');
   const inputRef = useRef(null);
-  const { navigate } = useStore();
+  const { navigate, openAssistant } = useStore();
+  const searchQuery = useSearch(query);
+  const results = searchQuery.data || [];
 
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
 
+  const openResult = (result) => {
+    if (!result?.module) return;
+    navigate(result.module, result.params || {});
+    onClose();
+  };
+
   const handleKeyDown = (e) => {
     if (e.key === 'Escape') {
       onClose();
+      return;
+    }
+    if (e.key === 'Enter' && results[0]) {
+      e.preventDefault();
+      openResult(results[0]);
     }
   };
-
-  const results = query ? [
-    { label: 'Work Order: ' + query, type: 'Work Order', action: () => navigate('workOrders') },
-    { label: 'Asset: ' + query, type: 'Asset', action: () => navigate('assets') }
-  ] : [];
 
   return (
     <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[10vh]">
@@ -32,7 +41,7 @@ export function SearchModal({ onClose }) {
           <input
             ref={inputRef}
             type="text"
-            placeholder="Search anywhere... (Cmd+K)"
+            placeholder="Search anywhere... (Ctrl+K)"
             className="flex-1 bg-transparent px-3 py-1 text-ink outline-none"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -42,24 +51,45 @@ export function SearchModal({ onClose }) {
             <Icon name="x" size={16} />
           </button>
         </div>
-        {query && (
+        {query.trim().length >= 2 && (
           <div className="max-h-80 overflow-y-auto p-2">
-            {results.map((r, i) => (
-              <button
-                key={i}
-                type="button"
-                className="flex w-full items-center gap-3 rounded-control px-3 py-2 text-left hover:bg-elevated"
-                onClick={() => { r.action(); onClose(); }}
-              >
-                <div className="flex h-8 w-8 items-center justify-center rounded bg-elevated">
-                  <Icon name={r.type === 'Asset' ? 'box' : 'clipboard'} size={14} className="text-ink-muted" />
-                </div>
-                <div>
-                  <div className="text-sm font-medium text-ink">{r.label}</div>
-                  <div className="text-[11px] text-ink-faint">{r.type}</div>
-                </div>
-              </button>
-            ))}
+            {results.length ? (
+              results.map((result) => (
+                <button
+                  key={result.id}
+                  type="button"
+                  className="flex w-full items-center gap-3 rounded-control px-3 py-2 text-left hover:bg-elevated"
+                  onClick={() => openResult(result)}
+                >
+                  <div className="flex h-8 w-8 items-center justify-center rounded bg-elevated">
+                    <Icon name="search" size={14} className="text-ink-muted" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="truncate text-sm font-medium text-ink">{result.title || result.label}</div>
+                    <div className="truncate text-[11px] text-ink-faint">{result.meta || result.category}</div>
+                  </div>
+                </button>
+              ))
+            ) : (
+              <div className="px-3 py-6 text-center text-sm text-ink-muted">No matching records.</div>
+            )}
+            <button
+              type="button"
+              className="mt-1 flex w-full items-center gap-3 rounded-control px-3 py-2 text-left hover:bg-elevated"
+              onClick={() => {
+                openAssistant();
+                window.dispatchEvent(new CustomEvent('vision:ask', { detail: { prompt: query } }));
+                onClose();
+              }}
+            >
+              <div className="flex h-8 w-8 items-center justify-center rounded bg-brand-soft">
+                <Icon name="star" size={14} className="text-brand" />
+              </div>
+              <div>
+                <div className="text-sm font-medium text-ink">Ask Vision AI</div>
+                <div className="text-[11px] text-ink-faint">Keep this page open and search in chat</div>
+              </div>
+            </button>
           </div>
         )}
       </div>

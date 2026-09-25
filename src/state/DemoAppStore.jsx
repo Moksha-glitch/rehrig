@@ -664,8 +664,12 @@ export function DemoAppStoreProvider({ children }) {
         ),
       ];
     }
+    if (user.persona === 'sp') {
+      const home = state.accounts.find((account) => account.name === 'Edmonton AB') || state.accounts[0];
+      return home ? [home.id] : [];
+    }
     return [];
-  }, [state.segments, user]);
+  }, [state.accounts, state.segments, user]);
 
   const isScoped = scopedAccountIds.length > 0 || !!user?.segmentIds?.length;
   const scopedAccounts = useMemo(() => {
@@ -796,7 +800,7 @@ export function DemoAppStoreProvider({ children }) {
             title: String(title),
             meta: [schema.singular, record.account, record.status].filter(Boolean).join(' · '),
             module: kind,
-            params: {},
+            params: { recordId: record.id },
           });
         });
       });

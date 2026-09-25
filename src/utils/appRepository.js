@@ -6,6 +6,7 @@ import {
   CONFIG_LOCATION_TYPES,
   CONFIG_PRODUCT_TYPES,
   CONFIG_SERVICE_TYPES,
+  CONFIG_TAG_SCHEMES,
   CONFIG_TRUCKS,
   CONTACTS,
   NOTIFICATION_CONFIG,
@@ -22,7 +23,7 @@ import {
 } from '../data/workspaceConfig.js';
 import { SEED_REPORT_SPECS } from '../data/reportStudio.js';
 
-export const STORAGE_VERSION = 1;
+export const STORAGE_VERSION = 6;
 export const STORAGE_KEY = `vision.app.v${STORAGE_VERSION}`;
 export const REMEMBER_KEY = 'vision.app.remember';
 export const SESSION_USER_KEY = 'vision.app.sessionUserId';
@@ -152,7 +153,7 @@ export function createSeedState() {
       productTypes: clone(CONFIG_PRODUCT_TYPES),
       device: clone(CONFIG_DEVICES),
       truck: clone(CONFIG_TRUCKS),
-      tagScheme: [],
+      tagScheme: clone(CONFIG_TAG_SCHEMES),
     },
     reportSpecs: clone(SEED_REPORT_SPECS),
     reportSubscriptions: clone(SEED_REPORT_SUBSCRIPTIONS),
@@ -248,6 +249,10 @@ export const appRepository = {
         ? saved.followedAccountIds
         : readFollowedAccountIds();
       writeFollowedAccountIds(followedFromState);
+      const savedWo = saved.operationalRecords?.workOrders?.[0];
+      const recordsNeedHtml = !savedWo || !('workOrderNumber' in savedWo);
+      const savedReports = Array.isArray(saved.reportSpecs) ? saved.reportSpecs : [];
+      const reportsNeedHtml = !savedReports.some((spec) => spec.id === 'R-001');
       return {
         ...seed,
         ...saved,
@@ -255,11 +260,16 @@ export const appRepository = {
         currentUser: user,
         followedAccountIds: followedFromState,
         config: { ...seed.config, ...(saved.config || {}) },
-        operationalRecords: {
-          ...seed.operationalRecords,
-          ...(saved.operationalRecords || {}),
-        },
-        reportSpecs: Array.isArray(saved.reportSpecs) ? saved.reportSpecs : seed.reportSpecs,
+        operationalRecords: recordsNeedHtml
+          ? seed.operationalRecords
+          : {
+              ...seed.operationalRecords,
+              ...(saved.operationalRecords || {}),
+            },
+        reportSpecs: reportsNeedHtml ? seed.reportSpecs : savedReports,
+        segments: (saved.segments || []).some((segment) => segment.name === 'Downtown District')
+          ? seed.segments
+          : saved.segments || seed.segments,
         reportSubscriptions: Array.isArray(saved.reportSubscriptions)
           ? saved.reportSubscriptions
           : seed.reportSubscriptions,

@@ -61,10 +61,10 @@ const OBJECTS = {
     enums: { status: PICKLISTS.routeStatus },
   },
   Dispatches: {
-    columns: ['account', 'number', 'status', 'routeDate', 'truck', 'driver', 'serviceType'],
+    columns: ['account', 'number', 'status', 'routeDate', 'segment', 'truck', 'driver', 'serviceType'],
     kind: 'dispatches',
     mode: 'record',
-    required: ['account', 'routeDate'],
+    required: ['account', 'routeDate', 'segment'],
     enums: { status: PICKLISTS.dispatchStatus, serviceType: PICKLISTS.serviceType },
   },
   Notes: {
@@ -130,17 +130,20 @@ const WOIT_STAGES = [
   { key: 'commit', label: 'Commit' },
 ];
 
-export default function BulkImport() {
+export default function BulkImport({ embedded = false, initialObject, initialMode, onClose }) {
   const { toast, state } = useStore();
   const navParams = state.nav?.params || {};
+  const startObject =
+    (initialObject && OBJECTS[initialObject] && initialObject) ||
+    (navParams.object && OBJECTS[navParams.object] ? navParams.object : 'Work Orders');
   const accountsQuery = useAccounts();
   const bulkImport = useBulkImport();
   const createDispatch = useCreateRecord('dispatches');
   const createNote = useCreateRecord('notesAttachments');
   const createTip = useCreateRecord('individualTips');
   const [stage, setStage] = useState('upload');
-  const [object, setObject] = useState(navParams.object && OBJECTS[navParams.object] ? navParams.object : 'Work Orders');
-  const [importMode, setImportMode] = useState(navParams.mode || 'standard');
+  const [object, setObject] = useState(startObject);
+  const [importMode, setImportMode] = useState(initialMode || navParams.mode || 'standard');
   const [fileName, setFileName] = useState('');
   const [preview, setPreview] = useState([]);
   const [errors, setErrors] = useState([]);
@@ -395,8 +398,8 @@ export default function BulkImport() {
 
   const stageIndex = WOIT_STAGES.findIndex((item) => item.key === stage);
 
-  return (
-    <Page>
+  const content = (
+    <>
       <PageHeader
         overline="Tools"
         title={importMode === 'legacy' ? 'Legacy Asset Import' : 'WOIT Import'}
@@ -406,9 +409,16 @@ export default function BulkImport() {
             : 'Work Order Import Tool. Upload, map, validate a sample, then commit. Portal customers are provisioned in identity systems, not here.'
         }
         actions={
-          <Button variant="secondary" onClick={openMapping}>
-            <Icon name="sliders" size={14} /> Column mapping
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="secondary" onClick={openMapping}>
+              <Icon name="sliders" size={14} /> Column mapping
+            </Button>
+            {onClose && (
+              <Button variant="secondary" onClick={onClose}>
+                Done
+              </Button>
+            )}
+          </div>
         }
       />
 
@@ -685,6 +695,8 @@ export default function BulkImport() {
           </FieldSection>
         </FormDrawer>
       )}
-    </Page>
+    </>
   );
+
+  return embedded ? <div className="px-1 pb-4">{content}</div> : <Page>{content}</Page>;
 }

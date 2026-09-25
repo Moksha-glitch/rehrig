@@ -13,6 +13,7 @@ import {
   Badge,
   ConfirmDialog,
   AsyncState,
+  activateRow,
 } from '../components/UI.jsx';
 import { useStore } from '../state/AppStore.jsx';
 import { useAccounts } from '../hooks/useAccounts.js';
@@ -98,16 +99,22 @@ export default function AccountsList({ onOnboard }) {
               { label: 'Phone', className: compact ? 'hidden' : '' },
               { label: 'Owner', className: compact ? 'hidden' : '' },
               { label: 'Residents', className: compact ? 'hidden' : '' },
-              'Status', '',
+              'Status',
             ]}
           >
             {providerRows.map((a, i) => (
-              <tr key={a.id} className="interactive hover:bg-elevated/70">
+              <tr
+                key={a.id}
+                className="interactive cursor-pointer hover:bg-elevated/70"
+                onClick={(event) =>
+                  activateRow(event, () => navigate('accountDetail', { accountId: a.id, tab: 'details' }))
+                }
+              >
                 <td className="mono w-10 px-4 py-3.5 text-ink-faint tabular-nums sm:px-5">{i + 1}</td>
                 <td className="min-w-0 px-4 py-3.5 sm:px-5">
-                  <button type="button" onClick={() => navigate('accountDetail', { accountId: a.id, tab: 'details' })} className="link-brand flex w-full min-w-0 flex-col items-start gap-1 text-left">
+                  <div className="flex w-full min-w-0 flex-col items-start gap-1 text-left">
                     <span className="flex w-full min-w-0 items-center gap-1.5">
-                      <span className="truncate">{a.name}</span>
+                      <span className="truncate font-medium text-ink">{a.name}</span>
                       {isFollowingAccount?.(a.id) && (
                         <span title="Following" aria-label="Following">
                           <Icon name="bookmark" size={12} className="shrink-0 text-brand" aria-hidden="true" />
@@ -115,7 +122,7 @@ export default function AccountsList({ onOnboard }) {
                       )}
                     </span>
                     <span className="flex flex-wrap gap-1"><AccountBadges account={a} /></span>
-                  </button>
+                  </div>
                 </td>
                 <td className="max-w-[8rem] truncate px-4 py-3.5 text-ink-muted sm:px-5">{a.industry}</td>
                 <td className={`mono px-4 py-3.5 text-ink-muted sm:px-5 ${compact ? 'hidden' : ''}`}>{a.phone}</td>
@@ -124,18 +131,11 @@ export default function AccountsList({ onOnboard }) {
                 <td className="whitespace-nowrap px-4 py-3.5 sm:px-5">
                   {a.inactive ? <StatusDot color="slate" label="Inactive" /> : <StatusDot color="emerald" label="Active" />}
                 </td>
-                <td className="px-4 py-3.5 text-right sm:px-5">
-                  {canCreateAccounts && (
-                    <button type="button" className="link-brand text-xs font-medium" onClick={() => navigate('accountDetail', { accountId: a.id, tab: 'details' })}>
-                      Edit
-                    </button>
-                  )}
-                </td>
               </tr>
             ))}
             {providerRows.length === 0 && (
               <tr>
-                <td colSpan={compact ? 5 : 8} className="px-5 py-10 text-center text-sm text-ink-faint">
+                <td colSpan={compact ? 4 : 7} className="px-5 py-10 text-center text-sm text-ink-faint">
                   {q || status !== 'All' ? 'No service providers match these filters.' : 'No service providers are available in your scope.'}
                 </td>
               </tr>
@@ -154,12 +154,14 @@ export default function AccountsList({ onOnboard }) {
             </div>
             <Table columns={['#', 'Draft name', 'Industry', { label: 'Last saved', className: compact ? 'hidden' : '' }, { label: 'Owner', className: compact ? 'hidden' : '' }, '', 'Status']}>
               {drafts.map((d, i) => (
-                <tr key={d.id} className="interactive hover:bg-elevated/70">
+                <tr
+                  key={d.id}
+                  className="interactive cursor-pointer hover:bg-elevated/70"
+                  onClick={(event) => activateRow(event, () => onOnboard?.(d.id))}
+                >
                   <td className="mono w-10 px-4 py-3.5 text-ink-faint tabular-nums sm:px-5">{providerRows.length + i + 1}</td>
-                  <td className="min-w-0 truncate px-4 py-3.5 sm:px-5">
-                    <button type="button" onClick={() => onOnboard?.(d.id)} className="link-brand max-w-full truncate text-left font-medium">
-                      {d.name || 'Untitled draft'}
-                    </button>
+                  <td className="min-w-0 truncate px-4 py-3.5 font-medium text-ink sm:px-5">
+                    {d.name || 'Untitled draft'}
                   </td>
                   <td className="max-w-[8rem] truncate px-4 py-3.5 text-ink-muted sm:px-5">{d.industry || '—'}</td>
                   <td className={`mono px-4 py-3.5 text-ink-muted sm:px-5 ${compact ? 'hidden' : ''}`}>
