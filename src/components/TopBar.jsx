@@ -406,7 +406,7 @@ export default function TopBar() {
                     </button>
                   );
                 }
-                const expanded = mobileExpanded[i] ?? true;
+                const expanded = mobileExpanded[i] ?? false;
                 return (
                   <div key={node.label} className="mb-2 pt-2">
                     <button

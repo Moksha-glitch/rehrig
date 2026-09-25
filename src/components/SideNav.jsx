@@ -340,12 +340,8 @@ export default function SideNav({ open, onToggle }) {
   };
 
   useEffect(() => {
-    if (!open) {
-      setOpenFolders(new Set());
-      return;
-    }
-    setOpenFolders(new Set(tree.filter((node) => node.type === 'section').map((node) => node.label)));
-  }, [open, tree]);
+    if (!open) setOpenFolders(new Set());
+  }, [open]);
 
   useEffect(() => {
     const activeKeys = [];
